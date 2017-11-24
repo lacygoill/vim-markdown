@@ -1,9 +1,7 @@
-" Vim syntax file
-" Language:     Markdown
-" Maintainer:   Tim Pope <vimNOSPAM@tpope.org>
-" Filenames:    *.markdown
-" Last Change:  2013 May 30
-
+" TODO:
+" The following is stolen from tpope's vim-markdown
+" Study how it works.
+"
 " # Vim Markdown runtime files
 
 " This is the development version of Vim's included syntax highlighting and
@@ -34,13 +32,10 @@
 
 " Note that setting too large value may cause bad performance on highlighting.
 
-" ## License
-
-" Copyright © Tim Pope.  Distributed under the same terms as Vim itself.
-" See `:help license`.
-if exists("b:current_syntax")
-  " finish
-endif
+" TODO:
+" read and take inspiration from:
+"         https://github.com/vim-pandoc/vim-pandoc-syntax
+"         http://pandoc.org/MANUAL.html#pandocs-markdown
 
 if !exists('main_syntax')
   let main_syntax = 'markdown'
@@ -96,16 +91,19 @@ syn match markdownH2 "^.\+\n-\+$" contained contains=@markdownInline,markdownHea
 
 syn match markdownHeadingRule "^[=-]\+$" contained
 
-syn region markdownH1 matchgroup=markdownHeadingDelimiter start="##\@!"      end="#*\s*$" keepend oneline contains=@markdownInline,markdownAutomaticLink contained
-syn region markdownH2 matchgroup=markdownHeadingDelimiter start="###\@!"     end="#*\s*$" keepend oneline contains=@markdownInline,markdownAutomaticLink contained
-syn region markdownH3 matchgroup=markdownHeadingDelimiter start="####\@!"    end="#*\s*$" keepend oneline contains=@markdownInline,markdownAutomaticLink contained
-syn region markdownH4 matchgroup=markdownHeadingDelimiter start="#####\@!"   end="#*\s*$" keepend oneline contains=@markdownInline,markdownAutomaticLink contained
-syn region markdownH5 matchgroup=markdownHeadingDelimiter start="######\@!"  end="#*\s*$" keepend oneline contains=@markdownInline,markdownAutomaticLink contained
-syn region markdownH6 matchgroup=markdownHeadingDelimiter start="#######\@!" end="#*\s*$" keepend oneline contains=@markdownInline,markdownAutomaticLink contained
+syn region markdownH1 matchgroup=markdownH1Delimiter start="##\@!"      end="#*\s*$" keepend oneline contains=@markdownInline,markdownAutomaticLink contained
+syn region markdownH2 matchgroup=markdownH2Delimiter start="###\@!"     end="#*\s*$" keepend oneline contains=@markdownInline,markdownAutomaticLink contained
+syn region markdownH3 matchgroup=markdownH3Delimiter start="####\@!"    end="#*\s*$" keepend oneline contains=@markdownInline,markdownAutomaticLink contained
+syn region markdownH4 matchgroup=markdownH4Delimiter start="#####\@!"   end="#*\s*$" keepend oneline contains=@markdownInline,markdownAutomaticLink contained
+syn region markdownH5 matchgroup=markdownH5Delimiter start="######\@!"  end="#*\s*$" keepend oneline contains=@markdownInline,markdownAutomaticLink contained
+syn region markdownH6 matchgroup=markdownH6Delimiter start="#######\@!" end="#*\s*$" keepend oneline contains=@markdownInline,markdownAutomaticLink contained
 
 syn match markdownBlockquote ">\%(\s\|$\)" contained nextgroup=@markdownBlock
 
-syn region markdownCodeBlock start="    \|\t" end="$" contained
+syn region markdownCodeBlock start="    \|\t" end="$" contained contains=@Spell
+"                                                                         │
+" When we enable 'spell', errors aren't highlighted inside a code block.  ┘
+" So we add the @Spell cluster. See `:h spell-syntax`
 
 " TODO: real nesting
 syn match markdownListMarker "\%(\t\| \{0,4\}\)[-*+]\%(\s\+\S\)\@=" contained
@@ -172,6 +170,12 @@ hi def link markdownH4                    Title
 hi def link markdownH5                    Title
 hi def link markdownH6                    Title
 hi def link markdownHeadingRule           markdownRule
+hi def link markdownH1Delimiter           markdownHeadingDelimiter
+hi def link markdownH2Delimiter           markdownHeadingDelimiter
+hi def link markdownH3Delimiter           markdownHeadingDelimiter
+hi def link markdownH4Delimiter           markdownHeadingDelimiter
+hi def link markdownH5Delimiter           markdownHeadingDelimiter
+hi def link markdownH6Delimiter           markdownHeadingDelimiter
 hi def link markdownHeadingDelimiter      Delimiter
 hi def link markdownOrderedListMarker     markdownListMarker
 hi def link markdownListMarker            Statement
@@ -200,11 +204,41 @@ hi def link markdownBoldItalicDelimiter   markdownBoldItalic
 hi def link markdownCodeDelimiter         Delimiter
 
 hi def link markdownEscape                Special
-hi def link markdownError                 Error
+"         foo_bar "{{{
+"            ^
+"            └ markdownError → red
+"
+" We don't want that. We could get rid of `markdownError`, but it doesn't work
+" in a title, and it would cause other syntax rules to start an italic section
+" on some `_` chars.
+"
+" We could also add a syntax group, linked to no HG:
+"
+"         syntax match markdownIgnore '\w_\w'
+"
+" But again, it doesn't work in titles.
+"
+" Solution:
+" }}}
+hi link markdownError                     Normal
+" Source: {{{
+"
+"     http://stackoverflow.com/a/19137899
+"
+" FIXME:
+"
+" Also, read this:
+"     https://github.com/tpope/vim-markdown/issues/85#issuecomment-149206804
+"
+" What is an inline code block? How to write one? `inline code block`
+" Would this get rid of ugly red on underscores?
+" If so, can we conceal the backticks?
+" If yes, then link back `markdownError` to `Error`, and conceal backticks.
+" If no, how to get rid of `markdownError` entirely, without any side-effect
+" (italic)?
+"}}}
 
-let b:current_syntax = "markdown"
+let b:current_syntax = 'markdown'
 if main_syntax ==# 'markdown'
   unlet main_syntax
 endif
-
-" vim:set sw=2:
