@@ -290,7 +290,7 @@ let &l:flp = '\v^\s*%(\d+[.)]|[-*+•])\s+'
 " Because you can't use a pattern inside 'com', only literal strings.
 " }}}
 
-" folding "{{{2
+" folding + conceal "{{{2
 " Why don't we set the folding options directly, instead of using an autocmd?{{{
 "
 " When we load a markdown buffer, the window-local options:
@@ -398,6 +398,7 @@ augroup my_markdown
                            \| let &l:fde = 'markdown#stacked()'
                            "                         │
                            "                         └─ Alternative: 'nested()'
+    au BufWinEnter <buffer> setl cole=2 cocu=nc
 augroup END
 
 " fp {{{2
@@ -453,7 +454,7 @@ let b:exchange_indent = ''
 let b:undo_ftplugin =          get(b:, 'undo_ftplugin', '')
 \                     . (empty(get(b:, 'undo_ftplugin', '')) ? '' : '|')
 \                     . "
-\                           setl ai< cms< com< fde< fdm< fdt< flp< fp< kp< spl< tw<
+\                           setl ai< cms< cocu< cole< com< fde< fdm< fdt< flp< fp< kp< spl< tw<
 \                         | unlet! b:cr_command b:exchange_indent
 \                         | exe 'au!  my_markdown * <buffer>'
 \                         | exe 'nunmap <buffer> [['

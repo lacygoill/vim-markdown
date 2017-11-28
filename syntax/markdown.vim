@@ -78,6 +78,10 @@ endif
 execute 'syn sync minlines=' . g:markdown_minlines
 syn case ignore
 
+" TODO:
+" revisit this line later: name of the group, regex, cchar
+syn match markdown_my_conceal '→.\{-}←' conceal cchar=↔ containedin=markdownCodeBlock
+
 syn match markdownValid '[<>]\c[a-z/$!]\@!'
 syn match markdownValid '&\%(#\=\w*;\)\@!'
 
