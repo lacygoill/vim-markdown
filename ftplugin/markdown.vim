@@ -460,5 +460,5 @@ let b:undo_ftplugin =          get(b:, 'undo_ftplugin', '')
 \                         | exe 'nunmap <buffer> [['
 \                         | exe 'nunmap <buffer> ]]'
 \                         | exe 'cuna   <buffer> foldtoggle'
-\                         | delcommand FoldToggle
+\                         | delc FoldToggle
 \                       "
