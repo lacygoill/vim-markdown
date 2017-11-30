@@ -33,7 +33,7 @@ endfu
 " disabled
 
 " fu! s:has_syntax_group(lnum) abort
-"     let syntax_groups = map(synstack(a:lnum, 1), 'synIDattr(v:val, "name")')
+"     let syntax_groups = map(synstack(a:lnum, 1), { k,v -> synIDattr(v, 'name') })
 "     for value in syntax_groups
 "         if value =~ '\vmarkdown%(Code|Highlight)'
 "             return 1

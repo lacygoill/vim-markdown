@@ -55,7 +55,7 @@ if !exists('g:markdown_fenced_languages')
   let g:markdown_fenced_languages = []
 endif
 let s:done_include = {}
-for s:type in map(copy(g:markdown_fenced_languages),'matchstr(v:val,"[^=]*$")')
+for s:type in map(copy(g:markdown_fenced_languages), { k,v -> matchstr(v, '[^=]*$') })
   if has_key(s:done_include, matchstr(s:type,'[^.]*'))
     continue
   endif
