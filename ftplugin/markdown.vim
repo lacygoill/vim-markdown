@@ -81,10 +81,10 @@ cnorea <expr> <buffer> foldtoggle  getcmdtype() ==# ':' && getcmdline() ==# 'fol
 
 " Mappings {{{1
 
-nno <buffer> <nowait> <silent> [[  :<c-u>let g:motion_to_repeat = '[['
+nno  <buffer><nowait><silent>  [[  :<c-u>let g:motion_to_repeat = '[['
                                    \<Bar> call myfuncs#sections_custom('^#\\|^=', 0)<cr>
 
-nno <buffer> <nowait> <silent> ]]  :<c-u>let g:motion_to_repeat = ']]'
+nno  <buffer><nowait><silent>  ]]  :<c-u>let g:motion_to_repeat = ']]'
                                    \<Bar> call myfuncs#sections_custom('^#\\|^=', 1)<cr>
 
 " Options {{{1
