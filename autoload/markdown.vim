@@ -1,8 +1,3 @@
-if exists('g:autoloaded_markdown')
-    finish
-endif
-let g:autoloaded_markdown = 1
-
 fu! markdown#fold_text() abort "{{{1
     let level  = s:heading_depth(v:foldstart)
     let indent = repeat(' ', (level-1)*3)
