@@ -73,7 +73,7 @@ runtime! ftplugin/html.vim ftplugin/html_*.vim ftplugin/html/*.vim
 
 " Commands {{{1
 
-com! -buffer FoldToggle call markdown#toggle_foldexpr()
+com! -buffer FoldToggle call fold#md#toggle_fde()
 
 cnorea <expr> <buffer> foldtoggle  getcmdtype() ==# ':' && getcmdline() ==# 'foldtoggle'
 \                                  ?    'FoldToggle'
