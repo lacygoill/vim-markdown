@@ -394,10 +394,10 @@ augroup my_markdown
     " And every time, the next `:au` re-installs a single instance of the needed autocmd.
 
     au BufWinEnter  <buffer>  setl fdm=expr
-                           \| let &l:fdt = 'markdown#fold_text()'
-                           \| let &l:fde = 'markdown#stacked()'
-                           "                         │
-                           "                         └─ Alternative: 'nested()'
+                           \| let &l:fdt = 'fold#text()'
+                           \| let &l:fde = 'fold#md#stacked()'
+                           "                        │
+                           "                        └─ Alternative: 'nested()'
     au BufWinEnter <buffer> setl cole=2 cocu=nc
 augroup END
 
