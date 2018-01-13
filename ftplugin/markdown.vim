@@ -81,10 +81,17 @@ cnorea <expr> <buffer> foldtoggle  getcmdtype() ==# ':' && getcmdline() ==# 'fol
 
 " Mappings {{{1
 
-if exists('*lg#motion#section#rhs')
-    noremap  <buffer><expr><nowait><silent>  [[  lg#motion#section#rhs(mode(1),0,'#')
-    noremap  <buffer><expr><nowait><silent>  ]]  lg#motion#section#rhs(mode(1),1,'#')
-endif
+" Don't put a guard around the mappings,{{{
+" to check the existence of `lg#motion#section#rhs()`.
+" Why?
+"
+" Because  of `b:undo_ftplugin`. If  the  function doesn't  exist, the  mappings
+" won't be installed.  But the teardown  will still try to remove them. So, when
+" you'll reload  a markdown  buffer, or  change its filetype,  it will  raise an
+" error.
+"}}}
+noremap  <buffer><expr><nowait><silent>  [[  lg#motion#section#rhs(mode(1),0,'#')
+noremap  <buffer><expr><nowait><silent>  ]]  lg#motion#section#rhs(mode(1),1,'#')
 
 if exists('*lg#motion#main#make_repeatable')
     call lg#motion#main#make_repeatable({
