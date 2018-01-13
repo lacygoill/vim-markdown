@@ -93,13 +93,13 @@ cnorea <expr> <buffer> foldtoggle  getcmdtype() ==# ':' && getcmdline() ==# 'fol
 noremap  <buffer><expr><nowait><silent>  [[  lg#motion#section#rhs(mode(1),0,'#')
 noremap  <buffer><expr><nowait><silent>  ]]  lg#motion#section#rhs(mode(1),1,'#')
 
-if exists('*lg#motion#main#make_repeatable')
+try
     call lg#motion#main#make_repeatable({
     \        'mode': '',
     \        'buffer': 1,
     \        'motions': [{'bwd': '[[',  'fwd': ']]',  'axis': 1 }]
     \ })
-endif
+endtry
 
 " Options {{{1
 " ai {{{2
