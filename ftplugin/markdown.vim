@@ -99,6 +99,8 @@ try
     \        'buffer': 1,
     \        'motions': [{'bwd': '[[',  'fwd': ']]',  'axis': 1 }]
     \ })
+catch
+    call lg#catch_error()
 endtry
 
 " Options {{{1
