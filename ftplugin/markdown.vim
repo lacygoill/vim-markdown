@@ -100,7 +100,7 @@ try
     \        'motions': [{'bwd': '[[',  'fwd': ']]',  'axis': 1 }]
     \ })
 catch
-    call lg#catch_error()
+    unsilent call lg#catch_error()
 endtry
 
 " Options {{{1
