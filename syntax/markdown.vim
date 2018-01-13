@@ -36,6 +36,13 @@
 " read and take inspiration from:
 "         https://github.com/vim-pandoc/vim-pandoc-syntax
 "         http://pandoc.org/MANUAL.html#pandocs-markdown
+"
+" TODO:
+" Learn how to conceal a url:
+"
+"     [some_text](some_url)
+"     →
+"     some_text
 
 if !exists('main_syntax')
   let main_syntax = 'markdown'

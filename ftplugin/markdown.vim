@@ -81,11 +81,15 @@ cnorea <expr> <buffer> foldtoggle  getcmdtype() ==# ':' && getcmdline() ==# 'fol
 
 " Mappings {{{1
 
-nno  <buffer><nowait><silent>  [[  :<c-u>let g:motion_to_repeat = '[['
-                                   \<Bar> call myfuncs#sections_custom('^#\\|^=', 0)<cr>
+noremap  <buffer><expr><nowait><silent>  [[  lg#motion#section#rhs(mode(1),0,'#')
+noremap  <buffer><expr><nowait><silent>  ]]  lg#motion#section#rhs(mode(1),1,'#')
 
-nno  <buffer><nowait><silent>  ]]  :<c-u>let g:motion_to_repeat = ']]'
-                                   \<Bar> call myfuncs#sections_custom('^#\\|^=', 1)<cr>
+call lg#motion#main#make_repeatable(
+\                     { 'mode': '',
+\                       'buffer': 1,
+\                       'motions': [
+\                                    {'bwd': '[[',  'fwd': ']]',  'axis': 1 },
+\                                  ]})
 
 " Options {{{1
 " ai {{{2
@@ -457,8 +461,8 @@ let b:undo_ftplugin =          get(b:, 'undo_ftplugin', '')
 \                           setl ai< cms< cocu< cole< com< fde< fdm< fdt< flp< fp< kp< spl< tw<
 \                         | unlet! b:cr_command b:exchange_indent
 \                         | exe 'au!  my_markdown * <buffer>'
-\                         | exe 'nunmap <buffer> [['
-\                         | exe 'nunmap <buffer> ]]'
+\                         | exe 'unmap <buffer> [['
+\                         | exe 'unmap <buffer> ]]'
 \                         | exe 'cuna   <buffer> foldtoggle'
 \                         | delc FoldToggle
 \                       "
