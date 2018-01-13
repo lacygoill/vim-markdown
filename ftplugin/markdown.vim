@@ -81,8 +81,10 @@ cnorea <expr> <buffer> foldtoggle  getcmdtype() ==# ':' && getcmdline() ==# 'fol
 
 " Mappings {{{1
 
-noremap  <buffer><expr><nowait><silent>  [[  lg#motion#section#rhs(mode(1),0,'#')
-noremap  <buffer><expr><nowait><silent>  ]]  lg#motion#section#rhs(mode(1),1,'#')
+if exists('*lg#motion#section#rhs')
+    noremap  <buffer><expr><nowait><silent>  [[  lg#motion#section#rhs(mode(1),0,'#')
+    noremap  <buffer><expr><nowait><silent>  ]]  lg#motion#section#rhs(mode(1),1,'#')
+endif
 
 if exists('*lg#motion#main#make_repeatable')
     call lg#motion#main#make_repeatable({
