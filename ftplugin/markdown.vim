@@ -100,6 +100,8 @@ try
     \        'motions': [{'bwd': '[[',  'fwd': ']]',  'axis': 1 }]
     \ })
 catch
+    " We use  `:unsilent` because a  filetype plugin is sourced  silently, which
+    " here prevents any message from being echo'ed.
     unsilent call lg#catch_error()
 endtry
 
