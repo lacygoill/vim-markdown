@@ -90,8 +90,8 @@ cnorea <expr> <buffer> foldtoggle  getcmdtype() ==# ':' && getcmdline() ==# 'fol
 " you'll reload  a markdown  buffer, or  change its filetype,  it will  raise an
 " error.
 "}}}
-noremap  <buffer><expr><nowait><silent>  [[  lg#motion#section#rhs(mode(1),0,'#')
-noremap  <buffer><expr><nowait><silent>  ]]  lg#motion#section#rhs(mode(1),1,'#')
+noremap  <buffer><expr><nowait><silent>  [[  lg#motion#section#rhs(0,'#')
+noremap  <buffer><expr><nowait><silent>  ]]  lg#motion#section#rhs(1,'#')
 
 try
     call lg#motion#main#make_repeatable({
