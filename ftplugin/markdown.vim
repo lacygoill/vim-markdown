@@ -93,17 +93,13 @@ cnorea <expr> <buffer> foldtoggle  getcmdtype() ==# ':' && getcmdline() ==# 'fol
 noremap  <buffer><expr><nowait><silent>  [[  lg#motion#section#rhs(0,'#')
 noremap  <buffer><expr><nowait><silent>  ]]  lg#motion#section#rhs(1,'#')
 
-try
+if has_key(get(g:, 'plugs', {}), 'vim-lg-lib')
     call lg#motion#main#make_repeatable({
     \        'mode': '',
     \        'buffer': 1,
     \        'motions': [{'bwd': '[[',  'fwd': ']]',  'axis': 1 }]
     \ })
-catch
-    " We use  `:unsilent` because a  filetype plugin is sourced  silently, which
-    " here prevents any message from being echo'ed.
-    unsilent call lg#catch_error()
-endtry
+endif
 
 " Options {{{1
 " ai {{{2
