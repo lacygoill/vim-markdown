@@ -94,7 +94,7 @@ noremap  <buffer><expr><nowait><silent>  [[  lg#motion#section#rhs('#',0)
 noremap  <buffer><expr><nowait><silent>  ]]  lg#motion#section#rhs('#',1)
 
 if has_key(get(g:, 'plugs', {}), 'vim-lg-lib')
-    call lg#motion#main#make_repeatable({
+    call lg#motion#repeatable#main#make_repeatable({
     \        'mode':    '',
     \        'buffer':  1,
     \        'from':    expand('<sfile>:p').':'.expand('<slnum>'),
