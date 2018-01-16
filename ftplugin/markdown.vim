@@ -82,7 +82,7 @@ cnorea <expr> <buffer> foldtoggle  getcmdtype() ==# ':' && getcmdline() ==# 'fol
 " Mappings {{{1
 
 " Don't put a guard around the mappings,{{{
-" to check the existence of `lg#motion#section#rhs()`.
+" to check the existence of `lg#motion#regex#rhs()`.
 " Why?
 "
 " Because  of `b:undo_ftplugin`. If  the  function doesn't  exist, the  mappings
@@ -90,8 +90,8 @@ cnorea <expr> <buffer> foldtoggle  getcmdtype() ==# ':' && getcmdline() ==# 'fol
 " you'll reload  a markdown  buffer, or  change its filetype,  it will  raise an
 " error.
 "}}}
-noremap  <buffer><expr><nowait><silent>  [[  lg#motion#section#rhs('#',0)
-noremap  <buffer><expr><nowait><silent>  ]]  lg#motion#section#rhs('#',1)
+noremap  <buffer><expr><nowait><silent>  [[  lg#motion#regex#rhs('#',0)
+noremap  <buffer><expr><nowait><silent>  ]]  lg#motion#regex#rhs('#',1)
 
 if has_key(get(g:, 'plugs', {}), 'vim-lg-lib')
     call lg#motion#repeatable#main#make_repeatable({
