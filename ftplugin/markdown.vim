@@ -206,7 +206,7 @@ setl com=fbn:•,fbn:-,fb:*,fb:+
 "
 " It's useful  to let Vim know  that 2 comment leaders  can be nested. Otherwise
 " `gw` won't set the proper indentation level for all the lines.
-" Watch:
+" MWE:
 "     • - some very long comment some very long comment some very long comment some very long comment
 "
 " Without `n`:
