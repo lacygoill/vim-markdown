@@ -98,7 +98,7 @@ if has_key(get(g:, 'plugs', {}), 'vim-lg-lib') && !exists('b:repeatable_motions'
     \        'mode':    '',
     \        'buffer':  1,
     \        'from':    expand('<sfile>:p').':'.expand('<slnum>'),
-    \        'motions': [{'bwd': '[[',  'fwd': ']]',  'axis': 1 }]
+    \        'motions': [{'bwd': '[[',  'fwd': ']]',  'space': 1 }]
     \ })
 endif
 
