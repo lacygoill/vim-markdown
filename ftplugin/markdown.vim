@@ -94,7 +94,7 @@ noremap  <buffer><expr><nowait><silent>  [[  lg#motion#regex#rhs('#',0)
 noremap  <buffer><expr><nowait><silent>  ]]  lg#motion#regex#rhs('#',1)
 
 if has_key(get(g:, 'plugs', {}), 'vim-lg-lib') && !exists('b:repeatable_motions')
-    call lg#motion#repeatable#main#make({
+    call lg#motion#repeatable#make#all({
     \        'mode':   '',
     \        'buffer': 1,
     \        'axis':   {'bwd': ',', 'fwd': ';'},
