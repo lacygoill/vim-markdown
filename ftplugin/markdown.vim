@@ -443,10 +443,7 @@ setl spl=fr
 
 " tw {{{2
 
-" By default, 'tw'  has the value 0. Because  of this, if we use  `gw` to format
-" some lines, they are limited to 80 characters, which I find too short.
-" So, we set 'tw' to 100, so that `gw` format longer lines.
-setl tw=100
+setl tw=80
 
 " Variables {{{1
 
