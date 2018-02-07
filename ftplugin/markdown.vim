@@ -417,10 +417,12 @@ augroup my_markdown
     au BufWinEnter <buffer> setl cole=2 cocu=nc
 augroup END
 
-" fp {{{2
-"
+" fp  tw {{{2
+
+setl tw=80
+
 " We want `gq` to use par in a markdown buffer.
-setl fp=par\ -w100rjeq
+let &l:fp = 'par -w'.&l:tw.'rjeq'
 
 " kp "{{{2
 
@@ -440,10 +442,6 @@ endif
 " language, but when we would enable 'spell', we would have this warning:
 "         Warning: region fr not supported
 setl spl=fr
-
-" tw {{{2
-
-setl tw=80
 
 " Variables {{{1
 

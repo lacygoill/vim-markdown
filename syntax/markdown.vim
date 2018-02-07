@@ -55,6 +55,9 @@
 " includes `markdownLink` and `markdownLinkText`:
 "
 "         contains=@Spell,markdownLink,markdownLinkText
+"
+" Atm,  I  don't  do  it  because  it would  wrongly  conceal  any  text  inside
+" parentheses in a block of code.
 
 
 if !exists('main_syntax')
@@ -123,9 +126,7 @@ syn region markdownH5 matchgroup=markdownH5Delimiter start="######\@!"  end="#*\
 syn region markdownH6 matchgroup=markdownH6Delimiter start="#######\@!" end="#*\s*$" keepend oneline contains=@markdownInline,markdownAutomaticLink contained
 syn match markdownBlockquote ">\%(\s\|$\)" contained nextgroup=@markdownBlock
 
-"                                           hide a link even in a block of code ┐
-"                                                                               ├───────────────────────────┐
-syn region markdownCodeBlock start="    \|\t" end="$" contained contains=@Spell,markdownLink,markdownLinkText
+syn region markdownCodeBlock start="    \|\t" end="$" contained contains=@Spell
 "                                                                         │
 " When we enable 'spell', errors aren't highlighted inside a code block.  ┘
 " So we add the @Spell cluster. See `:h spell-syntax`
