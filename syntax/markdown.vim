@@ -43,6 +43,19 @@
 "     [some_text](some_url)
 "     →
 "     some_text
+"
+" Update:
+" Add the argument:
+"
+"     • `conceal`     to `syn region markdownLink`     (to hide the url)
+"     • `concealends` to `syn region markdownLinkText` (to hide [] surrounding the url)
+"
+" Also, if you  want the link to be  concealed even in a block of  code, in `syn
+" region markdownCodeBlock`,  tweak the  argument `contains`  so that  its value
+" includes `markdownLink` and `markdownLinkText`:
+"
+"         contains=@Spell,markdownLink,markdownLinkText
+
 
 if !exists('main_syntax')
   let main_syntax = 'markdown'
@@ -108,10 +121,11 @@ syn region markdownH3 matchgroup=markdownH3Delimiter start="####\@!"    end="#*\
 syn region markdownH4 matchgroup=markdownH4Delimiter start="#####\@!"   end="#*\s*$" keepend oneline contains=@markdownInline,markdownAutomaticLink contained
 syn region markdownH5 matchgroup=markdownH5Delimiter start="######\@!"  end="#*\s*$" keepend oneline contains=@markdownInline,markdownAutomaticLink contained
 syn region markdownH6 matchgroup=markdownH6Delimiter start="#######\@!" end="#*\s*$" keepend oneline contains=@markdownInline,markdownAutomaticLink contained
-
 syn match markdownBlockquote ">\%(\s\|$\)" contained nextgroup=@markdownBlock
 
-syn region markdownCodeBlock start="    \|\t" end="$" contained contains=@Spell
+"                                           hide a link even in a block of code ┐
+"                                                                               ├───────────────────────────┐
+syn region markdownCodeBlock start="    \|\t" end="$" contained contains=@Spell,markdownLink,markdownLinkText
 "                                                                         │
 " When we enable 'spell', errors aren't highlighted inside a code block.  ┘
 " So we add the @Spell cluster. See `:h spell-syntax`
@@ -132,8 +146,10 @@ syn region markdownUrlTitle matchgroup=markdownUrlTitleDelimiter start=+"+ end=+
 syn region markdownUrlTitle matchgroup=markdownUrlTitleDelimiter start=+'+ end=+'+ keepend contained
 syn region markdownUrlTitle matchgroup=markdownUrlTitleDelimiter start=+(+ end=+)+ keepend contained
 
-syn region markdownLinkText matchgroup=markdownLinkTextDelimiter start="!\=\[\%(\_[^]]*]\%( \=[[(]\)\)\@=" end="\]\%( \=[[(]\)\@=" nextgroup=markdownLink,markdownId skipwhite contains=@markdownInline,markdownLineStart
-syn region markdownLink matchgroup=markdownLinkDelimiter start="(" end=")" contains=markdownUrl keepend contained
+" `concealends` is custom (not in original plugin).
+syn region markdownLinkText matchgroup=markdownLinkTextDelimiter start="!\=\[\%(\_[^]]*]\%( \=[[(]\)\)\@=" end="\]\%( \=[[(]\)\@=" nextgroup=markdownLink,markdownId skipwhite contains=@markdownInline,markdownLineStart concealends
+" `conceal` is custom (not in original plugin).
+syn region markdownLink matchgroup=markdownLinkDelimiter start="(" end=")" contains=markdownUrl keepend contained conceal
 syn region markdownId matchgroup=markdownIdDelimiter start="\[" end="\]" keepend contained
 syn region markdownAutomaticLink matchgroup=markdownUrlDelimiter start="<\%(\w\+:\|[[:alnum:]_+-]\+@\)\@=" end=">" keepend oneline
 
@@ -196,7 +212,12 @@ hi def link markdownRule                  PreProc
 hi def link markdownFootnote              Typedef
 hi def link markdownFootnoteDefinition    Typedef
 
-hi def link markdownLinkText              Underlined
+" TODO:
+" Originally, it was linked to `Underlined`, but in my current colorscheme,
+" it's pink and underlined: too noisy.
+" Create your own  HG for links, because I'm not  sure `Conditional` will always
+" be a good choice if you change your colorscheme.
+hi def link markdownLinkText              Conditional
 hi def link markdownIdDeclaration         Typedef
 hi def link markdownId                    Type
 hi def link markdownAutomaticLink         markdownUrl
