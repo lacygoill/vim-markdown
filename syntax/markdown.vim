@@ -48,7 +48,8 @@
 " Add the argument:
 "
 "     • `conceal`     to `syn region markdownLink`     (to hide the url)
-"     • `concealends` to `syn region markdownLinkText` (to hide [] surrounding the url)
+"     • `concealends` to `syn region markdownLinkText` (to hide [] surrounding
+"                                                       the text describing the url)
 "
 " Also, if you  want the link to be  concealed even in a block of  code, in `syn
 " region markdownCodeBlock`,  tweak the  argument `contains`  so that  its value
