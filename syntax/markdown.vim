@@ -59,6 +59,11 @@
 "
 " Atm,  I  don't  do  it  because  it would  wrongly  conceal  any  text  inside
 " parentheses in a block of code.
+" Maybe we need to tweak the definition of `markdownLink` so that it checks that
+" there is a description of the link just before:  [description](link).
+"                                                   ^^^^^^^^^^^
+"                                                   if there's NOT a description
+"                                                   don't conceal the link
 
 
 if !exists('main_syntax')
