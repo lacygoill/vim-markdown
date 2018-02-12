@@ -164,7 +164,7 @@ syn region markdownAutomaticLink matchgroup=markdownUrlDelimiter start="<\%(\w\+
 "         let g:markdown_syntax_conceal = 0
 
 let s:concealends = ''
-if has('conceal') && get(g:, 'markdown_syntax_conceal', 1) == 1
+if has('conceal') && get(g:, 'markdown_syntax_conceal', 1) ==# 1
   let s:concealends = ' concealends'
 endif
 exe 'syn region markdownItalic matchgroup=markdownItalicDelimiter start="\S\@<=\*\|\*\S\@=" end="\S\@<=\*\|\*\S\@=" keepend contains=markdownLineStart,@Spell' . s:concealends
