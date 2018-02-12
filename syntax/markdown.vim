@@ -181,7 +181,7 @@ syn region markdownCode matchgroup=markdownCodeDelimiter start="^\s*````*.*$" en
 syn match markdownFootnote "\[^[^\]]\+\]"
 syn match markdownFootnoteDefinition "^\[^[^\]]\+\]:"
 
-if main_syntax ==# 'markdown'
+if main_syntax is# 'markdown'
   let s:done_include = {}
   for s:type in g:markdown_fenced_languages
     if has_key(s:done_include, matchstr(s:type,'[^.]*'))
@@ -278,6 +278,6 @@ hi link markdownError                     Normal
 "}}}
 
 let b:current_syntax = 'markdown'
-if main_syntax ==# 'markdown'
+if main_syntax is# 'markdown'
   unlet main_syntax
 endif
