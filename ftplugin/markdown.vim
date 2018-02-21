@@ -438,10 +438,7 @@ endif
 
 " spl "{{{2
 
-" We could use the  value `fr_fr`, which Vim calls a  “region“ of the french
-" language, but when we would enable 'spell', we would have this warning:
-"         Warning: region fr not supported
-setl spl=fr
+setl spl=en
 
 " Variables {{{1
 
