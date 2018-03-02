@@ -424,10 +424,6 @@ setl tw=80
 " We want `gq` to use par in a markdown buffer.
 let &l:fp = 'par -w'.&l:tw.'rjeq'
 
-" inc {{{2
-
-let &l:inc = '^\s*<!--\s*include'
-
 " kp "{{{2
 
 " In our HTML plugin (~/.vim/after/ftplugin/html.vim), we've set up the web
