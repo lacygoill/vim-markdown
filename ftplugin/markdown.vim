@@ -264,7 +264,7 @@ let &l:flp = '\v^\s*%(\d+[.)]|[-*+•])\s+'
 "
 " Also, you have to add an extra backslash for every pipe character
 " (alternation), because one is removed by Vim to toggle its special meaning
-" (command termination).
+" (command separator).
 "
 " So:    2 backslashes for metacharacters (atoms, quantifiers, …)
 "        3 backslashes for pipes
