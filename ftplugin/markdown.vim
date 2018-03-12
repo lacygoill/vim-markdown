@@ -71,6 +71,28 @@ runtime! ftplugin/html.vim ftplugin/html_*.vim ftplugin/html/*.vim
 " TODO:
 " Create a plugin, and move the functions in `autoload/`.
 
+" TODO:
+" Study this plugin.
+"
+"     https://github.com/vim-pandoc/vim-rmarkdown
+"     https://rmarkdown.rstudio.com/lesson-1.html
+"     https://rmarkdown.rstudio.com/authoring_pandoc_markdown.html#philosophy
+"
+" And maybe these ones:
+"
+"     https://github.com/jalvesaq/Nvim-R
+"     https://github.com/gaalcaras/ncm-R
+"
+" You may need to read these 2 books:
+"
+"     https://www.amazon.com/Dynamic-Documents-knitr-Second-Chapman/dp/1498716962/
+"     https://www.amazon.com/Data-Science-Transform-Visualize-Model/dp/1491910399/
+"
+" We've already downloaded them.
+"
+" Also read this:
+" https://medium.freecodecamp.org/turning-vim-into-an-r-ide-cd9602e8c217
+
 " Commands {{{1
 
 com! -buffer FoldToggle call fold#md#toggle_fde()
