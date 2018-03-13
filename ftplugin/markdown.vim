@@ -452,7 +452,7 @@ let &l:fp = 'par -w'.&l:tw.'rjeq'
 " browser to look for the word under the cursor when we hit K.
 " But, in a markdown buffer, we prefer `:Man` or `:help`.
 
-if expand('%:p') =~# 'cheat/vim$'
+if expand('%:p') =~# 'wiki/vim'
     setl kp=:help
 else
     setl kp=:Man
