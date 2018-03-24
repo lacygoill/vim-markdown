@@ -177,6 +177,15 @@ exe 'syn region markdownBoldItalic matchgroup=markdownBoldItalicDelimiter start=
 syn region markdownCode matchgroup=markdownCodeDelimiter start="`" end="`" keepend contains=markdownLineStart
 syn region markdownCode matchgroup=markdownCodeDelimiter start="`` \=" end=" \=``" keepend contains=markdownLineStart
 syn region markdownCode matchgroup=markdownCodeDelimiter start="^\s*````*.*$" end="^\s*````*\ze\s*$" keepend
+" Why?{{{
+"
+" It allows us to conceal backticks when they are followed by quotes:
+"
+"       `'option'`    →     'option'
+"
+" It reduces noise.
+"}}}
+syn region markdownBacktickThenQuotes matchgroup=Comment start=/`\ze['"]/ end=/['"]\zs`/ oneline concealends containedin=markdownCode,markdownCodeDelimiter
 
 syn match markdownFootnote "\[^[^\]]\+\]"
 syn match markdownFootnoteDefinition "^\[^[^\]]\+\]:"
@@ -281,3 +290,4 @@ let b:current_syntax = 'markdown'
 if main_syntax is# 'markdown'
   unlet main_syntax
 endif
+
