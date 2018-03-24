@@ -185,7 +185,7 @@ syn region markdownCode matchgroup=markdownCodeDelimiter start="^\s*````*.*$" en
 "
 " It reduces noise.
 "}}}
-syn region markdownBacktickThenQuotes matchgroup=Comment start=/`\ze['"]/ end=/['"]\zs`/ oneline concealends containedin=markdownCode,markdownCodeDelimiter
+syn region markdownBacktickThenQuotes matchgroup=Comment start=/`\ze['"]\S\+['"]`/ end=/['"]\S\+['"]\zs`/ oneline concealends containedin=markdownCode,markdownCodeDelimiter
 
 syn match markdownFootnote "\[^[^\]]\+\]"
 syn match markdownFootnoteDefinition "^\[^[^\]]\+\]:"
