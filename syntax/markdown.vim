@@ -109,7 +109,7 @@ syn case ignore
 
 " TODO:
 " revisit this line later: name of the group, regex, cchar
-syn match markdown_my_conceal '↣\_.\{-}↢' conceal cchar=↔ containedin=markdownCodeBlock
+syn match markdown_my_conceal '\%(↣\)\@<=\_.\{-}↢' conceal containedin=markdownCodeBlock
 
 syn match markdownValid '[<>]\c[a-z/$!]\@!'
 syn match markdownValid '&\%(#\=\w*;\)\@!'
