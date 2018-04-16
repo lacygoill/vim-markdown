@@ -109,7 +109,14 @@ syn case ignore
 
 " TODO:
 " revisit this line later: name of the group, regex, cchar
-syn match markdown_my_conceal '\%(↣\)\@<=\_.\{-}↢' conceal cchar=? containedin=markdownCodeBlock
+" Why two syntax items, instead of one?{{{
+"
+" If the concealed text is multi-line, Vim displays the cchar character once per
+" line.
+" I prefer to see it only once at the beginning of the text.
+"}}}
+syn match markdown_my_conceal_1 '↣' conceal cchar=? containedin=markdownCodeBlock
+syn match markdown_my_conceal_2 '\%(↣\)\@<=\_.\{-}↢' conceal containedin=markdownCodeBlock
 
 syn match markdownValid '[<>]\c[a-z/$!]\@!'
 syn match markdownValid '&\%(#\=\w*;\)\@!'
