@@ -117,6 +117,12 @@ syn case ignore
 "}}}
 syn match markdown_my_conceal_1 '↣' conceal cchar=? containedin=markdownCodeBlock
 syn match markdown_my_conceal_2 '\%(↣\)\@<=\_.\{-}↢' conceal containedin=markdownCodeBlock
+" Why?{{{
+"
+" Sometimes we need to separate some blocks of VimL code in our notes.
+" But we still want to be able to source them with a simple `+sip`.
+" So we separate them with empty commented lines.
+"}}}
 syn match markdown_my_conceal_3 '^\s*"$' conceal containedin=markdownCodeBlock
 
 syn match markdownValid '[<>]\c[a-z/$!]\@!'
