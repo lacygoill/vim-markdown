@@ -117,6 +117,7 @@ syn case ignore
 "}}}
 syn match markdown_my_conceal_1 '↣' conceal cchar=? containedin=markdownCodeBlock
 syn match markdown_my_conceal_2 '\%(↣\)\@<=\_.\{-}↢' conceal containedin=markdownCodeBlock
+syn match markdown_my_conceal_3 '^\s*"$' conceal containedin=markdownCodeBlock
 
 syn match markdownValid '[<>]\c[a-z/$!]\@!'
 syn match markdownValid '&\%(#\=\w*;\)\@!'
