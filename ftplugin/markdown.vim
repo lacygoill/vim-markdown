@@ -104,7 +104,7 @@ cnorea <expr> <buffer> foldtoggle  getcmdtype() is# ':' && getcmdline() is# 'fol
 com! -buffer -range=%  FoldSortBySize  exe fold#md#sort_by_size(<line1>,<line2>)
 
 cnorea  <buffer><expr>  foldsortbysize  getcmdtype() is# ':' && getcmdline() is# 'foldsortbysize'
-\                                       ?    'FoldSortBysize'
+\                                       ?    'FoldSortBySize'
 \                                       :    'foldsortbysize'
 
 " Mappings {{{1
