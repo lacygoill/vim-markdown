@@ -101,6 +101,12 @@ cnorea <expr> <buffer> foldtoggle  getcmdtype() is# ':' && getcmdline() is# 'fol
 \                                  ?    'FoldToggle'
 \                                  :    'foldtoggle'
 
+com! -buffer -range=%  FoldSortBySize  exe fold#md#sort_by_size(<line1>,<line2>)
+
+cnorea  <buffer><expr>  foldsortbysize  getcmdtype() is# ':' && getcmdline() is# 'foldsortbysize'
+\                                       ?    'FoldSortBysize'
+\                                       :    'foldsortbysize'
+
 " Mappings {{{1
 
 " Don't put a guard around the mappings,{{{
@@ -489,6 +495,8 @@ let b:undo_ftplugin =          get(b:, 'undo_ftplugin', '')
 \                         | exe 'au!  my_markdown * <buffer>'
 \                         | exe 'unmap <buffer> [['
 \                         | exe 'unmap <buffer> ]]'
+\                         | exe 'cuna   <buffer> foldsortbysize'
 \                         | exe 'cuna   <buffer> foldtoggle'
+\                         | delc FoldSortBysize
 \                         | delc FoldToggle
 \                       "
