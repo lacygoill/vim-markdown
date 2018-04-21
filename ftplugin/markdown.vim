@@ -497,6 +497,6 @@ let b:undo_ftplugin =          get(b:, 'undo_ftplugin', '')
 \                         | exe 'unmap <buffer> ]]'
 \                         | exe 'cuna   <buffer> foldsortbysize'
 \                         | exe 'cuna   <buffer> foldtoggle'
-\                         | delc FoldSortBysize
+\                         | delc FoldSortBySize
 \                         | delc FoldToggle
 \                       "
