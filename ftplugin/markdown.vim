@@ -437,7 +437,8 @@ augroup my_markdown
     " When we load B, this will only remove autocmds for the pattern `<buffer=4>`.
     " And every time, the next `:au` re-installs a single instance of the needed autocmd.
 
-    au BufWinEnter  <buffer>  setl fdm=expr
+    au BufWinEnter  <buffer>  setl fml=0
+                           \| setl fdm=expr
                            \| setl fdt=fold#text()
                            \| setl fde=fold#md#stacked()
                            "                   │
@@ -490,7 +491,7 @@ let b:exchange_indent = ''
 let b:undo_ftplugin =          get(b:, 'undo_ftplugin', '')
 \                     . (empty(get(b:, 'undo_ftplugin', '')) ? '' : '|')
 \                     . "
-\                           setl ai< cms< cocu< cole< com< fde< fdm< fdt< flp< fp< kp< spl< tw<
+\                           setl ai< cms< cocu< cole< com< fde< fdm< fdt< flp< fml< fp< kp< spl< tw<
 \                         | unlet! b:cr_command b:exchange_indent
 \                         | exe 'au!  my_markdown * <buffer>'
 \                         | exe 'unmap <buffer> [['
