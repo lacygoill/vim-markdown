@@ -69,9 +69,6 @@ runtime! ftplugin/html.vim ftplugin/html_*.vim ftplugin/html/*.vim
 " We could read the latter in firefox.
 
 " TODO:
-" Create a plugin, and move the functions in `autoload/`.
-
-" TODO:
 " Study this plugin.
 "
 "     https://github.com/vim-pandoc/vim-rmarkdown
