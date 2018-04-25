@@ -487,7 +487,7 @@ let b:cr_command = 'norm! 100|'
 let b:exchange_indent = ''
 
 " Let us conceal the answer to a question with by pressing `sa {text-object} c`.
-sil! let b:sandwich_recipes =  deepcopy(g:sandwich#default_recipes)
+sil! let b:sandwich_recipes =  deepcopy(g:sandwich#recipes)
 \  + [ {'buns':    ['↣ ', ' ↢'],
 \       'input':   ['c'],
 \       'command': ["']mark z",
