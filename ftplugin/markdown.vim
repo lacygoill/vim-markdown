@@ -486,13 +486,22 @@ let b:cr_command = 'norm! 100|'
 
 let b:exchange_indent = ''
 
+" Let us conceal the answer to a question with by pressing `sa {text-object} c`.
+sil! let b:sandwich_recipes =  deepcopy(g:sandwich#default_recipes)
+\  + [ {'buns':    ['↣ ', ' ↢'],
+\       'input':   ['c'],
+\       'command': ["']mark z",
+\                   "keepj keepp '[s/^\\s*↣\\s*$/↣/e",
+\                   "keepj keepp 'zs/^\\s*↢\\s*$/↢/e"]}
+\ ]
+
 " Teardown {{{1
 
 let b:undo_ftplugin =          get(b:, 'undo_ftplugin', '')
 \                     . (empty(get(b:, 'undo_ftplugin', '')) ? '' : '|')
 \                     . "
 \                           setl ai< cms< cocu< cole< com< fde< fdm< fdt< flp< fml< fp< kp< spl< tw<
-\                         | unlet! b:cr_command b:exchange_indent
+\                         | unlet! b:cr_command b:exchange_indent b:sandwich_recipes
 \                         | exe 'au!  my_markdown * <buffer>'
 \                         | exe 'unmap <buffer> [['
 \                         | exe 'unmap <buffer> ]]'

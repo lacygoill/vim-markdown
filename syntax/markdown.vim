@@ -107,28 +107,23 @@ endif
 execute 'syn sync minlines=' . g:markdown_minlines
 syn case ignore
 
-" TODO:
-" revisit this line later: name of the group, regex, cchar
-" Why two syntax items, instead of one?{{{
-"
-" If the concealed text is multi-line, Vim displays the cchar character once per
-" line.
-" I prefer to see it only once at the beginning of the text.
-"}}}
-syn match markdown_my_conceal_1 '↣' conceal cchar=? containedin=markdownCodeBlock
-syn match markdown_my_conceal_2 '\%(↣\)\@<=\_.\{-}↢' conceal containedin=markdownCodeBlock
 " Why?{{{
 "
 " Sometimes we need to separate some blocks of VimL code in our notes.
 " But we still want to be able to source them with a simple `+sip`.
 " So we separate them with empty commented lines.
 "}}}
-syn match markdown_my_conceal_3 '^\s*"$' conceal containedin=markdownCodeBlock
+syn match markdown_hide_VimL_separations '^\s*"$' conceal containedin=markdownCodeBlock
 
 syn match markdownValid '[<>]\c[a-z/$!]\@!'
 syn match markdownValid '&\%(#\=\w*;\)\@!'
 
 syn match markdownLineStart "^[<@]\@!" nextgroup=@markdownBlock,htmlSpecialChar
+
+" FIXME:
+" Why does this line need to be after the `markdownLineStart` item?
+syn region markdown_hide_answers start='^↣$' end='^↢$' conceal cchar=? containedin=markdownCodeBlock
+syn match markdown_hide_answers '↣.\{-}↢' conceal cchar=? containedin=markdownCodeBlock
 
 syn cluster markdownBlock contains=markdownH1,markdownH2,markdownH3,markdownH4,markdownH5,markdownH6,markdownBlockquote,markdownListMarker,markdownOrderedListMarker,markdownCodeBlock,markdownRule
 syn cluster markdownInline contains=markdownLineBreak,markdownLinkText,markdownItalic,markdownBold,markdownCode,markdownEscape,@htmlTop,markdownError
@@ -304,4 +299,3 @@ let b:current_syntax = 'markdown'
 if main_syntax is# 'markdown'
   unlet main_syntax
 endif
-
