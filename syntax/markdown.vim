@@ -122,7 +122,7 @@ syn match markdownLineStart "^[<@]\@!" nextgroup=@markdownBlock,htmlSpecialChar
 
 " FIXME:
 " Why does this line need to be after the `markdownLineStart` item?
-syn region markdown_hide_answers start='^↣$' end='^↢$' conceal cchar=? containedin=markdownCodeBlock
+syn region markdown_hide_answers start='^↣' end='^↢.*' conceal cchar=? containedin=markdownCodeBlock
 syn match markdown_hide_answers '↣.\{-}↢' conceal cchar=? containedin=markdownCodeBlock
 
 syn cluster markdownBlock contains=markdownH1,markdownH2,markdownH3,markdownH4,markdownH5,markdownH6,markdownBlockquote,markdownListMarker,markdownOrderedListMarker,markdownCodeBlock,markdownRule
