@@ -92,12 +92,6 @@ runtime! ftplugin/html.vim ftplugin/html_*.vim ftplugin/html/*.vim
 
 " Commands {{{1
 
-com! -buffer FoldToggle call fold#md#toggle_fde()
-
-cnorea <expr> <buffer> foldtoggle  getcmdtype() is# ':' && getcmdline() is# 'foldtoggle'
-\                                  ?    'FoldToggle'
-\                                  :    'foldtoggle'
-
 com! -buffer -range=%  FoldSortBySize  exe fold#md#sort_by_size(<line1>,<line2>)
 
 cnorea  <buffer><expr>  foldsortbysize  getcmdtype() is# ':' && getcmdline() is# 'foldsortbysize'
@@ -105,6 +99,8 @@ cnorea  <buffer><expr>  foldsortbysize  getcmdtype() is# ':' && getcmdline() is#
 \                                       :    'foldsortbysize'
 
 " Mappings {{{1
+
+nno  <buffer><nowait><silent>  cof  :<c-u>call fold#md#toggle_fde()<cr>
 
 " Don't put a guard around the mappings,{{{
 " to check the existence of `lg#motion#regex#rhs()`.
@@ -502,8 +498,7 @@ let b:undo_ftplugin =          get(b:, 'undo_ftplugin', '')
 \                         | exe 'au!  my_markdown * <buffer>'
 \                         | exe 'unmap <buffer> [['
 \                         | exe 'unmap <buffer> ]]'
+\                         | exe 'nunmap <buffer> cof'
 \                         | exe 'cuna   <buffer> foldsortbysize'
-\                         | exe 'cuna   <buffer> foldtoggle'
 \                         | delc FoldSortBySize
-\                         | delc FoldToggle
 \                       "
