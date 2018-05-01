@@ -139,7 +139,7 @@ syn region markdownH3 matchgroup=markdownH3Delimiter start="####\@!"    end="#*\
 syn region markdownH4 matchgroup=markdownH4Delimiter start="#####\@!"   end="#*\s*$" keepend oneline contains=@markdownInline,markdownAutomaticLink contained
 syn region markdownH5 matchgroup=markdownH5Delimiter start="######\@!"  end="#*\s*$" keepend oneline contains=@markdownInline,markdownAutomaticLink contained
 syn region markdownH6 matchgroup=markdownH6Delimiter start="#######\@!" end="#*\s*$" keepend oneline contains=@markdownInline,markdownAutomaticLink contained
-syn match markdownBlockquote ">\%(\s\|$\)" contained nextgroup=@markdownBlock
+syn match markdownBlockquote "^>\+\%(\s.*\|$\)" contained nextgroup=@markdownBlock
 
 syn region markdownCodeBlock start="    \|\t" end="$" contained contains=@Spell
 "                                                                         │
