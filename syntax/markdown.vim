@@ -139,7 +139,19 @@ syn region markdownH3 matchgroup=markdownH3Delimiter start="####\@!"    end="#*\
 syn region markdownH4 matchgroup=markdownH4Delimiter start="#####\@!"   end="#*\s*$" keepend oneline contains=@markdownInline,markdownAutomaticLink contained
 syn region markdownH5 matchgroup=markdownH5Delimiter start="######\@!"  end="#*\s*$" keepend oneline contains=@markdownInline,markdownAutomaticLink contained
 syn region markdownH6 matchgroup=markdownH6Delimiter start="#######\@!" end="#*\s*$" keepend oneline contains=@markdownInline,markdownAutomaticLink contained
-syn match markdownBlockquote "^>\+\%(\s.*\|$\)" contained contains=markdownBold,markdownItalic nextgroup=@markdownBlock
+syn match markdownBlockquote "^>\+\%(\s.*\|$\)" contained contains=markdownBold,markdownItalic nextgroup=@markdownBlock keepend
+" TODO: explain why we need `keepend`.
+" Hint:
+" In ~/Dropbox/wiki/vim/compiler.md, there's a question whose title is:
+"
+"         What's the “module” name of an entry?
+"
+" In the answer, we quote some text.
+" Inside the quote, there's an underscore in an url.
+" Because of it, Vim applies an italic style.
+" Without `keepend`, the latter would be applied beyond the quote.
+" We would have the same issue (with  the bold style) if, for some reason, there
+" were two (unclosed) asterisks in the quote.
 
 syn region markdownCodeBlock start="    \|\t" end="$" contained contains=@Spell
 "                                                                         │

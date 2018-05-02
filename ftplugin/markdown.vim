@@ -431,9 +431,9 @@ augroup my_markdown
     " And every time, the next `:au` re-installs a single instance of the needed autocmd.
 
     au BufWinEnter  <buffer>  setl fml=0
-                           \| setl fdm=expr
-                           \| setl fdt=fold#text()
-                           \| setl fde=fold#md#stacked()
+                          \ | setl fdm=expr
+                          \ | setl fdt=fold#text()
+                          \ | setl fde=fold#md#stacked()
                            "                   │
                            "                   └─ Alternative: 'nested()'
     au BufWinEnter <buffer> setl cole=2 cocu=nc
