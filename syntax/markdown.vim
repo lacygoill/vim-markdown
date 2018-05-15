@@ -1,36 +1,13 @@
+" This guard is  useful if you want to  set the filetype of a  special buffer to
+" `markdown`,  so  that you  can  leverage  filetype  settings and  the  folding
+" specific to markdown, but without applying the markdown syntax plugin.
+if exists('b:current_syntax')
+    finish
+endif
+
 " TODO:
 " The following is stolen from tpope's vim-markdown
 " Study how it works.
-"
-" # Vim Markdown runtime files
-
-" This is the development version of Vim's included syntax highlighting and
-" filetype plugins for Markdown.  Generally you don't need to install these if
-" you are running a recent version of Vim.
-
-" One difference between this repository and the upstream files in Vim is that
-" the former forces `*.md` as Markdown, while the latter detects it as Modula-2,
-" with an exception for `README.md`.  If you'd like to force Markdown without
-" installing from this repository, add the following to your vimrc:
-
-"     autocmd BufNewFile,BufReadPost *.md set filetype=markdown
-
-" If you want to enable fenced code block syntax highlighting in your markdown
-" documents you can enable it in your `.vimrc` like so:
-
-"     let g:markdown_fenced_languages = ['html', 'python', 'bash=sh']
-
-" To disable markdown syntax concealing add the following to your vimrc:
-
-"     let g:markdown_syntax_conceal = 0
-
-" Syntax highlight is synchronized in 50 lines. It may cause collapsed
-" highlighting at large fenced code block.
-" In the case, please set larger value in your vimrc:
-
-"     let g:markdown_minlines = 100
-
-" Note that setting too large value may cause bad performance on highlighting.
 
 " TODO:
 " read and take inspiration from:
@@ -73,38 +50,34 @@ endif
 runtime! syntax/html.vim
 unlet! b:current_syntax
 
-" If you want to enable fenced code block syntax highlighting in your markdown
-" documents you can enable it in your .vimrc like so:
+" If you want  to enable fenced code block syntax  highlighting in your markdown
+" documents you can enable it like so:
 "
-"         let g:markdown_fenced_languages = ['html', 'python', 'bash=sh']
+"         let s:markdown_fenced_languages = ['html', 'python', 'bash=sh']
 "                                                               └─────┤
 " FIXME:                                                              └ what does this mean?
 
-if !exists('g:markdown_fenced_languages')
-  let g:markdown_fenced_languages = []
-endif
+let s:markdown_fenced_languages = []
 let s:done_include = {}
-for s:type in map(copy(g:markdown_fenced_languages), { i,v -> matchstr(v, '[^=]*$') })
-  if has_key(s:done_include, matchstr(s:type,'[^.]*'))
-    continue
-  endif
-  if s:type =~ '\.'
-    let b:{matchstr(s:type,'[^.]*')}_subtype = matchstr(s:type,'\.\zs.*')
-  endif
-  exe 'syn include @markdownHighlight'.substitute(s:type,'\.','','g').' syntax/'.matchstr(s:type,'[^.]*').'.vim'
-  unlet! b:current_syntax
-  let s:done_include[matchstr(s:type,'[^.]*')] = 1
+for s:type in map(copy(s:markdown_fenced_languages), { i,v -> matchstr(v, '[^=]*$') })
+    if has_key(s:done_include, matchstr(s:type,'[^.]*'))
+        continue
+    endif
+    if s:type =~ '\.'
+        let b:{matchstr(s:type,'[^.]*')}_subtype = matchstr(s:type,'\.\zs.*')
+    endif
+    exe 'syn include @markdownHighlight'.substitute(s:type,'\.','','g').' syntax/'.matchstr(s:type,'[^.]*').'.vim'
+    unlet! b:current_syntax
+    let s:done_include[matchstr(s:type,'[^.]*')] = 1
 endfor
 unlet! s:type
 unlet! s:done_include
 
-" Syntax highlight is synchronized in 50 lines. It may cause collapsed
-" highlighting at large fenced code block. In this case, set a larger value
-" in your vimrc.
-if !exists('g:markdown_minlines')
-  let g:markdown_minlines = 50
-endif
-execute 'syn sync minlines=' . g:markdown_minlines
+" Syntax highlight is synchronized in 50 lines.
+" It may cause collapsed highlighting at large fenced code block.
+" In this case, set a larger value.
+" Note that setting a too large value may cause bad performance on highlighting.
+syn sync minlines=50
 syn case ignore
 
 " Why?{{{
@@ -181,19 +154,12 @@ syn region markdownLink matchgroup=markdownLinkDelimiter start="(" end=")" conta
 syn region markdownId matchgroup=markdownIdDelimiter start="\[" end="\]" keepend contained
 syn region markdownAutomaticLink matchgroup=markdownUrlDelimiter start="<\%(\w\+:\|[[:alnum:]_+-]\+@\)\@=" end=">" keepend oneline
 
-" To disable markdown syntax concealing add the following to your vimrc:
-"         let g:markdown_syntax_conceal = 0
-
-let s:concealends = ''
-if has('conceal') && get(g:, 'markdown_syntax_conceal', 1) ==# 1
-  let s:concealends = ' concealends'
-endif
-exe 'syn region markdownItalic matchgroup=markdownItalicDelimiter start="\S\@<=\*\|\*\S\@=" end="\S\@<=\*\|\*\S\@=" keepend contains=markdownLineStart,@Spell' . s:concealends
-exe 'syn region markdownItalic matchgroup=markdownItalicDelimiter start="\S\@<=_\|_\S\@=" end="\S\@<=_\|_\S\@=" keepend contains=markdownLineStart,@Spell' . s:concealends
-exe 'syn region markdownBold matchgroup=markdownBoldDelimiter start="\S\@<=\*\*\|\*\*\S\@=" end="\S\@<=\*\*\|\*\*\S\@=" keepend contains=markdownLineStart,markdownItalic,@Spell' . s:concealends
-exe 'syn region markdownBold matchgroup=markdownBoldDelimiter start="\S\@<=__\|__\S\@=" end="\S\@<=__\|__\S\@=" keepend contains=markdownLineStart,markdownItalic,@Spell' . s:concealends
-exe 'syn region markdownBoldItalic matchgroup=markdownBoldItalicDelimiter start="\S\@<=\*\*\*\|\*\*\*\S\@=" end="\S\@<=\*\*\*\|\*\*\*\S\@=" keepend contains=markdownLineStart,@Spell' . s:concealends
-exe 'syn region markdownBoldItalic matchgroup=markdownBoldItalicDelimiter start="\S\@<=___\|___\S\@=" end="\S\@<=___\|___\S\@=" keepend contains=markdownLineStart,@Spell' . s:concealends
+syn region markdownItalic matchgroup=markdownItalicDelimiter start="\S\@<=\*\|\*\S\@=" end="\S\@<=\*\|\*\S\@=" keepend contains=markdownLineStart,@Spell concealends
+syn region markdownItalic matchgroup=markdownItalicDelimiter start="\S\@<=_\|_\S\@=" end="\S\@<=_\|_\S\@=" keepend contains=markdownLineStart,@Spell concealends
+syn region markdownBold matchgroup=markdownBoldDelimiter start="\S\@<=\*\*\|\*\*\S\@=" end="\S\@<=\*\*\|\*\*\S\@=" keepend contains=markdownLineStart,markdownItalic,@Spell concealends
+syn region markdownBold matchgroup=markdownBoldDelimiter start="\S\@<=__\|__\S\@=" end="\S\@<=__\|__\S\@=" keepend contains=markdownLineStart,markdownItalic,@Spell concealends
+syn region markdownBoldItalic matchgroup=markdownBoldItalicDelimiter start="\S\@<=\*\*\*\|\*\*\*\S\@=" end="\S\@<=\*\*\*\|\*\*\*\S\@=" keepend contains=markdownLineStart,@Spell concealends
+syn region markdownBoldItalic matchgroup=markdownBoldItalicDelimiter start="\S\@<=___\|___\S\@=" end="\S\@<=___\|___\S\@=" keepend contains=markdownLineStart,@Spell concealends
 
 syn region markdownCode matchgroup=markdownCodeDelimiter start="`" end="`" keepend contains=markdownLineStart
 syn region markdownCode matchgroup=markdownCodeDelimiter start="`` \=" end=" \=``" keepend contains=markdownLineStart
@@ -212,16 +178,16 @@ syn match markdownFootnote "\[^[^\]]\+\]"
 syn match markdownFootnoteDefinition "^\[^[^\]]\+\]:"
 
 if main_syntax is# 'markdown'
-  let s:done_include = {}
-  for s:type in g:markdown_fenced_languages
-    if has_key(s:done_include, matchstr(s:type,'[^.]*'))
-      continue
-    endif
-    exe 'syn region markdownHighlight'.substitute(matchstr(s:type,'[^=]*$'),'\..*','','').' matchgroup=markdownCodeDelimiter start="^\s*````*\s*'.matchstr(s:type,'[^=]*').'\S\@!.*$" end="^\s*````*\ze\s*$" keepend contains=@markdownHighlight'.substitute(matchstr(s:type,'[^=]*$'),'\.','','g')
-    let s:done_include[matchstr(s:type,'[^.]*')] = 1
-  endfor
-  unlet! s:type
-  unlet! s:done_include
+    let s:done_include = {}
+    for s:type in s:markdown_fenced_languages
+        if has_key(s:done_include, matchstr(s:type,'[^.]*'))
+            continue
+        endif
+        exe 'syn region markdownHighlight'.substitute(matchstr(s:type,'[^=]*$'),'\..*','','').' matchgroup=markdownCodeDelimiter start="^\s*````*\s*'.matchstr(s:type,'[^=]*').'\S\@!.*$" end="^\s*````*\ze\s*$" keepend contains=@markdownHighlight'.substitute(matchstr(s:type,'[^=]*$'),'\.','','g')
+        let s:done_include[matchstr(s:type,'[^.]*')] = 1
+    endfor
+    unlet! s:type
+    unlet! s:done_include
 endif
 
 syn match markdownEscape "\\[][\\`*_{}()<>#+.!-]"
