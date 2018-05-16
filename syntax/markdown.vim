@@ -43,10 +43,6 @@ endif
 "                                                   don't conceal the link
 
 
-if !exists('main_syntax')
-  let main_syntax = 'markdown'
-endif
-
 runtime! syntax/html.vim
 unlet! b:current_syntax
 
@@ -177,18 +173,16 @@ syn region markdownBacktickThenQuotes matchgroup=Comment start=/`\ze['"]\S\+['"]
 syn match markdownFootnote "\[^[^\]]\+\]"
 syn match markdownFootnoteDefinition "^\[^[^\]]\+\]:"
 
-if main_syntax is# 'markdown'
-    let s:done_include = {}
-    for s:type in s:markdown_fenced_languages
-        if has_key(s:done_include, matchstr(s:type,'[^.]*'))
-            continue
-        endif
-        exe 'syn region markdownHighlight'.substitute(matchstr(s:type,'[^=]*$'),'\..*','','').' matchgroup=markdownCodeDelimiter start="^\s*````*\s*'.matchstr(s:type,'[^=]*').'\S\@!.*$" end="^\s*````*\ze\s*$" keepend contains=@markdownHighlight'.substitute(matchstr(s:type,'[^=]*$'),'\.','','g')
-        let s:done_include[matchstr(s:type,'[^.]*')] = 1
-    endfor
-    unlet! s:type
-    unlet! s:done_include
-endif
+let s:done_include = {}
+for s:type in s:markdown_fenced_languages
+    if has_key(s:done_include, matchstr(s:type,'[^.]*'))
+        continue
+    endif
+    exe 'syn region markdownHighlight'.substitute(matchstr(s:type,'[^=]*$'),'\..*','','').' matchgroup=markdownCodeDelimiter start="^\s*````*\s*'.matchstr(s:type,'[^=]*').'\S\@!.*$" end="^\s*````*\ze\s*$" keepend contains=@markdownHighlight'.substitute(matchstr(s:type,'[^=]*$'),'\.','','g')
+    let s:done_include[matchstr(s:type,'[^.]*')] = 1
+endfor
+unlet! s:type
+unlet! s:done_include
 
 syn match markdownEscape "\\[][\\`*_{}()<>#+.!-]"
 syn match markdownError "\w\@<=_\w\@="
@@ -274,6 +268,3 @@ hi link markdownError                     Normal
 "}}}
 
 let b:current_syntax = 'markdown'
-if main_syntax is# 'markdown'
-  unlet main_syntax
-endif
