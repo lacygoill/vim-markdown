@@ -1,6 +1,3 @@
-" This guard is  useful if you want to  set the filetype of a  special buffer to
-" `markdown`,  so  that you  can  leverage  filetype  settings and  the  folding
-" specific to markdown, but without applying the markdown syntax plugin.
 if exists('b:current_syntax')
     finish
 endif
