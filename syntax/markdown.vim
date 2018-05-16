@@ -187,52 +187,52 @@ unlet! s:done_include
 syn match markdownEscape "\\[][\\`*_{}()<>#+.!-]"
 syn match markdownError "\w\@<=_\w\@="
 
-hi def link markdownH1                    Title
-hi def link markdownH2                    Title
-hi def link markdownH3                    Title
-hi def link markdownH4                    Title
-hi def link markdownH5                    Title
-hi def link markdownH6                    Title
-hi def link markdownHeadingRule           markdownRule
-hi def link markdownH1Delimiter           markdownHeadingDelimiter
-hi def link markdownH2Delimiter           markdownHeadingDelimiter
-hi def link markdownH3Delimiter           markdownHeadingDelimiter
-hi def link markdownH4Delimiter           markdownHeadingDelimiter
-hi def link markdownH5Delimiter           markdownHeadingDelimiter
-hi def link markdownH6Delimiter           markdownHeadingDelimiter
-hi def link markdownHeadingDelimiter      Delimiter
-hi def link markdownOrderedListMarker     markdownListMarker
-hi def link markdownListMarker            Statement
-hi def link markdownBlockquote            Comment
-hi def link markdownRule                  PreProc
+hi link markdownH1                    Title
+hi link markdownH2                    Title
+hi link markdownH3                    Title
+hi link markdownH4                    Title
+hi link markdownH5                    Title
+hi link markdownH6                    Title
+hi link markdownHeadingRule           markdownRule
+hi link markdownH1Delimiter           markdownHeadingDelimiter
+hi link markdownH2Delimiter           markdownHeadingDelimiter
+hi link markdownH3Delimiter           markdownHeadingDelimiter
+hi link markdownH4Delimiter           markdownHeadingDelimiter
+hi link markdownH5Delimiter           markdownHeadingDelimiter
+hi link markdownH6Delimiter           markdownHeadingDelimiter
+hi link markdownHeadingDelimiter      Delimiter
+hi link markdownOrderedListMarker     markdownListMarker
+hi link markdownListMarker            Statement
+hi link markdownBlockquote            Comment
+hi link markdownRule                  PreProc
 
-hi def link markdownFootnote              Typedef
-hi def link markdownFootnoteDefinition    Typedef
+hi link markdownFootnote              Typedef
+hi link markdownFootnoteDefinition    Typedef
 
 " TODO:
 " Originally, it was linked to `Underlined`, but in my current colorscheme,
 " it's pink and underlined: too noisy.
 " Create your own  HG for links, because I'm not  sure `Conditional` will always
 " be a good choice if you change your colorscheme.
-hi def link markdownLinkText              Conditional
-hi def link markdownIdDeclaration         Typedef
-hi def link markdownId                    Type
-hi def link markdownAutomaticLink         markdownUrl
-hi def link markdownUrl                   Float
-hi def link markdownUrlTitle              String
-hi def link markdownIdDelimiter           markdownLinkDelimiter
-hi def link markdownUrlDelimiter          Function
-hi def link markdownUrlTitleDelimiter     Delimiter
+hi link markdownLinkText              Conditional
+hi link markdownIdDeclaration         Typedef
+hi link markdownId                    Type
+hi link markdownAutomaticLink         markdownUrl
+hi link markdownUrl                   Float
+hi link markdownUrlTitle              String
+hi link markdownIdDelimiter           markdownLinkDelimiter
+hi link markdownUrlDelimiter          Function
+hi link markdownUrlTitleDelimiter     Delimiter
 
-hi def link markdownItalic                htmlItalic
-hi def link markdownItalicDelimiter       markdownItalic
-hi def link markdownBold                  htmlBold
-hi def link markdownBoldDelimiter         markdownBold
-hi def link markdownBoldItalic            htmlBoldItalic
-hi def link markdownBoldItalicDelimiter   markdownBoldItalic
-hi def link markdownCodeDelimiter         Delimiter
+hi link markdownItalic                htmlItalic
+hi link markdownItalicDelimiter       markdownItalic
+hi link markdownBold                  htmlBold
+hi link markdownBoldDelimiter         markdownBold
+hi link markdownBoldItalic            htmlBoldItalic
+hi link markdownBoldItalicDelimiter   markdownBoldItalic
+hi link markdownCodeDelimiter         Delimiter
 
-hi def link markdownEscape                Special
+hi link markdownEscape                Special
 "         foo_bar "{{{
 "            ^
 "            └ markdownError → red
