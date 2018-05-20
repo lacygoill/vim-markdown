@@ -53,10 +53,11 @@
 "     https://daringfireball.net/projects/markdown/syntax#html
 "
 " We consider the 3 possible naming schemes
-runtime! ftplugin/html.vim ftplugin/html_*.vim ftplugin/html/*.vim
-"      │
-"      └─ all of them (even if there's several ftplugin/html.vim in various
-"         directories of &rtp)
+ru! ftplugin/html.vim ftplugin/html_*.vim ftplugin/html/*.vim
+" │
+" └─ all of them
+"    (even if there are several ftplugin/html.vim in various directories of &rtp)
+ru! after/ftplugin/html.vim after/ftplugin/html_*.vim after/ftplugin/html/*.vim
 
 " TODO:
 " read this:
