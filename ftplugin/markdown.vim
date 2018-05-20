@@ -480,21 +480,36 @@ endif
 setl spl=en
 
 " Variables {{{1
+" did_ftplugin {{{2
 
 " We don't want other ftplugins to be sourced.
 " The less code, the faster we can reload our notes.
 let b:did_ftplugin = 1
+
+" cr_command {{{2
 
 " When we hit `CR`, we want the cursor to move on the 100th column.
 " By default, it moves on the 80th column.
 
 let b:cr_command = 'norm! 100|'
 
+" exchange_indent {{{2
+
 " We've set up `vim-exchange` to re-indent linewise exchanges with `==`.
 " But we don't want that for markdown buffers.
 " For more info:    :h g:exchange_indent
 
 let b:exchange_indent = ''
+
+" markdown_fenced_languages {{{2
+
+" We want syntax highlighting in fenced blocks, but only for certain files:
+
+if expand('%:p') =~# 'wiki/web/'
+    let b:markdown_fenced_languages = ['html']
+endif
+
+" sandwich_recipes {{{2
 
 " Let us conceal the answer to a question by pressing `sa {text-object} c`.
 let b:sandwich_recipes = deepcopy(get(g:, 'sandwich#recipes', []))
@@ -511,7 +526,7 @@ let b:undo_ftplugin =          get(b:, 'undo_ftplugin', '')
 \                     . (empty(get(b:, 'undo_ftplugin', '')) ? '' : '|')
 \                     . "
 \                           setl ai< cms< cocu< cole< com< fde< fdm< fdt< flp< fml< fp< kp< spl< tw<
-\                         | unlet! b:cr_command b:exchange_indent b:sandwich_recipes
+\                         | unlet! b:cr_command b:exchange_indent b:sandwich_recipes b:markdown_fenced_languages
 \                         | exe 'au!  my_markdown * <buffer>'
 \                         | exe 'unmap <buffer> [['
 \                         | exe 'unmap <buffer> ]]'

@@ -53,7 +53,7 @@ unlet! b:current_syntax
 "                                                               └─────┤
 " FIXME:                                                              └ what does this mean?
 
-let s:markdown_fenced_languages = ['html']
+let s:markdown_fenced_languages = get(b:, 'markdown_fenced_languages', [])
 let s:done_include = {}
 for s:type in map(copy(s:markdown_fenced_languages), { i,v -> matchstr(v, '[^=]*$') })
     if has_key(s:done_include, matchstr(s:type,'[^.]*'))
