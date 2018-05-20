@@ -57,7 +57,6 @@ ru! ftplugin/html.vim ftplugin/html_*.vim ftplugin/html/*.vim
 " │
 " └─ all of them
 "    (even if there are several ftplugin/html.vim in various directories of &rtp)
-ru! after/ftplugin/html.vim after/ftplugin/html_*.vim after/ftplugin/html/*.vim
 
 " TODO:
 " read this:

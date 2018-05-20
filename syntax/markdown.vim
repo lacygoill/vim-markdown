@@ -41,7 +41,6 @@ endif
 
 
 ru! syntax/html.vim syntax/html_*.vim syntax/html/*.vim
-ru! after/syntax/html.vim after/syntax/html_*.vim after/syntax/html/*.vim
 unlet! b:current_syntax
 
 " If you want  to enable fenced code block syntax  highlighting in your markdown
