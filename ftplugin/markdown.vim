@@ -49,14 +49,31 @@
 " endfu
 "}}}
 
-" HTML tags can be used in Markdown, therefore, we also load html ftplugins.
+" Would it make sense to also source html filetype plugins?{{{
+"
+" Yes, because html tags can be used in Markdown:
+"
 "     https://daringfireball.net/projects/markdown/syntax#html
 "
-" We consider the 3 possible naming schemes
-ru! ftplugin/html.vim ftplugin/html_*.vim ftplugin/html/*.vim
-" │
-" └─ all of them
-"    (even if there are several ftplugin/html.vim in various directories of &rtp)
+" Besides, that's what tpope does in its markdown plugin.
+"}}}
+" How could I source them?{{{
+"
+" You would need to consider the 3 possible naming schemes:
+"
+"     ru! ftplugin/html.vim ftplugin/html_*.vim ftplugin/html/*.vim
+"       │
+"       └─ all of them
+"          (even if there are several ftplugin/html.vim in various directories of &rtp)
+"}}}
+" Do you source them?{{{
+"
+" No, we  don't, because  we have  some html settings  which are  undesirable in
+" markdown.
+"
+" Example: we set 'sw' to 2 in an  html file (as per google style guide), but we
+" prefer to set it to 4 in a markdown file.
+"}}}
 
 " TODO:
 " read this:
