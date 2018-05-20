@@ -40,6 +40,9 @@ endif
 "                                                   don't conceal the link
 
 
+" TODO:
+" We've disabled html filetype plugins.
+" Should we do the same for html syntax plugins?
 ru! syntax/html.vim syntax/html_*.vim syntax/html/*.vim
 unlet! b:current_syntax
 
