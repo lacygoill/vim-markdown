@@ -46,28 +46,7 @@ endif
 ru! syntax/html.vim syntax/html_*.vim syntax/html/*.vim
 unlet! b:current_syntax
 
-" If you want  to enable fenced code block syntax  highlighting in your markdown
-" documents you can enable it like so:
-"
-"         let s:markdown_fenced_languages = ['html', 'python', 'bash=sh']
-"                                                               └─────┤
-" FIXME:                                                              └ what does this mean?
-
-let s:markdown_fenced_languages = get(b:, 'markdown_fenced_languages', [])
-let s:done_include = {}
-for s:type in map(copy(s:markdown_fenced_languages), { i,v -> matchstr(v, '[^=]*$') })
-    if has_key(s:done_include, matchstr(s:type,'[^.]*'))
-        continue
-    endif
-    if s:type =~ '\.'
-        let b:{matchstr(s:type,'[^.]*')}_subtype = matchstr(s:type,'\.\zs.*')
-    endif
-    exe 'syn include @markdownHighlight'.substitute(s:type,'\.','','g').' syntax/'.matchstr(s:type,'[^.]*').'.vim'
-    unlet! b:current_syntax
-    let s:done_include[matchstr(s:type,'[^.]*')] = 1
-endfor
-unlet! s:type
-unlet! s:done_include
+call markdown#include()
 
 " Syntax highlight is synchronized in 50 lines.
 " It may cause collapsed highlighting at large fenced code block.
@@ -174,11 +153,16 @@ syn match markdownFootnote "\[^[^\]]\+\]"
 syn match markdownFootnoteDefinition "^\[^[^\]]\+\]:"
 
 let s:done_include = {}
-for s:type in s:markdown_fenced_languages
+for s:type in get(b:, 'markdown_fenced_languages', [])
     if has_key(s:done_include, matchstr(s:type,'[^.]*'))
         continue
     endif
-    exe 'syn region markdownHighlight'.substitute(matchstr(s:type,'[^=]*$'),'\..*','','').' matchgroup=markdownCodeDelimiter start="^\s*````*\s*'.matchstr(s:type,'[^=]*').'\S\@!.*$" end="^\s*````*\ze\s*$" keepend contains=@markdownHighlight'.substitute(matchstr(s:type,'[^=]*$'),'\.','','g')
+    exe 'syn region markdownHighlight'.substitute(matchstr(s:type,'[^=]*$'),'\..*','','')
+    \ . ' matchgroup=markdownCodeDelimiter'
+    \ . ' start="^\s*````*\s*'.matchstr(s:type,'[^=]*').'\S\@!.*$"'
+    \ . ' end="^\s*````*\ze\s*$"'
+    \ . ' keepend'
+    \ . ' contains=@markdownHighlight'.substitute(matchstr(s:type,'[^=]*$'),'\.','','g')
     let s:done_include[matchstr(s:type,'[^.]*')] = 1
 endfor
 unlet! s:type

@@ -503,9 +503,17 @@ let b:exchange_indent = ''
 
 " markdown_fenced_languages {{{2
 
-" We want syntax highlighting in fenced blocks, but only for certain files:
+" We want  syntax highlighting  in fenced  blocks, but  only for  certain files,
+" because  the more  you  add syntax  plugins,  the  more it  has  an impact  on
+" performance.
 
-if expand('%:p') =~# 'wiki/web/'
+" The original `vim-markdown` plugin from tpope uses a global variable:
+"
+"         let g:markdown_fenced_languages = ['html', 'python', 'bash=sh']
+"                                                               └─────┤
+" FIXME:                                                              └ what does this mean?
+
+if expand('%:p') =~# '/wiki/web/'
     let b:markdown_fenced_languages = ['html']
 endif
 
