@@ -507,12 +507,6 @@ let b:exchange_indent = ''
 " because  the more  you  add syntax  plugins,  the  more it  has  an impact  on
 " performance.
 
-" The original `vim-markdown` plugin from tpope uses a global variable:
-"
-"         let g:markdown_fenced_languages = ['html', 'python', 'bash=sh']
-"                                                               └─────┤
-" FIXME:                                                              └ what does this mean?
-
 if expand('%:p') =~# '/wiki/web/'
     let b:markdown_fenced_languages = ['html']
 endif
