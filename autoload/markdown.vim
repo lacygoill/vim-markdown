@@ -1,4 +1,4 @@
-fu! markdown#define_cluster() abort "{{{1
+fu! markdown#define_fenced_cluster() abort "{{{1
     " What's the purpose of this `for` loop?{{{
     "
     " Iterate over the names mentioned in `b:markdown_fenced_languages`,
@@ -24,13 +24,15 @@ fu! markdown#define_cluster() abort "{{{1
     " Because that's the name of the syntax plugin we need to source.
     "}}}
     let done_include = {}
-    " `item` is the text after a possible equal sign.
-    for item in map(copy(get(b:, 'markdown_fenced_languages', [])), {i,v -> matchstr(v, '[^=]*$')})
-        let ft = matchstr(item,'[^.]*')
+    let filetypes = map(copy(get(b:, 'markdown_fenced_languages', [])), {i,v -> matchstr(v, '[^=]*$')})
+    for ft in filetypes
+        " If   we   wrote   the   same  fenced   language   several   times   in
+        " `b:markdown_fenced_languages`, include the corresponding syntax plugin
+        " only once.
         if has_key(done_include, ft)
             continue
         endif
-        exe 'syn include @markdownHighlight'.item.' syntax/'.ft.'.vim'
+        exe 'syn include @markdownFenced'.ft.' syntax/'.ft.'.vim'
         " We need to remove `b:current_syntax` to be sure the next syntax plugin
         " can be sourced, even if it has a guard.
         unlet! b:current_syntax
@@ -38,19 +40,20 @@ fu! markdown#define_cluster() abort "{{{1
     endfor
 endfu
 
-fu! markdown#use_cluster() abort "{{{1
+fu! markdown#highlight_fenced_languages() abort "{{{1
     let done_include = {}
-    for type in get(b:, 'markdown_fenced_languages', [])
-        if has_key(done_include, matchstr(type,'[^.]*'))
+    for item in get(b:, 'markdown_fenced_languages', [])
+        if has_key(done_include, matchstr(item,'[^.]*'))
             continue
         endif
-        exe 'syn region markdownHighlight'.substitute(matchstr(type,'[^=]*$'),'\..*','','')
+        let ft = substitute(matchstr(item,'[^=]*$'),'\..*','','')
+        exe 'syn region markdownFenced'.ft
         \ . ' matchgroup=markdownCodeDelimiter'
-        \ . ' start="^\s*````*\s*'.matchstr(type,'[^=]*').'\S\@!.*$"'
+        \ . ' start="^\s*````*\s*'.matchstr(item,'[^=]*').'\S\@!.*$"'
         \ . ' end="^\s*````*\ze\s*$"'
         \ . ' keepend'
-        \ . ' contains=@markdownHighlight'.substitute(matchstr(type,'[^=]*$'),'\.','','g')
-        let done_include[matchstr(type,'[^.]*')] = 1
+        \ . ' contains=@markdownFenced'.substitute(matchstr(item,'[^=]*$'),'\.','','g')
+        let done_include[matchstr(item,'[^.]*')] = 1
     endfor
 endfu
 
