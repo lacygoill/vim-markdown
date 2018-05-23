@@ -1,4 +1,4 @@
-fu! markdown#define_fenced_cluster() abort "{{{1
+fu! markdown#define_fenced_clusters() abort "{{{1
     " What's the purpose of this `for` loop?{{{
     "
     " Iterate over the names mentioned in `b:markdown_fenced_languages`,
@@ -43,17 +43,18 @@ endfu
 fu! markdown#highlight_fenced_languages() abort "{{{1
     let done_include = {}
     for item in get(b:, 'markdown_fenced_languages', [])
-        if has_key(done_include, matchstr(item,'[^.]*'))
+        if has_key(done_include, item)
             continue
         endif
-        let ft = substitute(matchstr(item,'[^=]*$'),'\..*','','')
+        let ft = matchstr(item,'[^=]*$')
+        let delim = matchstr(item,'[^=]*')
         exe 'syn region markdownFenced'.ft
         \ . ' matchgroup=markdownCodeDelimiter'
-        \ . ' start="^\s*````*\s*'.matchstr(item,'[^=]*').'\S\@!.*$"'
+        \ . ' start="^\s*````*\s*'.delim.'\S\@!.*$"'
         \ . ' end="^\s*````*\ze\s*$"'
         \ . ' keepend'
-        \ . ' contains=@markdownFenced'.substitute(matchstr(item,'[^=]*$'),'\.','','g')
-        let done_include[matchstr(item,'[^.]*')] = 1
+        \ . ' contains=@markdownFenced'.ft
+        let done_include[item] = 1
     endfor
 endfu
 

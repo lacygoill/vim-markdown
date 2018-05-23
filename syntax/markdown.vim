@@ -46,7 +46,7 @@ endif
 ru! syntax/html.vim syntax/html_*.vim syntax/html/*.vim
 unlet! b:current_syntax
 
-call markdown#define_fenced_cluster()
+call markdown#define_fenced_clusters()
 
 " Syntax highlight is synchronized in 50 lines.
 " It may cause collapsed highlighting at large fenced code block.
