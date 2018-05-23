@@ -66,10 +66,9 @@
 "       └─ all of them
 "          (even if there are several ftplugin/html.vim in various directories of &rtp)
 "}}}
-" Do you source them?{{{
+" Why don't you source them?{{{
 "
-" No, we  don't, because  we have  some html settings  which are  undesirable in
-" markdown.
+" We have some html settings which are undesirable in markdown.
 "
 " Example: we set 'sw' to 2 in an  html file (as per google style guide), but we
 " prefer to set it to 4 in a markdown file.

@@ -40,8 +40,8 @@ fu! markdown#define_fenced_clusters() abort "{{{1
         "
         " Vim will install all items from  all html syntax plugins, and for each
         " of them, it will add the argument `contained`.
-        " It means that the item will only match if it's contained in another one
-        " which has the argument `contains=@markdownFencedhtml`.
+        " It means  that the item will  only match if it's  contained in another
+        " one, which has the argument `contains=@markdownFencedhtml`.
         "}}}
         exe 'syn include @markdownFenced'.ft.' syntax/'.ft.'.vim'
 
