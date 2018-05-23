@@ -53,6 +53,7 @@ fu! markdown#highlight_fenced_languages() abort "{{{1
         \ . ' start="^\s*````*\s*'.delim.'\S\@!.*$"'
         \ . ' end="^\s*````*\ze\s*$"'
         \ . ' keepend'
+        \ . ' concealends'
         \ . ' contains=@markdownFenced'.ft
         let done_include[item] = 1
     endfor
