@@ -500,14 +500,14 @@ let b:cr_command = 'norm! 100|'
 
 let b:exchange_indent = ''
 
-" markdown_fenced_languages {{{2
+" markdown_embed {{{2
 
 " We want  syntax highlighting  in fenced  blocks, but  only for  certain files,
 " because  the more  you  add syntax  plugins,  the  more it  has  an impact  on
 " performance.
 
 if expand('%:p') =~# '/wiki/web/'
-    let b:markdown_fenced_languages = ['html']
+    let b:markdown_embed = ['html']
 endif
 
 " sandwich_recipes {{{2
@@ -527,7 +527,7 @@ let b:undo_ftplugin =          get(b:, 'undo_ftplugin', '')
 \                     . (empty(get(b:, 'undo_ftplugin', '')) ? '' : '|')
 \                     . "
 \                           setl ai< cms< cocu< cole< com< fde< fdm< fdt< flp< fml< fp< kp< spl< tw<
-\                         | unlet! b:cr_command b:exchange_indent b:sandwich_recipes b:markdown_fenced_languages
+\                         | unlet! b:cr_command b:exchange_indent b:sandwich_recipes b:markdown_embed
 \                         | exe 'au!  my_markdown * <buffer>'
 \                         | exe 'unmap <buffer> [['
 \                         | exe 'unmap <buffer> ]]'

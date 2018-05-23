@@ -131,8 +131,8 @@ syn match markdownFootnoteDefinition "^\[^[^\]]\+\]:"
 syn match markdownEscape "\\[][\\`*_{}()<>#+.!-]"
 syn match markdownError "\w\@<=_\w\@="
 
-call markdown#define_fenced_clusters()
-call markdown#highlight_fenced_languages()
+call markdown#define_include_clusters()
+call markdown#highlight_embedded_languages()
 
 hi link markdownH1                    Title
 hi link markdownH2                    Title
