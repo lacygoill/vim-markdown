@@ -1,8 +1,8 @@
 fu! markdown#define_fenced_clusters() abort "{{{1
     " What's the purpose of this `for` loop?{{{
     "
-    " Iterate over the names mentioned in `b:markdown_fenced_languages`,
-    " and for each of them, include the corresponding syntax plugin.
+    " Iterate over the languages mentioned in `b:markdown_fenced_languages`, and
+    " for each of them, include the corresponding syntax plugin.
     "}}}
     " If `b:markdown_fenced_languages` contains `javascript=js`, what does it mean?{{{
     "
@@ -26,9 +26,8 @@ fu! markdown#define_fenced_clusters() abort "{{{1
     let done_include = {}
     let filetypes = map(copy(get(b:, 'markdown_fenced_languages', [])), {i,v -> matchstr(v, '[^=]*$')})
     for ft in filetypes
-        " If   we   wrote   the   same  fenced   language   several   times   in
-        " `b:markdown_fenced_languages`, include the corresponding syntax plugin
-        " only once.
+        " If by  accident, we wrote the  same fenced language several  times, we
+        " want to include the corresponding syntax plugin only once.
         if has_key(done_include, ft)
             continue
         endif

@@ -46,8 +46,6 @@ endif
 ru! syntax/html.vim syntax/html_*.vim syntax/html/*.vim
 unlet! b:current_syntax
 
-call markdown#define_fenced_clusters()
-
 " Syntax highlight is synchronized in 50 lines.
 " It may cause collapsed highlighting at large fenced code block.
 " In this case, set a larger value.
@@ -152,10 +150,11 @@ syn region markdownBacktickThenQuotes matchgroup=Comment start=/`\ze['"]\S\+['"]
 syn match markdownFootnote "\[^[^\]]\+\]"
 syn match markdownFootnoteDefinition "^\[^[^\]]\+\]:"
 
-call markdown#highlight_fenced_languages()
-
 syn match markdownEscape "\\[][\\`*_{}()<>#+.!-]"
 syn match markdownError "\w\@<=_\w\@="
+
+call markdown#define_fenced_clusters()
+call markdown#highlight_fenced_languages()
 
 hi link markdownH1                    Title
 hi link markdownH2                    Title
