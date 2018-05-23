@@ -3,20 +3,25 @@ if exists('b:current_syntax')
 endif
 
 " TODO:
-" The following is stolen from tpope's vim-markdown
-" Study how it works.
-
-" TODO:
 " read and take inspiration from:
 "         https://github.com/vim-pandoc/vim-pandoc-syntax
 "         http://pandoc.org/MANUAL.html#pandocs-markdown
-"
 
-" TODO:
-" We've disabled html filetype plugins.
-" Should we do the same for html syntax plugins?
-ru! syntax/html.vim syntax/html_*.vim syntax/html/*.vim
-unlet! b:current_syntax
+" How to enable html syntax plugins?{{{
+"
+"     ru! syntax/html.vim syntax/html/*.vim
+"     unlet! b:current_syntax
+"}}}
+" Is `syntax/html_*.vim` a valid file pattern for an html syntax plugin?{{{
+"
+" No.
+"
+" Vim doesn't use it when we do `:set syn=foobar`:
+"
+"     :2Verbose set syn=foo
+"         → Searching for "syntax/foo.vim syntax/foo/*.vim" in ...
+"           not found in 'runtimepath': "syntax/foobar.vim syntax/foobar/*.vim"
+"}}}
 
 " Syntax highlight is synchronized in 50 lines.
 " It may cause collapsed highlighting at large fenced code block.
