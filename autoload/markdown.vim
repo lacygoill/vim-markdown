@@ -47,6 +47,13 @@ fu! markdown#highlight_fenced_languages() abort "{{{1
         endif
         let ft = matchstr(item,'[^=]*$')
         let delim = matchstr(item,'[^=]*')
+        " Note that the name of the region is identical to the name of the cluster:{{{
+        "
+        "     'markdownFenced'.ft
+        "
+        " But there's no conflict.
+        " Probably because a cluster name is always prefixed by `@`.
+        "}}}
         exe 'syn region markdownFenced'.ft
         \ . ' matchgroup=markdownCodeDelimiter'
         \ . ' start="^\s*````*\s*'.delim.'\S\@!.*$"'
