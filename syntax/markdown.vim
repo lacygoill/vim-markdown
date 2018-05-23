@@ -11,34 +11,6 @@ endif
 "         https://github.com/vim-pandoc/vim-pandoc-syntax
 "         http://pandoc.org/MANUAL.html#pandocs-markdown
 "
-" TODO:
-" Learn how to conceal a url:
-"
-"     [some_text](some_url)
-"     →
-"     some_text
-"
-" Update:
-" Add the argument:
-"
-"     • `conceal`     to `syn region markdownLink`     (to hide the url)
-"     • `concealends` to `syn region markdownLinkText` (to hide [] surrounding
-"                                                       the text describing the url)
-"
-" Also, if you  want the link to be  concealed even in a block of  code, in `syn
-" region markdownCodeBlock`,  tweak the  argument `contains`  so that  its value
-" includes `markdownLink` and `markdownLinkText`:
-"
-"         contains=@Spell,markdownLink,markdownLinkText
-"
-" Atm,  I  don't  do  it  because  it would  wrongly  conceal  any  text  inside
-" parentheses in a block of code.
-" Maybe we need to tweak the definition of `markdownLink` so that it checks that
-" there is a description of the link just before:  [description](link).
-"                                                   ^^^^^^^^^^^
-"                                                   if there's NOT a description
-"                                                   don't conceal the link
-
 
 " TODO:
 " We've disabled html filetype plugins.
@@ -120,9 +92,10 @@ syn region markdownUrlTitle matchgroup=markdownUrlTitleDelimiter start=+"+ end=+
 syn region markdownUrlTitle matchgroup=markdownUrlTitleDelimiter start=+'+ end=+'+ keepend contained
 syn region markdownUrlTitle matchgroup=markdownUrlTitleDelimiter start=+(+ end=+)+ keepend contained
 
-" `concealends` is custom (not in original plugin).
+" We add the  `concealends` argument to hide the square  brackets [] surrounding
+" the text describing the url.
 syn region markdownLinkText matchgroup=markdownLinkTextDelimiter start="!\=\[\%(\_[^]]*]\%( \=[[(]\)\)\@=" end="\]\%( \=[[(]\)\@=" nextgroup=markdownLink,markdownId skipwhite contains=@markdownInline,markdownLineStart concealends
-" `conceal` is custom (not in original plugin).
+" We add the `conceal` argument to hide the url of a link.
 syn region markdownLink matchgroup=markdownLinkDelimiter start="(" end=")" contains=markdownUrl keepend contained conceal
 syn region markdownId matchgroup=markdownIdDelimiter start="\[" end="\]" keepend contained
 syn region markdownAutomaticLink matchgroup=markdownUrlDelimiter start="<\%(\w\+:\|[[:alnum:]_+-]\+@\)\@=" end=">" keepend oneline
