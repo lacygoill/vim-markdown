@@ -31,7 +31,20 @@ fu! markdown#define_fenced_clusters() abort "{{{1
         if has_key(done_include, ft)
             continue
         endif
+
+        " What's the effect of `:syn include`?{{{
+        "
+        " If you execute:
+        "
+        "     syn include @markdownFencedhtml syntax/html.vim
+        "
+        " Vim will install all items from  all html syntax plugins, and for each
+        " of them, it will add the argument `contained`.
+        " It means that the item will only match if it's contained in another one
+        " which has the argument `contains=@markdownFencedhtml`.
+        "}}}
         exe 'syn include @markdownFenced'.ft.' syntax/'.ft.'.vim'
+
         " We need to remove `b:current_syntax` to be sure the next syntax plugin
         " can be sourced, even if it has a guard.
         unlet! b:current_syntax
