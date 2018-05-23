@@ -46,7 +46,7 @@ endif
 ru! syntax/html.vim syntax/html_*.vim syntax/html/*.vim
 unlet! b:current_syntax
 
-call markdown#include()
+call markdown#define_cluster()
 
 " Syntax highlight is synchronized in 50 lines.
 " It may cause collapsed highlighting at large fenced code block.
@@ -152,21 +152,7 @@ syn region markdownBacktickThenQuotes matchgroup=Comment start=/`\ze['"]\S\+['"]
 syn match markdownFootnote "\[^[^\]]\+\]"
 syn match markdownFootnoteDefinition "^\[^[^\]]\+\]:"
 
-let s:done_include = {}
-for s:type in get(b:, 'markdown_fenced_languages', [])
-    if has_key(s:done_include, matchstr(s:type,'[^.]*'))
-        continue
-    endif
-    exe 'syn region markdownHighlight'.substitute(matchstr(s:type,'[^=]*$'),'\..*','','')
-    \ . ' matchgroup=markdownCodeDelimiter'
-    \ . ' start="^\s*````*\s*'.matchstr(s:type,'[^=]*').'\S\@!.*$"'
-    \ . ' end="^\s*````*\ze\s*$"'
-    \ . ' keepend'
-    \ . ' contains=@markdownHighlight'.substitute(matchstr(s:type,'[^=]*$'),'\.','','g')
-    let s:done_include[matchstr(s:type,'[^.]*')] = 1
-endfor
-unlet! s:type
-unlet! s:done_include
+call markdown#use_cluster()
 
 syn match markdownEscape "\\[][\\`*_{}()<>#+.!-]"
 syn match markdownError "\w\@<=_\w\@="

@@ -508,7 +508,7 @@ let b:exchange_indent = ''
 " performance.
 
 if expand('%:p') =~# '/wiki/web/'
-    let b:markdown_fenced_languages = ['html']
+    let b:markdown_fenced_languages = ['html','js=javascript']
 endif
 
 " sandwich_recipes {{{2
