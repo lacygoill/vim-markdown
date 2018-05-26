@@ -106,28 +106,22 @@ fu! markdown#link_inline_2_ref() abort "{{{2
     " describe an inline link:
     "
     "     [description](url)
-    let pat1 = '\[\_.\{-1,}\](\_.\{-1,})'
-    let pat2 = '\[\_.\{-1,}\]\zs(\_.\{-1,})'
-    while search(pat1, 'W')
+    let pat = '\[.\{-}\]\zs(.\{-})'
+    while search(pat, 'W')
      \ && s:is_a_real_link()
      \ && g <= 100
-        " beginning of the url
-        let lnum1 = line('.')
-        " end of the url
-        let lnum2 = search('(\_.\{-1,})\zs', 'W')
+        norm! %
 
-        let lines = getline(lnum1, lnum2)
-        let text = join(lines, "\n")
-        let link = substitute(matchstr(text, pat2), '[() \t\n]', '', 'g')
+        let line = getline('.')
+        let link = matchstr(line, '(\zs.*\%'.col('.').'c')
+        let link = substitute(link, '[ \t]', '', 'g')
+
         let links += [link]
-        let new_text = substitute(text, pat2, '['.(last_id+1).']', '')
-        if lnum2 > lnum1
-            sil! exe lnum1.','.(lnum2 - 1).'d_'
-        endif
-        let new_lines = split(new_text, '\n')
-        call setline(lnum1, new_lines)
-        let g:debug = 'norm '.lnum1.','.(lnum1 + len(new_lines)).'gqq'
-        exe 'norm '.lnum1.'Ggq'.(len(new_lines) - 1).'j'
+        let new_line = substitute(line, '('.link.')', '['.(last_id+1).']', '')
+
+        " put the new link
+        call setline('.', new_line)
+
         let last_id += 1
         let g += 1
     endwhile
