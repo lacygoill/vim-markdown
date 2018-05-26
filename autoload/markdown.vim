@@ -83,7 +83,7 @@ fu! markdown#link_inline_2_ref() abort "{{{1
     let &l:fen = 0
 
     if !search('^# Reference')
-        let last_line = line('$')
+        let last_line = 0
         let last_id = 0
     else
         call search('\%$')
@@ -127,7 +127,7 @@ fu! markdown#link_inline_2_ref() abort "{{{1
             call append('$', ['##', '# Reference', ''])
         endif
         call map(links, {i,v -> '['.(i+1+orig_last_id).']: '.v})
-        call append(last_line, links)
+        call append(last_line ? last_line : line('$'), links)
     endif
 
     let &l:fen = 1
