@@ -101,7 +101,11 @@ fu! markdown#link_inline_2_ref() abort "{{{1
     "
     "     [description](url)
     let pat = '\[\_.\{-1,}\]\zs(\_.\{-1,})'
-    while search(pat, 'W') && 1 && g <= 100
+    while search(pat, 'W')
+     \ && !empty(filter(reverse(map(synstack(line('.'), col('.')),
+     \                              {i,v -> synIDattr(v, 'name')})),
+     \                  {i,v -> v =~# '^markdownLink'}))
+     \ && g <= 100
         let lnum1 = line('.')
         let lnum2 = search('(\_.\{-1,})\zs', 'W')
         let lines = getline(lnum1, lnum2)
