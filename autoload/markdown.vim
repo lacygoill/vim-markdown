@@ -87,6 +87,8 @@ fu! markdown#link_inline_2_ref() abort "{{{2
     " We must be sure it's correct.
     syn sync fromstart
 
+    " Make sure there's no link whose description span multiple lines.
+    " Those kind of links are too difficult to handle.
     call cursor(1,1)
     let g = 0
     let pat = '\[[^]]\{-}\n\_.\{-}\](.*)'
@@ -99,14 +101,30 @@ fu! markdown#link_inline_2_ref() abort "{{{2
         let g += 1
     endwhile
 
+    " If there're already reference links in the buffer, get the numerical id of
+    " the biggest one.
+    " We need it to correctly number the new links we may find.
     if !search('^# Reference')
+        " Why don't you put the `# Reference` line now?{{{
+        "
+        " There's no guarantee that we'll find any link in the buffer.
+        "}}}
         " Why assigning `0` instead of `line('$')`?{{{
         "
         " The last  line address may change  between now and the  moment when we
         " need `last_line`.
         "}}}
         let last_line = 0
-        let last_id = 0
+        let ref_links = filter(getline(1, '$'), {i,v -> v =~# '^[\d\+\]:'})
+        if !empty(ref_links)
+            let last_id = max(map(ref_links, {i,v -> matchstr(v, '^\[\zs\d\+')}))
+            call append('$', ['##', '# Reference', ''])
+            " Move the existing reference links  which were not in a `Reference`
+            " section, inside the latter.
+            keepj keepp g/^\[\d\+\]:/m$
+        else
+            let last_id = 0
+        endif
     else
         call search('\%$')
         call search('^\[\d\+\]:', 'bW')
@@ -117,6 +135,7 @@ fu! markdown#link_inline_2_ref() abort "{{{2
 
     call cursor(1,1)
 
+    " Collect the links.
     let g = 0
     let links = []
     " describe an inline link:
@@ -142,6 +161,7 @@ fu! markdown#link_inline_2_ref() abort "{{{2
         let g += 1
     endwhile
 
+    " Put the links at the bottom of the buffer.
     if !empty(links)
         if !search('^# Reference')
             call append('$', ['##', '# Reference', ''])
