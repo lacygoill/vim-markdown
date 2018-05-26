@@ -1,4 +1,5 @@
-fu! markdown#define_include_clusters() abort "{{{1
+" Core {{{1
+fu! markdown#define_include_clusters() abort "{{{2
     " What's the purpose of this `for` loop?{{{
     "
     " Iterate over the  languages mentioned in `b:markdown_embed`,  and for each
@@ -52,7 +53,7 @@ fu! markdown#define_include_clusters() abort "{{{1
     endfor
 endfu
 
-fu! markdown#highlight_embedded_languages() abort "{{{1
+fu! markdown#highlight_embedded_languages() abort "{{{2
     let done_include = {}
     for item in get(b:, 'markdown_embed', [])
         if has_key(done_include, item)
@@ -78,11 +79,16 @@ fu! markdown#highlight_embedded_languages() abort "{{{1
     endfor
 endfu
 
-fu! markdown#link_inline_2_ref() abort "{{{1
+fu! markdown#link_inline_2_ref() abort "{{{2
     let view = winsaveview()
     let &l:fen = 0
 
     if !search('^# Reference')
+        " Why assigning `0` instead of `line('$')`?{{{
+        "
+        " The last  line address may change  between now and the  moment when we
+        " need `last_line`.
+        "}}}
         let last_line = 0
         let last_id = 0
     else
@@ -100,24 +106,28 @@ fu! markdown#link_inline_2_ref() abort "{{{1
     " describe an inline link:
     "
     "     [description](url)
-    let pat = '\[\_.\{-1,}\]\zs(\_.\{-1,})'
-    while search(pat, 'W')
-     \ && !empty(filter(reverse(map(synstack(line('.'), col('.')),
-     \                              {i,v -> synIDattr(v, 'name')})),
-     \                  {i,v -> v =~# '^markdownLink'}))
+    let pat1 = '\[\_.\{-1,}\](\_.\{-1,})'
+    let pat2 = '\[\_.\{-1,}\]\zs(\_.\{-1,})'
+    while search(pat1, 'W')
+     \ && s:is_a_real_link()
      \ && g <= 100
+        " beginning of the url
         let lnum1 = line('.')
+        " end of the url
         let lnum2 = search('(\_.\{-1,})\zs', 'W')
+
         let lines = getline(lnum1, lnum2)
         let text = join(lines, "\n")
-        let link = substitute(matchstr(text, pat), '[() \t\n]', '', 'g')
+        let link = substitute(matchstr(text, pat2), '[() \t\n]', '', 'g')
         let links += [link]
-        let new_text = substitute(text, pat, '['.(last_id+1).']', '')
+        let new_text = substitute(text, pat2, '['.(last_id+1).']', '')
         if lnum2 > lnum1
             sil! exe lnum1.','.(lnum2 - 1).'d_'
         endif
-        call setline(lnum1, new_text)
-        norm gqq
+        let new_lines = split(new_text, '\n')
+        call setline(lnum1, new_lines)
+        let g:debug = 'norm '.lnum1.','.(lnum1 + len(new_lines)).'gqq'
+        exe 'norm '.lnum1.'Ggq'.(len(new_lines) - 1).'j'
         let last_id += 1
         let g += 1
     endwhile
@@ -132,5 +142,12 @@ fu! markdown#link_inline_2_ref() abort "{{{1
 
     let &l:fen = 1
     call winrestview(view)
+endfu
+
+" Util {{{1
+fu! s:is_a_real_link() abort "{{{2
+    return !empty(filter(reverse(map(synstack(line('.'), col('.')),
+    \                            {i,v -> synIDattr(v, 'name')})),
+    \             {i,v -> v =~# '^markdownLink'}))
 endfu
 
