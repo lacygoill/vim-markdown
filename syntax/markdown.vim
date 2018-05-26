@@ -74,6 +74,11 @@ syn match markdownBlockquote "^>\+\%(\s.*\|$\)" contained contains=markdownBold 
 " Remove the ending two stars, and see what happens.
 " The bold style is applied beyond the quoted text.
 " With `keepend`, the style is contained to the quoted text.
+" Warning:
+" Don't allow the italic style inside quoted text.
+" Regular text often  contains a single underscore or star,  which would wrongly
+" be interpreted as the italic style.
+" Also, if the bold style creates an issue, remove the `contains` argument entirely.
 
 syn region markdownCodeBlock start="    \|\t" end="$" contained contains=@Spell
 "                                                                         │
