@@ -125,7 +125,7 @@ fu! markdown#link_inline_2_ref() abort "{{{2
         norm! %
 
         let line = getline('.')
-        let link = matchstr(line, '(\zs.*\%'.col('.').'c')
+        let link = matchstr(line, '\[.\{-}\](\zs.*\%'.col('.').'c')
         let link = substitute(link, '\s', '', 'g')
 
         let links += [link]
