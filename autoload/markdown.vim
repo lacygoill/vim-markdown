@@ -82,6 +82,10 @@ endfu
 fu! markdown#link_inline_2_ref() abort "{{{2
     let view = winsaveview()
     let &l:fen = 0
+    " We're going to inspect the syntax highlighting under the cursor.
+    " Sometimes, it's wrong.
+    " We must be sure it's correct.
+    syn sync fromstart
 
     call cursor(1,1)
     let g = 0
