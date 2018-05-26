@@ -163,7 +163,7 @@ setl ai
 
 " template for a comment (taken from html); will be used by `gc` (could also
 " be used by `zf` &friends, if &l:fdm = 'manual')
-setl cms=<!--%s-->
+setl cms=>\ %s
 
 " com {{{2
 
