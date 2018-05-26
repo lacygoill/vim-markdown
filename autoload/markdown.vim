@@ -78,3 +78,51 @@ fu! markdown#highlight_embedded_languages() abort "{{{1
     endfor
 endfu
 
+fu! markdown#link_inline_2_ref() abort "{{{1
+    let view = winsaveview()
+    let &l:fen = 0
+
+    if !search('^# Reference')
+        call append('$', ['##', '# Reference', ''])
+        let last_line = line('$')
+        let last_id = 0
+    else
+        call search('\%$')
+        call search('^\[\d\+\]:', 'bW')
+        let last_line = line('.')
+        let last_id = matchstr(getline('.'), '^\[\zs\d\+\ze\]:')
+    endif
+    let orig_last_id = last_id
+
+    call cursor(1,1)
+
+    let g = 0
+    let links = []
+    " describe an inline link:
+    "
+    "     [description](url)
+    let pat = '\[\_.\{-}\]\zs(\_.\{-})'
+    while search(pat, 'W') && g <= 100
+        let lnum1 = line('.')
+        let lnum2 = search('(\_.\{-})\zs', 'W')
+        let lines = getline(lnum1, lnum2)
+        let text = join(lines, "\n")
+        let link = substitute(matchstr(text, pat), '[() \t\n]', '', 'g')
+        let links += [link]
+        let new_text = substitute(text, pat, '['.(last_id+1).']', '')
+        if lnum2 > lnum1
+            sil! exe lnum1.','.(lnum2 - 1).'d_'
+        endif
+        call setline(lnum1, new_text)
+        norm gqq
+        let last_id += 1
+        let g += 1
+    endwhile
+
+    call map(links, {i,v -> '['.(i+1+orig_last_id).']: '.v})
+    call append(last_line, links)
+
+    let &l:fen = 1
+    call winrestview(view)
+endfu
+

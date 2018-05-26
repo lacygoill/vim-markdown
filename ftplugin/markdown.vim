@@ -114,6 +114,18 @@ cnorea  <buffer><expr>  foldsortbysize  getcmdtype() is# ':' && getcmdline() is#
 \                                       ?    'FoldSortBySize'
 \                                       :    'foldsortbysize'
 
+" Purpose: Convert inline link:{{{
+"
+"     [text](url)
+"
+" ...  to reference link:
+"
+"     [text][ref]
+"
+"  Make it local to markdown
+"}}}
+com! -buffer -bar -range=% LinkInline2Ref  call markdown#link_inline_2_ref()
+
 " Mappings {{{1
 
 nno  <buffer><nowait><silent>  cof  :<c-u>call fold#md#toggle_fde()<cr>
@@ -534,4 +546,5 @@ let b:undo_ftplugin =          get(b:, 'undo_ftplugin', '')
 \                         | exe 'nunmap <buffer> cof'
 \                         | exe 'cuna   <buffer> foldsortbysize'
 \                         | delc FoldSortBySize
+\                         | delc LinkInline2Ref
 \                       "
