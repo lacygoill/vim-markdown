@@ -80,15 +80,20 @@ fu! markdown#highlight_embedded_languages() abort "{{{2
 endfu
 
 fu! markdown#link_inline_2_ref() abort "{{{2
-    let pat = '\[[^]]\{-}\n\_.\{-}\](.*)'
-    if search(pat)
-        exe 'lvim /'.pat.'/gj %'
-        call setloclist(0, [], 'a', {'title': 'some links span multiple lines; make them mono-line'})
-        return
-    endif
-
     let view = winsaveview()
     let &l:fen = 0
+
+    call cursor(1,1)
+    let g = 0
+    let pat = '\[[^]]\{-}\n\_.\{-}\](.*)'
+    while search(pat) && g <= 100
+        if s:is_a_real_link()
+            exe 'lvim /'.pat.'/gj %'
+            call setloclist(0, [], 'a', {'title': 'some links span multiple lines; make them mono-line'})
+            return
+        endif
+        let g += 1
+    endwhile
 
     if !search('^# Reference')
         " Why assigning `0` instead of `line('$')`?{{{
