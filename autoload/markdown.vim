@@ -80,6 +80,13 @@ fu! markdown#highlight_embedded_languages() abort "{{{2
 endfu
 
 fu! markdown#link_inline_2_ref() abort "{{{2
+    let pat = '\[[^]]\{-}\n\_.\{-}\](.*)'
+    if search(pat)
+        exe 'lvim /'.pat.'/gj %'
+        call setloclist(0, [], 'a', {'title': 'some links span multiple lines; make them mono-line'})
+        return
+    endif
+
     let view = winsaveview()
     let &l:fen = 0
 
@@ -114,7 +121,7 @@ fu! markdown#link_inline_2_ref() abort "{{{2
 
         let line = getline('.')
         let link = matchstr(line, '(\zs.*\%'.col('.').'c')
-        let link = substitute(link, '[ \t]', '', 'g')
+        let link = substitute(link, '\s', '', 'g')
 
         let links += [link]
         let new_line = substitute(line, '('.link.')', '['.(last_id+1).']', '')
