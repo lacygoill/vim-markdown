@@ -83,7 +83,6 @@ fu! markdown#link_inline_2_ref() abort "{{{1
     let &l:fen = 0
 
     if !search('^# Reference')
-        call append('$', ['##', '# Reference', ''])
         let last_line = line('$')
         let last_id = 0
     else
@@ -101,10 +100,10 @@ fu! markdown#link_inline_2_ref() abort "{{{1
     " describe an inline link:
     "
     "     [description](url)
-    let pat = '\[\_.\{-}\]\zs(\_.\{-})'
-    while search(pat, 'W') && g <= 100
+    let pat = '\[\_.\{-1,}\]\zs(\_.\{-1,})'
+    while search(pat, 'W') && 1 && g <= 100
         let lnum1 = line('.')
-        let lnum2 = search('(\_.\{-})\zs', 'W')
+        let lnum2 = search('(\_.\{-1,})\zs', 'W')
         let lines = getline(lnum1, lnum2)
         let text = join(lines, "\n")
         let link = substitute(matchstr(text, pat), '[() \t\n]', '', 'g')
@@ -119,8 +118,13 @@ fu! markdown#link_inline_2_ref() abort "{{{1
         let g += 1
     endwhile
 
-    call map(links, {i,v -> '['.(i+1+orig_last_id).']: '.v})
-    call append(last_line, links)
+    if !empty(links)
+        if !search('^# Reference')
+            call append('$', ['##', '# Reference', ''])
+        endif
+        call map(links, {i,v -> '['.(i+1+orig_last_id).']: '.v})
+        call append(last_line, links)
+    endif
 
     let &l:fen = 1
     call winrestview(view)
