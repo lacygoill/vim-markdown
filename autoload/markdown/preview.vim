@@ -28,6 +28,7 @@ fu! s:getlines() abort "{{{1
     " edit.
     " Source:
     "     https://github.com/suan/vim-instant-markdown/pull/74#issue-37422001
+    "     https://github.com/suan/instant-markdown-d/pull/26
     "}}}
     let lines[line('.')-1] .= ' <a name="#marker" id="marker"></a>'
     return lines
