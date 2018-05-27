@@ -520,7 +520,7 @@ let b:exchange_indent = ''
 " because  the more  you  add syntax  plugins,  the  more it  has  an impact  on
 " performance.
 
-if expand('%:p') =~# '/wiki/web/'
+if expand('%:p') =~# '/wiki/\%(markdown\|web\)/'
     let b:markdown_embed = ['html']
 endif
 
