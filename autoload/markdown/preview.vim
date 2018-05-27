@@ -20,6 +20,15 @@ endif
 "}}}
 let s:redirection = '>/dev/null 2>&1 &'
 
+fu! s:getlines() abort "{{{1
+    let lines = getline(1, '$')
+    " Inject an invisible marker.
+    " The web server will use it to  scroll the window where we've made our last
+    " edit.
+    let lines[line('.')-1] .= ' <a name="#marker" id="marker"></a>'
+    return lines
+endfu
+
 fu! s:kill_daemon() abort "{{{1
     "                  ┌ silent: don't show progress meter or error messages{{{
     "                  │
@@ -56,7 +65,7 @@ fu! s:refresh() abort "{{{1
 
     elseif b:changedtick_last != b:changedtick
         let b:changedtick_last = b:changedtick
-        call system('curl -X PUT -T - http://localhost:8090 '.s:redirection, getline(1, '$'))
+        call system('curl -X PUT -T - http://localhost:8090 '.s:redirection, s:getlines())
         "                         │ │{{{
         "                         │ └ use stdin instead of a given file
         "                         │
