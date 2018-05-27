@@ -57,6 +57,11 @@ fu! s:refresh() abort "{{{1
     elseif b:changedtick_last != b:changedtick
         let b:changedtick_last = b:changedtick
         call system('curl -X PUT -T - http://localhost:8090 '.s:redirection, getline(1, '$'))
+        "                         │ │{{{
+        "                         │ └ use stdin instead of a given file
+        "                         │
+        "                         └ transfer the specified local file to the remote URL
+        " }}}
     endif
 endfu
 
