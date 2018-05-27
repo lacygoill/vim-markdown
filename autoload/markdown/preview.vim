@@ -85,7 +85,7 @@ fu! s:start_daemon(initial_lines) abort "{{{1
     "     https://github.com/suan/instant-markdown-d#environment-variables
     "
 "}}}
-    let env = 'INSTANT_MARKDOWN_BLOCK_EXTERNAL=1'
+    let env = 'INSTANT_MARKDOWN_ALLOW_UNSAFE_CONTENT=1'
     call system(env.' '.s:web_server.' '.s:redirection, a:initial_lines)
 endfu
 
