@@ -126,6 +126,8 @@ cnorea  <buffer><expr>  foldsortbysize  getcmdtype() is# ':' && getcmdline() is#
 "}}}
 com! -buffer -bar -range=% LinkInline2Ref  call markdown#link_inline_2_ref()
 
+com! -buffer -bar Preview call markdown#preview#main()
+
 " Mappings {{{1
 
 nno  <buffer><nowait><silent>  cof  :<c-u>call fold#md#toggle_fde()<cr>
@@ -541,10 +543,13 @@ let b:undo_ftplugin =          get(b:, 'undo_ftplugin', '')
 \                           setl ai< cms< cocu< cole< com< fde< fdm< fdt< flp< fml< fp< kp< spl< tw<
 \                         | unlet! b:cr_command b:exchange_indent b:sandwich_recipes b:markdown_embed
 \                         | exe 'au!  my_markdown * <buffer>'
+\                         | exe 'sil! au! instant-markdown * <buffer>'
 \                         | exe 'unmap <buffer> [['
 \                         | exe 'unmap <buffer> ]]'
 \                         | exe 'nunmap <buffer> cof'
 \                         | exe 'cuna   <buffer> foldsortbysize'
 \                         | delc FoldSortBySize
 \                         | delc LinkInline2Ref
+\                         | delc Preview
 \                       "
+
