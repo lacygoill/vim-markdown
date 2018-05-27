@@ -22,9 +22,13 @@ let s:redirection = '>/dev/null 2>&1 &'
 
 fu! s:getlines() abort "{{{1
     let lines = getline(1, '$')
-    " Inject an invisible marker.
+    " Inject an invisible marker.{{{
+    "
     " The web server will use it to  scroll the window where we've made our last
     " edit.
+    " Source:
+    "     https://github.com/suan/vim-instant-markdown/pull/74#issue-37422001
+    "}}}
     let lines[line('.')-1] .= ' <a name="#marker" id="marker"></a>'
     return lines
 endfu
