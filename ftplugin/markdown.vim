@@ -527,7 +527,7 @@ endif
 " sandwich_recipes {{{2
 
 " Let us conceal the answer to a question by pressing `sa {text-object} c`.
-let b:sandwich_recipes = deepcopy(get(g:, 'sandwich#recipes', []))
+let b:sandwich_recipes = deepcopy(get(g:, 'sandwich#recipes', get(g:, 'sandwich#default_recipes', [])))
 \  + [ {'buns':    ['↣ ', ' ↢'],
 \       'input':   ['c'],
 \       'command': ["']mark z",
