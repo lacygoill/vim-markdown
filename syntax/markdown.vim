@@ -7,10 +7,20 @@ endif
 "         https://github.com/vim-pandoc/vim-pandoc-syntax
 "         http://pandoc.org/MANUAL.html#pandocs-markdown
 
-" How to enable html syntax plugins?{{{
+" Why do you enable html syntax plugins?{{{
 "
-"     ru! syntax/html.vim syntax/html/*.vim
-"     unlet! b:current_syntax
+" We use some of their HGs and syntax groups, in our markdown syntax plugin.
+" Namely:
+"
+"     • syntax group: htmlSpecialChar
+"     • syntax cluster: @htmlTop
+"     • HG: htmlItalic
+"     • HG: htmlBold
+"     • HG: htmlBoldItalic
+"
+" That's what the original plugin does:
+"
+"     $VIMRUNTIME/syntax/markdown.vim
 "}}}
 " Is `syntax/html_*.vim` a valid file pattern for an html syntax plugin?{{{
 "
@@ -22,6 +32,8 @@ endif
 "         → Searching for "syntax/foo.vim syntax/foo/*.vim" in ...
 "           not found in 'runtimepath': "syntax/foobar.vim syntax/foobar/*.vim"
 "}}}
+ru! syntax/html.vim syntax/html/*.vim
+unlet! b:current_syntax
 
 " Syntax highlight is synchronized in 50 lines.
 " It may cause collapsed highlighting at large fenced code block.
