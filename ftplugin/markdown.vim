@@ -528,14 +528,14 @@ endif
 
 " Let us conceal the answer to a question by pressing `sa {text-object} c`.
 let b:sandwich_recipes = deepcopy(get(g:, 'sandwich#recipes', get(g:, 'sandwich#default_recipes', [])))
-    \ + [
-    \    {'buns':   ['↣ ', ' ↢'],
-    \    'input':   ['c'],
-    \    'command': [
-    \        "']mark z",
-    \        "keepj keepp '[s/^\\s*↣\\s*$/↣/e",
-    \        "keepj keepp 'zs/^\\s*↢\\s*$/↢/e"]}
-    \ ]
+    \ + [{
+    \     'buns': ['↣ ', ' ↢'],
+    \     'input': ['c'],
+    \     'command': [
+    \         "']mark z",
+    \         "keepj keepp '[s/^\\s*↣\\s*$/↣/e",
+    \         "keepj keepp 'zs/^\\s*↢\\s*$/↢/e",
+    \ ]}]
 
 " Teardown {{{1
 
