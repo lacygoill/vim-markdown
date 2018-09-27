@@ -32,7 +32,7 @@ endif
 "         → Searching for "syntax/foo.vim syntax/foo/*.vim" in ...
 "           not found in 'runtimepath': "syntax/foobar.vim syntax/foobar/*.vim"
 "}}}
-ru! syntax/html.vim syntax/html/*.vim
+runtime! syntax/html.vim syntax/html/*.vim
 unlet! b:current_syntax
 
 " Syntax highlight is synchronized in 50 lines.
