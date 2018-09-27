@@ -1,3 +1,10 @@
+if exists('b:did_ftplugin')
+    finish
+endif
+" We don't want other ftplugins to be sourced.
+" The less code, the faster we can reload our notes.
+let b:did_ftplugin = 1
+
 " TODO: study this folding code from tpope vim-markdown{{{
 
 " setl fdm=expr fde=Markdown_fold() fdt=Markdown_fold_text()
@@ -411,12 +418,6 @@ endif
 setl spl=en
 
 " Variables {{{1
-" did_ftplugin {{{2
-
-" We don't want other ftplugins to be sourced.
-" The less code, the faster we can reload our notes.
-let b:did_ftplugin = 1
-
 " cr_command {{{2
 
 " When we hit `CR`, we want the cursor to move on the 100th column.
