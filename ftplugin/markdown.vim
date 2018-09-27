@@ -1,9 +1,6 @@
 if exists('b:did_ftplugin')
     finish
 endif
-" We don't want other ftplugins to be sourced.
-" The less code, the faster we can reload our notes.
-let b:did_ftplugin = 1
 
 " TODO: study this folding code from tpope vim-markdown{{{
 
@@ -455,6 +452,12 @@ let b:sandwich_recipes = deepcopy(get(g:, 'sandwich#recipes', get(g:, 'sandwich#
     \         "keepj keepp '[s/^\\s*↣\\s*$/↣/e",
     \         "keepj keepp 'zs/^\\s*↢\\s*$/↢/e",
     \ ]}]
+
+" did_ftplugin {{{2
+
+" We don't want other ftplugins to be sourced.
+" The less code, the faster we can reload our notes.
+let b:did_ftplugin = 1
 
 " Teardown {{{1
 
