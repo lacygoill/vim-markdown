@@ -438,6 +438,8 @@ let b:exchange_indent = ''
 
 if expand('%:p') =~# '/wiki/\%(markdown\|web\)/'
     let b:markdown_embed = ['html']
+elseif expand('%:p') =~# '/wiki/vim/'
+    let b:markdown_embed = ['vim']
 endif
 
 " sandwich_recipes {{{2
