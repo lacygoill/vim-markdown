@@ -384,7 +384,7 @@ augroup my_markdown
 
     au BufWinEnter  <buffer>  setl fml=0
                           \ | setl fdm=expr
-                          \ | setl fdt=fold#text()
+                          \ | setl fdt=fold#fdt#get()
                           \ | setl fde=fold#md#fde#stacked()
                            "                       │
                            "                       └─ Alternative: 'nested()'
