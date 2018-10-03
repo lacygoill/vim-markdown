@@ -134,7 +134,7 @@ com! -buffer -bar Preview call markdown#preview#main()
 
 " Mappings {{{1
 
-nno  <buffer><nowait><silent>  cof  :<c-u>call fold#md#fde#toggle_fde()<cr>
+nno  <buffer><nowait><silent>  cof  :<c-u>call fold#md#fde#toggle()<cr>
 
 " Don't put a guard around the mappings,{{{
 " to check the existence of `lg#motion#regex#rhs()`.
@@ -385,9 +385,9 @@ augroup my_markdown
     au BufWinEnter  <buffer>  setl fml=0
                           \ | setl fdm=expr
                           \ | setl fdt=fold#text()
-                          \ | setl fde=fold#md#stacked()
-                           "                   │
-                           "                   └─ Alternative: 'nested()'
+                          \ | setl fde=fold#md#fde#stacked()
+                           "                       │
+                           "                       └─ Alternative: 'nested()'
     au BufWinEnter <buffer> setl cole=2 cocu=nc
 augroup END
 
