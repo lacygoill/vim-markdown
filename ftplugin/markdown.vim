@@ -134,7 +134,7 @@ com! -buffer -bar Preview call markdown#preview#main()
 
 " Mappings {{{1
 
-nno  <buffer><nowait><silent>  cof  :<c-u>call fold#md#toggle_fde()<cr>
+nno  <buffer><nowait><silent>  cof  :<c-u>call fold#md#fde#toggle_fde()<cr>
 
 " Don't put a guard around the mappings,{{{
 " to check the existence of `lg#motion#regex#rhs()`.
