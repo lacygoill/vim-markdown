@@ -112,7 +112,7 @@ endif
 
 " Commands {{{1
 
-com! -bar -buffer -range=%  FoldSortBySize  exe fold#md#sort_by_size(<line1>,<line2>)
+com! -bar -buffer -range=%  FoldSortBySize  exe fold#md#sort#by_size(<line1>,<line2>)
 
 cnorea  <buffer><expr>  foldsortbysize  getcmdtype() is# ':' && getcmdline() is# 'foldsortbysize'
 \                                       ?    'FoldSortBySize'
