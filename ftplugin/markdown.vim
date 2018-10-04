@@ -187,6 +187,10 @@ setl com=fbn:•,fbn:-,fb:*,fb:+
 "         └─ Blank (Space, Tab or EOL) required after the comment leader.
 "            So here, '• hello' would be recognized as a comment, but not '•hello'.
 
+" compiler {{{2
+
+compiler pandoc
+
 " What's the purpose of 'com'? {{{
 "
 " 'comments' contains a list of strings which can start a commented line.
@@ -466,7 +470,7 @@ let b:did_ftplugin = 1
 let b:undo_ftplugin =          get(b:, 'undo_ftplugin', '')
 \                     . (empty(get(b:, 'undo_ftplugin', '')) ? '' : '|')
 \                     . "
-\                           setl ai< cms< cocu< cole< com< fde< fdm< fdt< flp< fml< fp< kp< spl< tw<
+\                           setl ai< cms< cocu< cole< com< efm< fde< fdm< fdt< flp< fml< fp< kp< mp< spl< tw<
 \                         | unlet! b:cr_command b:exchange_indent b:sandwich_recipes b:markdown_embed
 \                         | exe 'au!  my_markdown * <buffer>'
 \                         | exe 'sil! au! instant-markdown * <buffer>'
