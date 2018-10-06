@@ -135,6 +135,7 @@ com! -buffer -bar Preview call markdown#preview#main()
 " Mappings {{{1
 
 nno  <buffer><nowait><silent>  cof  :<c-u>call fold#md#fde#toggle()<cr>
+nno  <buffer><nowait><silent>  gl  :<c-u>call fold#md#how_many#print()<cr>
 
 " Don't put a guard around the mappings,{{{
 " to check the existence of `lg#motion#regex#rhs()`.
@@ -477,6 +478,7 @@ let b:undo_ftplugin =          get(b:, 'undo_ftplugin', '')
 \                         | exe 'unmap <buffer> [['
 \                         | exe 'unmap <buffer> ]]'
 \                         | exe 'nunmap <buffer> cof'
+\                         | exe 'nunmap <buffer> gl'
 \                         | exe 'cuna   <buffer> foldsortbysize'
 \                         | delc FoldSortBySize
 \                         | delc LinkInline2Ref
