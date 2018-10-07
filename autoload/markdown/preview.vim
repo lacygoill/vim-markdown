@@ -6,7 +6,7 @@ let g:autoloaded_markdown#preview = 1
 " To install the web server:{{{
 "
 "     $ sudo aptitude install git nodejs npm
-"     $ git clone https://github.com/suan/instant-markdown-d
+"     $ git clone https://github.com/lacygoill/instant-markdown-d
 "     $ cd instant-markdown-d
 "     $ npm install
 "}}}
