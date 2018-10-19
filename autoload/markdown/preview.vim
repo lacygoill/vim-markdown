@@ -35,16 +35,16 @@ fu! s:getlines() abort "{{{1
 endfu
 
 fu! s:kill_daemon() abort "{{{1
-    "                  ┌ silent: don't show progress meter or error messages{{{
-    "                  │
-    "                  │  ┌ specifies  a custom  request method  to use
-    "                  │  │ when communicating with the HTTP server
-    "                  │  │
-    "                  │  │ The  specified request  method  will be  used
-    "                  │  │ instead of  the method otherwise  used (which
-    "                  │  │ defaults to GET).
-    "                  │  │}}}
-    call system('curl -s -X DELETE http://localhost:8090 '.s:redirection)
+    "                      ┌ silent: don't show progress meter or error messages{{{
+    "                      │
+    "                      │  ┌ specifies  a custom  request method  to use
+    "                      │  │ when communicating with the HTTP server
+    "                      │  │
+    "                      │  │ The  specified request  method  will be  used
+    "                      │  │ instead of  the method otherwise  used (which
+    "                      │  │ defaults to GET).
+    "                      │  │}}}
+    sil call system('curl -s -X DELETE http://localhost:8090 '.s:redirection)
     " What's the meaning of the `DELETE` method?{{{
     "
     " >   The DELETE method requests that  the origin server delete the resource
@@ -70,7 +70,7 @@ fu! s:refresh() abort "{{{1
 
     elseif b:changedtick_last != b:changedtick
         let b:changedtick_last = b:changedtick
-        call system('curl -X PUT -T - http://localhost:8090 '.s:redirection, s:getlines())
+        sil call system('curl -X PUT -T - http://localhost:8090 '.s:redirection, s:getlines())
         "                         │ │{{{
         "                         │ └ use stdin instead of a given file
         "                         │
@@ -104,6 +104,6 @@ fu! s:start_daemon(initial_lines) abort "{{{1
     " For Vimium to be allowed to work, yes.
     "}}}
     let env = 'INSTANT_MARKDOWN_ALLOW_UNSAFE_CONTENT=1'
-    call system(env.' '.s:web_server.' '.s:redirection, a:initial_lines)
+    sil call system(env.' '.s:web_server.' '.s:redirection, a:initial_lines)
 endfu
 
