@@ -470,19 +470,21 @@ let b:did_ftplugin = 1
 
 let b:undo_ftplugin = get(b:, 'undo_ftplugin', '')
     \ . (empty(get(b:, 'undo_ftplugin', '')) ? '' : '|')
-    \ . 'setl ai< cms< cocu< cole< com< efm< fde< fdm< fdt< flp< fml< fp< kp< mp< spl< tw<'
-    \ . '| unlet! b:cr_command b:exchange_indent b:sandwich_recipes b:markdown_embed'
-    \ . '| exe "au! my_markdown * <buffer>"'
-    \ . '| exe "sil! au! instant-markdown * <buffer>"'
+    \ . "
+    \ setl ai< cms< cocu< cole< com< efm< fde< fdm< fdt< flp< fml< fp< kp< mp< spl< tw<
+    \|unlet! b:cr_command b:exchange_indent b:sandwich_recipes b:markdown_embed
+    \|exe 'au! my_markdown * <buffer>'
+    \|exe 'sil! au! instant-markdown * <buffer>'
     \
-    \ . '| unmap <buffer> [['
-    \ . '| unmap <buffer> ]]'
+    \|unmap <buffer> [[
+    \|unmap <buffer> ]]
     \
-    \ . '| nunmap <buffer> cof'
-    \ . '| nunmap <buffer> gl'
+    \|nunmap <buffer> cof
+    \|nunmap <buffer> gl
     \
-    \ . '| cuna <buffer> foldsortbysize'
-    \ . '| delc FoldSortBySize'
-    \ . '| delc LinkInline2Ref'
-    \ . '| delc Preview'
+    \|cuna <buffer> foldsortbysize
+    \|delc FoldSortBySize
+    \|delc LinkInline2Ref
+    \|delc Preview
+    \"
 
