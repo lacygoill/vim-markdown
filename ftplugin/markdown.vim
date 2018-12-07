@@ -172,25 +172,22 @@ setl ai
 " be used by `zf` &friends, if &l:fdm = 'manual')
 setl cms=>\ %s
 
-" com {{{2
+" comments {{{2
 
-"        ┌─ Only the first line has the comment leader.
-"        │  Do not repeat comment on the next line, but preserve indentation:
-"        │  useful for bullet-list.
+"        ┌ Only the first line has the comment leader.{{{
+"        │ Do not repeat comment on the next line, but preserve indentation:
+"        │ useful for bullet-list.
 "        │
-"        │ ┌─ Nested comment.
-"        │ │  Nesting with mixed parts is allowed.
-"        │ │  Ex: if 'comments' is "n:•,n:-", a line starting with "• -" is a comment.
-"        │ │                                                        └─┤
-"        │ │                                                          └ mixed
+"        │┌ Blank (Space, Tab or EOL) required after the comment leader.
+"        ││ So here, '• hello' would be recognized as a comment, but not '•hello'.
+"        ││
+"        ││┌ Nested comment.
+"        │││ Nesting with mixed parts is allowed.
+"        │││ Ex: if 'comments' is "n:•,n:-", a line starting with "• -" is a comment.
+"        │││                                                       └─┤
+"        │││                                                         └ mixed
+"        │││}}}
 setl com=fbn:•,fbn:-,fb:*,fb:+
-"         │
-"         └─ Blank (Space, Tab or EOL) required after the comment leader.
-"            So here, '• hello' would be recognized as a comment, but not '•hello'.
-
-" compiler {{{2
-
-compiler pandoc
 
 " What's the purpose of 'com'? {{{
 "
@@ -224,10 +221,10 @@ compiler pandoc
 " We often use it to infer what a comment looks like, because it's easier than
 " parsing 'com', but that's it.
 "
-"                          ┌ %s is replaced by "{{{ and "}}}  at the end of resp.
-"                          │ the starting line of the fold and the ending line of the fold
-"                 ┌────────┤
-"         "%s  →  "{{{  "}}}
+"                            ┌ %s is replaced by "{{_{ and "}}_}  at the end of resp.
+"                            │ the starting line of the fold and the ending line of the fold
+"                 ┌──────────┤
+"         "%s  →  "{{_{  "}}_}
 "         └─┤
 "           └ template
 "}}}
@@ -284,6 +281,11 @@ compiler pandoc
 "         some very long comment
 "
 " }}}
+
+" compiler {{{2
+
+compiler pandoc
+
 " folding + conceal "{{{2
 " Why don't we set the folding options directly, instead of using an autocmd?{{{
 "
@@ -418,7 +420,7 @@ endif
 " spl "{{{2
 
 setl spl=en
-
+" }}}1
 " Variables {{{1
 " cr_command {{{2
 
@@ -465,7 +467,7 @@ let b:sandwich_recipes = deepcopy(get(g:, 'sandwich#recipes', get(g:, 'sandwich#
 " We don't want other ftplugins to be sourced.
 " The less code, the faster we can reload our notes.
 let b:did_ftplugin = 1
-
+" }}}1
 " Teardown {{{1
 
 let b:undo_ftplugin = get(b:, 'undo_ftplugin', '')
