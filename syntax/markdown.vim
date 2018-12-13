@@ -55,8 +55,13 @@ syn match markdownValid '&\%(#\=\w*;\)\@!'
 
 syn match markdownLineStart "^[<@]\@!" nextgroup=@markdownBlock,htmlSpecialChar
 
-" FIXME:
-" Why does this line need to be after the `markdownLineStart` item?
+" FIXME: Why does this line need to be after the `markdownLineStart` item?
+" Update: It doesn't seem to be true anymore...
+" Try to move the previous line after the next two ones, and visit this file:
+"
+"     ~/.vim/after/plugin/README/sandwich.md
+"
+" The conceal seems to work fine.
 syn region markdown_hide_answers start='^↣' end='^↢.*' conceal cchar=? containedin=markdownCodeBlock
 syn match markdown_hide_answers '↣.\{-}↢' conceal cchar=? containedin=markdownCodeBlock
 
@@ -231,3 +236,4 @@ hi link markdownError                     Normal
 "}}}
 
 let b:current_syntax = 'markdown'
+

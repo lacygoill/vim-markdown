@@ -67,8 +67,8 @@ endif
 "
 "     ru! ftplugin/html.vim ftplugin/html_*.vim ftplugin/html/*.vim
 "       │
-"       └─ all of them
-"          (even if there are several ftplugin/html.vim in various directories of &rtp)
+"       └ all of them
+"         (even if there are several ftplugin/html.vim in various directories of &rtp)
 "}}}
 " Why don't you source them?{{{
 "
@@ -473,20 +473,20 @@ let b:did_ftplugin = 1
 let b:undo_ftplugin = get(b:, 'undo_ftplugin', '')
     \ . (empty(get(b:, 'undo_ftplugin', '')) ? '' : '|')
     \ . "
-    \ setl ai< cms< cocu< cole< com< efm< fde< fdm< fdt< flp< fml< fp< kp< mp< spl< tw<
-    \|unlet! b:cr_command b:exchange_indent b:sandwich_recipes b:markdown_embed
-    \|exe 'au! my_markdown * <buffer>'
-    \|exe 'sil! au! instant-markdown * <buffer>'
+    \   setl ai< cms< cocu< cole< com< efm< fde< fdm< fdt< flp< fml< fp< kp< mp< spl< tw<
+    \ | unlet! b:cr_command b:exchange_indent b:sandwich_recipes b:markdown_embed
+    \ | exe 'au! my_markdown * <buffer>'
+    \ | exe 'sil! au! instant-markdown * <buffer>'
     \
-    \|unmap <buffer> [[
-    \|unmap <buffer> ]]
+    \ | exe 'unmap <buffer> [['
+    \ | exe 'unmap <buffer> ]]'
     \
-    \|nunmap <buffer> cof
-    \|nunmap <buffer> gl
+    \ | exe 'nunmap <buffer> cof'
+    \ | exe 'nunmap <buffer> gl'
     \
-    \|cuna <buffer> foldsortbysize
-    \|delc FoldSortBySize
-    \|delc LinkInline2Ref
-    \|delc Preview
+    \ | exe 'cuna <buffer> foldsortbysize'
+    \ | delc FoldSortBySize
+    \ | delc LinkInline2Ref
+    \ | delc Preview
     \"
 
