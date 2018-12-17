@@ -48,7 +48,7 @@ syn case ignore
 " But we still want to be able to source them with a simple `+sip`.
 " So we separate them with empty commented lines.
 "}}}
-syn match markdown_hide_VimL_separations '^\s*"$' conceal containedin=markdownCodeBlock
+syn match markdownHideVimlSeparations '^\s*"$' conceal containedin=markdownCodeBlock
 
 syn match markdownValid '[<>]\c[a-z/$!]\@!'
 syn match markdownValid '&\%(#\=\w*;\)\@!'
@@ -62,8 +62,13 @@ syn match markdownLineStart "^[<@]\@!" nextgroup=@markdownBlock,htmlSpecialChar
 "     ~/.vim/after/plugin/README/sandwich.md
 "
 " The conceal seems to work fine.
-syn region markdown_hide_answers start='^↣' end='^↢.*' conceal cchar=? containedin=markdownCodeBlock
-syn match markdown_hide_answers '↣.\{-}↢' conceal cchar=? containedin=markdownCodeBlock
+"
+" TODO: How to include italics inside a hidden answer?
+" We would add `contains=markdownItalic`.
+" But the text in italics would not be concealed...
+" We probably have the same issue with other styles (bold, ...).
+syn region markdownHideAnswers start='^↣' end='^↢.*' conceal cchar=? containedin=markdownCodeBlock
+syn match markdownHideAnswers '↣.\{-}↢' conceal cchar=? containedin=markdownCodeBlock
 
 syn cluster markdownBlock contains=markdownH1,markdownH2,markdownH3,markdownH4,markdownH5,markdownH6,markdownBlockquote,markdownListMarker,markdownOrderedListMarker,markdownCodeBlock,markdownRule
 syn cluster markdownInline contains=markdownLineBreak,markdownLinkText,markdownItalic,markdownBold,markdownCode,markdownEscape,@htmlTop,markdownError
