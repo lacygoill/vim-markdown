@@ -201,7 +201,7 @@ syn match markdownFootnoteDefinition "^\[^[^\]]\+\]:"
 syn match markdownEscape "\\[][\\`*_{}()<>#+.!-]"
 syn match markdownError "\w\@<=_\w\@="
 
-syn match markdownPointer "^\s*^\+$"
+syn match markdownPointer "^\s*[v^✘✔]\+$"
 
 call markdown#define_include_clusters()
 call markdown#highlight_embedded_languages()
@@ -223,7 +223,7 @@ hi link markdownHeadingDelimiter      Delimiter
 hi link markdownOrderedListMarker     markdownListMarker
 hi link markdownListMarker            Statement
 hi link markdownBlockquote            Comment
-hi link markdownRule                  PreProc
+hi link markdownRule                  Comment
 
 hi link markdownFootnote              Typedef
 hi link markdownFootnoteDefinition    Typedef
