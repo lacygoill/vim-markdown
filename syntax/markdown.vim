@@ -201,6 +201,8 @@ syn match markdownFootnoteDefinition "^\[^[^\]]\+\]:"
 syn match markdownEscape "\\[][\\`*_{}()<>#+.!-]"
 syn match markdownError "\w\@<=_\w\@="
 
+syn match markdownPointer "^\s*^\+$"
+
 call markdown#define_include_clusters()
 call markdown#highlight_embedded_languages()
 
@@ -285,6 +287,8 @@ hi link markdownError                 Normal
 "}}}
 hi link markdownCode                  CodeSpan
 " hi link markdownCodeBlock             CodeSpan
+
+hi link markdownPointer               Comment
 
 let b:current_syntax = 'markdown'
 
