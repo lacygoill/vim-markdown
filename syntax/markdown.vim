@@ -6,6 +6,7 @@ endif
 " read and take inspiration from:
 "         https://github.com/vim-pandoc/vim-pandoc-syntax
 "         http://pandoc.org/MANUAL.html#pandocs-markdown
+"         https://github.com/junegunn/vim-journal/blob/master/syntax/journal.vim
 
 " Why do you enable html syntax plugins?{{{
 "
@@ -50,6 +51,10 @@ syn case ignore
 "}}}
 syn match markdownHideVimlSeparations '^\s*"$' conceal containedin=markdownCodeBlock
 
+" To understand why these lines are necessary, insert this at the beginning of a
+" line:
+"     <'abc
+" And read this: https://github.com/tpope/vim-markdown/pull/31
 syn match markdownValid '[<>]\c[a-z/$!]\@!'
 syn match markdownValid '&\%(#\=\w*;\)\@!'
 
@@ -64,7 +69,7 @@ syn match markdownLineStart "^[<@]\@!" nextgroup=@markdownBlock,htmlSpecialChar
 " The conceal seems to work fine.
 "
 " TODO: How to include italics inside a hidden answer?
-" We would add `contains=markdownItalic`.
+" We could add `contains=markdownItalic`.
 " But the text in italics would not be concealed...
 " We probably have the same issue with other styles (bold, ...).
 syn region markdownHideAnswers start='^↣' end='^↢.*' conceal cchar=? containedin=markdownCodeBlock
@@ -84,31 +89,79 @@ syn region markdownH3 matchgroup=markdownH3Delimiter start="####\@!"    end="#*\
 syn region markdownH4 matchgroup=markdownH4Delimiter start="#####\@!"   end="#*\s*$" keepend oneline contains=@markdownInline,markdownAutomaticLink contained
 syn region markdownH5 matchgroup=markdownH5Delimiter start="######\@!"  end="#*\s*$" keepend oneline contains=@markdownInline,markdownAutomaticLink contained
 syn region markdownH6 matchgroup=markdownH6Delimiter start="#######\@!" end="#*\s*$" keepend oneline contains=@markdownInline,markdownAutomaticLink contained
-syn match markdownBlockquote "^>\+\%(\s.*\|$\)" contained contains=markdownBold nextgroup=@markdownBlock keepend
-" TODO: explain why we need `keepend`.
-" Hint:
-" In ~/Dropbox/wiki/vim/qf.md, there's a question whose title is:
+
+" Why is `keepend` important here?{{{
 "
-"         What's the 'module' property of a qf entry?
+" Suppose you emphasize some text in bold, while quoting a sentence.
+" But you forget to add `**` at the end of the emphasized text.
+" The `markdownBold` region will go on until the end of the quoted sentence.
 "
-" In the answer, we quote some text.
-" Inside the quote, we emphasize some words in bold, by surrounding them with two stars.
-" Remove the ending two stars, and see what happens.
-" The bold style is applied beyond the quoted text.
-" With `keepend`, the style is contained to the quoted text.
-" Warning:
-" Don't allow the italic style inside quoted text.
-" Regular text often  contains a single underscore or star,  which would wrongly
-" be interpreted as the italic style.
-" Also, if the bold style creates an issue, remove the `contains` argument entirely.
+" This is expected, and *not* avoidable.
+"
+" But, it will also consume the  end of `markdownBlockquote`, which will have to
+" be extended, as well as `markdownBold`.
+" As a  result, after your quoted  sentence, the following text  will be wrongly
+" highlighted by the stack of items `markdownBold markdownBlockquote`.
+" IOW, the text will be in bold, even *after* you've finished writing your quote.
+"
+" This is UNexpected, but *avoidable*.
+" `keepend`  prevents a  possible broken  contained region  from being  extended
+" outside the initial containing region.
+"}}}
+syn match markdownBlockquote "^>\+\%(\s.*\|$\)" contained contains=markdownBold,markdownCode,markdownItalic,markdownBlockquoteLeadingChar keepend nextgroup=@markdownBlock
+syn match markdownBlockquoteLeadingChar "^>\+\s*" contained conceal
 
 syn region markdownCodeBlock start="    \|\t" end="$" contained contains=@Spell
-"                                                                         │
+"                                                                         │{{{
 " When we enable 'spell', errors aren't highlighted inside a code block.  ┘
 " So we add the @Spell cluster. See `:h spell-syntax`
+"}}}
 
 " TODO: real nesting
-syn match markdownListMarker "\%(\t\| \{0,4\}\)[-*+]\%(\s\+\S\)\@=" contained
+" Why did you add `•` in the collection `[-*+•]`?{{{
+"
+" It makes the bullets prettier, because they're highlighted.
+" When we indent  a list with 4 spaces or  more, it prevents `markdownCodeBlock`
+" to match, which in turn allows `markdownCode` to match.
+"}}}
+" TODO: Maybe we should remove `•`, and instead use `-` to format our lists.
+" This would give us the benefit of having our bulleted list recognized by a markdown viewer/parser.{{{
+"
+"     syn match markdownListMarkerPretty "\%(\t\| \{0,4\}\)\@<=[-*+]\%(\s\+\S\)\@=" contained containedin=markdownListMarker conceal cchar=•
+"
+" Also, when  we would read  a markdown file written  by someone else,  we would
+" automatically see `•` instead of `-`.
+" No need of reformatting.
+"
+" If we do this, we would need to conceal `-`, and replace it with `•`.
+" And we would need to make `hl-Conceal` less visible:
+"
+"     hi! link Conceal Statement
+"                      │
+"                      └ HG used by markdownListMarker
+"
+" And  we  would  need  to  refactor   `coc`  so  that  it  temporarily  resets
+" `hl-Conceal` with its old attributes (more visible):
+"
+"     Conceal        xxx ctermfg=237 ctermbg=254 guifg=#4B4B4B guibg=#E9E9E9
+"
+" And we would need to refactor `vim-bullet-list`.
+" And we would need to replace `•` with `-` everywhere:
+"
+"     `noa vim /•/gj ~/.vim/**/*.{vim,md} ~/.vim/**/*.snippets ~/.vim/template/** ~/.vim/vimrc ~/Dropbox/wiki/**/*.md ~/.zsh/** ~/.config/** ~/.zshrc ~/.zshenv ~/.Xresources ~/.tmux.conf ... | cw`
+"
+" Also,  should we  add the  same  kind of  conceal  in all  filetypes, but  for
+" comments only?
+"
+" Issue:
+" If we do this, lists indented with 4 spaces would be highlighted as code.
+" Solution:
+" Indent them with Tabs instead.
+" And tweak the syntax match `xCommentCodeBlock` in `lg#styled_comment#syntax()`.
+" Remove `•`  from its regex,  and specify  that the there  should not be  a tab
+" after the comment leader.
+"}}}
+syn match markdownListMarker "\%(\t\| \{0,4\}\)[-*+•]\%(\s\+\S\)\@=" contained
 syn match markdownOrderedListMarker "\%(\t\| \{0,4}\)\<\d\+\.\%(\s\+\S\)\@=" contained
 
 syn match markdownRule "\* *\* *\*[ *]*$" contained
@@ -138,18 +191,9 @@ syn region markdownBold matchgroup=markdownBoldDelimiter start="\S\@<=__\|__\S\@
 syn region markdownBoldItalic matchgroup=markdownBoldItalicDelimiter start="\S\@<=\*\*\*\|\*\*\*\S\@=" end="\S\@<=\*\*\*\|\*\*\*\S\@=" keepend contains=markdownLineStart,@Spell concealends
 syn region markdownBoldItalic matchgroup=markdownBoldItalicDelimiter start="\S\@<=___\|___\S\@=" end="\S\@<=___\|___\S\@=" keepend contains=markdownLineStart,@Spell concealends
 
-syn region markdownCode matchgroup=markdownCodeDelimiter start="`" end="`" keepend contains=markdownLineStart
+syn region markdownCode matchgroup=markdownCodeDelimiter start="`" end="`" keepend contains=markdownLineStart concealends
 syn region markdownCode matchgroup=markdownCodeDelimiter start="`` \=" end=" \=``" keepend contains=markdownLineStart
 syn region markdownCode matchgroup=markdownCodeDelimiter start="^\s*````*.*$" end="^\s*````*\ze\s*$" keepend
-" Why?{{{
-"
-" It allows us to conceal backticks when they are followed by quotes:
-"
-"       `'option'`    →     'option'
-"
-" It reduces noise.
-"}}}
-syn region markdownBacktickThenQuotes matchgroup=Comment start=/`\ze['"]\S\+['"]`/ end=/['"]\S\+['"]\zs`/ oneline concealends containedin=markdownCode,markdownCodeDelimiter
 
 syn match markdownFootnote "\[^[^\]]\+\]"
 syn match markdownFootnoteDefinition "^\[^[^\]]\+\]:"
@@ -222,7 +266,7 @@ hi link markdownEscape                Special
 "
 " Solution:
 " }}}
-hi link markdownError                     Normal
+hi link markdownError                 Normal
 " Source: {{{
 "
 "     http://stackoverflow.com/a/19137899
@@ -239,6 +283,8 @@ hi link markdownError                     Normal
 " If no, how to get rid of `markdownError` entirely, without any side-effect
 " (italic)?
 "}}}
+hi link markdownCode                  CodeSpan
+" hi link markdownCodeBlock             CodeSpan
 
 let b:current_syntax = 'markdown'
 

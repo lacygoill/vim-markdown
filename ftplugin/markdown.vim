@@ -443,10 +443,10 @@ let b:exchange_indent = ''
 " because  the more  you  add syntax  plugins,  the  more it  has  an impact  on
 " performance.
 
-if expand('%:p') =~# '/wiki/\%(markdown\|web\)/'
-    let b:markdown_embed = ['html']
-elseif expand('%:p') =~# '/wiki/vim/'
-    let b:markdown_embed = ['vim']
+if search('^```\S\+', 'n')
+    let b:markdown_embed = map(uniq(sort(filter(getline(1, '$'),
+        \ {i,v -> v =~# '^```\S\+'}))),
+        \ {i,v -> matchstr(v, '```\zs.*')})
 endif
 
 " sandwich_recipes {{{2
@@ -473,7 +473,8 @@ let b:did_ftplugin = 1
 let b:undo_ftplugin = get(b:, 'undo_ftplugin', '')
     \ . (empty(get(b:, 'undo_ftplugin', '')) ? '' : '|')
     \ . "
-    \   setl ai< cms< cocu< cole< com< efm< fde< fdm< fdt< flp< fml< fp< kp< mp< spl< tw<
+    \   setl ai< cms< cocu< cole< com< fde< fdm< fdt< flp< fml< spl< tw<
+    \ | set efm< fp< kp< mp<
     \ | unlet! b:cr_command b:exchange_indent b:sandwich_recipes b:markdown_embed
     \ | exe 'au! my_markdown * <buffer>'
     \ | exe 'sil! au! instant-markdown * <buffer>'
