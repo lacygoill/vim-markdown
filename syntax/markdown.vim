@@ -203,6 +203,9 @@ syn match markdownError "\w\@<=_\w\@="
 
 syn match markdownPointer "^\s*[v^✘✔]\+$"
 
+syn match markdownCommentTitle /\s*\u\w*\(\s\+\u\w*\)*:/ contains=markdownTodo
+syn keyword markdownTodo contained FIXME TODO
+
 call markdown#define_include_clusters()
 call markdown#highlight_embedded_languages()
 
@@ -289,6 +292,8 @@ hi link markdownCode                  CodeSpan
 " hi link markdownCodeBlock             CodeSpan
 
 hi link markdownPointer               Comment
+hi link markdownCommentTitle PreProc
+hi link markdownTodo Todo
 
 let b:current_syntax = 'markdown'
 
