@@ -199,8 +199,6 @@ syn region markdownCodeBlock start="    \|\t" end="$" contained contains=@Spell 
 "        ├─────┘  ├─┘
 "        │        └ the end of the buffer
 "        │
-"        │      odeblock inside a list item
-"        │
 "        └ the beginning of a paragraph
 "}}}
 syn match markdownList "^ \{,3\}\%([-*+•]\|\d\+\.\)\s\+\S\_.\{-}\n\%(\s*\n\S\|\%$\)\@=" contained contains=markdownListItalic,markdownListBold,markdownListBoldItalic,markdownListCodeSpan
