@@ -190,20 +190,20 @@ syn region markdownCodeBlock start="    \|\t" end="$" contained contains=@Spell 
 "
 " Second Part:
 "
-"     \%(\s*\n\S\| \{8}\|\%$\)\@=
+"     \%(\s*\n\S\|\%$\)\@=
 "
 " This describes when a list item should stop.
 " It can be broken down further:
 "
-"     \%(\s*\n\S\| \{8}\|\%$\)\@=
-"        ├─────┘  ├───┘  ├─┘
-"        │        │      └ the end of the buffer
-"        │        │
-"        │        └ a codeblock inside a list item
+"     \%(\s*\n\S\|\%$\)\@=
+"        ├─────┘  ├─┘
+"        │        └ the end of the buffer
+"        │
+"        │      odeblock inside a list item
 "        │
 "        └ the beginning of a paragraph
 "}}}
-syn match markdownList "^ \{,3\}\%([-*+•]\|\d\+\.\)\s\+\S\_.\{-}\n\%(\s*\n\S\| \{8}\|\%$\)\@=" contained contains=markdownListItalic,markdownListBold,markdownListBoldItalic,markdownListCodeSpan
+syn match markdownList "^ \{,3\}\%([-*+•]\|\d\+\.\)\s\+\S\_.\{-}\n\%(\s*\n\S\|\%$\)\@=" contained contains=markdownListItalic,markdownListBold,markdownListBoldItalic,markdownListCodeSpan
 syn region markdownListItalic matchgroup=markdownItalicDelimiter start="\S\@<=\*\|\*\S\@=" end="\S\@<=\*\|\*\S\@=" keepend contains=markdownLineStart,@Spell concealends
 syn region markdownListBold matchgroup=markdownBoldDelimiter start="\S\@<=\*\*\|\*\*\S\@=" end="\S\@<=\*\*\|\*\*\S\@=" keepend contains=markdownLineStart,markdownItalic,@Spell concealends
 syn region markdownListBoldItalic matchgroup=markdownBoldItalicDelimiter start="\S\@<=\*\*\*\|\*\*\*\S\@=" end="\S\@<=\*\*\*\|\*\*\*\S\@=" keepend contains=markdownLineStart,@Spell concealends
