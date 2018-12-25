@@ -142,7 +142,6 @@ syn region markdownCodeBlock start="    \|\t" end="$" contained contains=@Spell 
 "}}}
 
 " TODO: real nesting
-" TODO: other styles should be included inside a list (bold, italic, bold+italic, codespan ...)
 " Why did you add `•` in the collection `[-*+•]`?{{{
 "
 " It makes the bullets prettier, because they're highlighted.
@@ -180,16 +179,6 @@ syn region markdownCodeBlock start="    \|\t" end="$" contained contains=@Spell 
 "
 " Also,  should we  add the  same  kind of  conceal  in all  filetypes, but  for
 " comments only?
-"}}}
-" FIXME: Originally, there were 2 items (ordered + unordered lists), and they used the quantifier `\{0,4\}`.{{{
-"
-" But it seems too much.
-" Try to write a list indented with 4 spaces, and run `:Preview`.
-" The list is formatted as a codeblock, instead of a list!
-" So, why did tpope used 4 spaces, instead of 3?
-" Also, it included a tab, which causes the same issue:
-"
-"     syn match markdownList "\%(\t\| \{0,3\}\)[-*+•]\%(\s\+\S\)\@=" contained
 "}}}
 " The regex can be broken down like this:{{{
 "
@@ -321,36 +310,14 @@ hi link markdownH4Delimiter           markdownHeadingDelimiter
 hi link markdownH5Delimiter           markdownHeadingDelimiter
 hi link markdownH6Delimiter           markdownHeadingDelimiter
 hi link markdownHeadingDelimiter      Delimiter
-" Originally, it was linked to `Statement`, but I find `Repeat` more readable.
-hi link markdownList                  CommentList
-hi link markdownBlockquote            CommentBlockQuote
 hi link markdownRule                  Comment
 
 hi link markdownFootnote              Typedef
 hi link markdownFootnoteDefinition    Typedef
 
-" TODO:
-" We should  not link `markdownLinkText`  and `markdownUrl` to  `Underlined` and
-" `Float`.
-" We should link them to `CommentLinkText` and `CommentUrl`, and define
-" the latter in:
-"
-"     ~/.vim/autoload/colorscheme.vim
-"     /s:styled_comments(
-"
-" This way our global theme will be consistent.
-" If we change the colors of links in the customizations of our colorscheme, the
-" change will be reflected in our markdown notes.
-hi link markdownLinkText              Underlined
-"                                     │{{{
-"                                     └ From `:h group-name`:
-"
-"                                         *Underlined text that stands out, HTML links
-"}}}
 hi link markdownIdDeclaration         Typedef
 hi link markdownId                    Type
 hi link markdownAutomaticLink         markdownUrl
-hi link markdownUrl                   Float
 hi link markdownUrlTitle              String
 hi link markdownIdDelimiter           markdownLinkDelimiter
 hi link markdownUrlDelimiter          Function
@@ -397,7 +364,6 @@ hi link markdownEscape                Special
 "}}}
 hi link markdownError                 Error
 hi link markdownCodeBlock             Comment
-hi link markdownBlockquoteBold        CommentBlockquoteBold
 
 hi link markdownPointer               Title
 hi link markdownCommentTitle          PreProc
