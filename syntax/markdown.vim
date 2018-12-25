@@ -212,6 +212,10 @@ syn match markdownList '^ \{,3\}\%([-*+•]\|\d\+\.\)\s\+\S\_.\{-}\n\s*\n\%(\S\|
 " Shouldn't we use `_` instead of `*` to  avoid a conflict with `*` when used as
 " an item leader.
 "}}}
+" TODO:
+" I'm not sure that the end of a list is simply a non-whitespace character right
+" at the beginning of a line.
+" It seems there could be one or a few spaces before the non-whitespace.
 syn region markdownListItalic matchgroup=markdownItalicDelimiter start='\S\@<=\*\|\*\S\@=' end='\S\@<=\*\|\*\S\@=' keepend contains=markdownLineStart,@Spell concealends
 syn region markdownListBold matchgroup=markdownBoldDelimiter start='\S\@<=\*\*\|\*\*\S\@=' end='\S\@<=\*\*\|\*\*\S\@=' keepend contains=markdownLineStart,markdownItalic,@Spell concealends
 syn region markdownListBoldItalic matchgroup=markdownBoldItalicDelimiter start='\S\@<=\*\*\*\|\*\*\*\S\@=' end='\S\@<=\*\*\*\|\*\*\*\S\@=' keepend contains=markdownLineStart,@Spell concealends
