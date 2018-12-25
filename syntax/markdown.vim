@@ -307,6 +307,9 @@ syn match markdownIgnore /.$/ contained containedin=markdownOutput conceal
 "     │  │
 "     │  └ blue
 "     └ red
+"
+" Maybe it's an argument in favor of using 8 spaces to indent codeblocks.
+" This would leave us indentations of 3 spaces up to 7 spaces for other usage...
 "}}}
 syn match markdownTable /^\s\{4}[│─┌└├].*/
 
