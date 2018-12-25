@@ -143,9 +143,12 @@ fu! markdown#link_inline_2_ref() abort "{{{2
     "     [description](url)
     let pat = '\[.\{-}\]\zs(.\{-})'
     while search(pat, 'W')
-     \ && s:is_a_real_link()
      \ && g <= 100
         norm! %
+
+        if !s:is_a_real_link()
+            continue
+        endif
 
         let line = getline('.')
         let link = matchstr(line, '\[.\{-}\](\zs.*\%'.col('.').'c')

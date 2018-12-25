@@ -110,7 +110,7 @@ syn region markdownHideAnswer start='^↣' end='^↢.*' conceal cchar=? containe
 syn match markdownHideAnswer '↣.\{-}↢' conceal cchar=? containedin=markdownCodeBlock
 
 syn cluster markdownBlock contains=markdownH1,markdownH2,markdownH3,markdownH4,markdownH5,markdownH6,markdownBlockquote,markdownList,markdownOrderedListMarker,markdownCodeBlock,markdownRule
-syn cluster markdownInline contains=markdownLineBreak,markdownLinkText,markdownItalic,markdownBold,markdownCode,markdownEscape,@htmlTop,markdownError
+syn cluster markdownInline contains=markdownLineBreak,markdownLinkText,markdownItalic,markdownBold,markdownCodeSpan,markdownEscape,@htmlTop,markdownError
 
 syn match markdownH1 "^.\+\n=\+$" contained contains=@markdownInline,markdownHeadingRule,markdownAutomaticLink
 syn match markdownH2 "^.\+\n-\+$" contained contains=@markdownInline,markdownHeadingRule,markdownAutomaticLink
@@ -147,7 +147,7 @@ syn region markdownCodeBlock start="    \|\t" end="$" contained contains=@Spell 
 "
 " It makes the bullets prettier, because they're highlighted.
 " When we indent  a list with 4 spaces or  more, it prevents `markdownCodeBlock`
-" to match, which in turn allows `markdownCode` to match.
+" to match, which in turn allows `markdownCodeSpan` to match.
 "}}}
 " TODO: We should remove `•`, and instead use `-` to format our lists.{{{
 "
@@ -216,7 +216,11 @@ syn region markdownCodeBlock start="    \|\t" end="$" contained contains=@Spell 
 "        │            └ the beginning of another ordered list item
 "        └ the beginning of another unordered list item
 "}}}
-syn match markdownList "^ \{,3\}\%([-*+•]\|\d\+\.\)\s\+\S\_.\{-}\n\%( \{,3}[-*+•]\| \{,3}\d\+\.\|\s*\n\S\| \{8}\|\%$\)\@=" contained
+syn match markdownList "^ \{,3\}\%([-*+•]\|\d\+\.\)\s\+\S\_.\{-}\n\%( \{,3}[-*+•]\| \{,3}\d\+\.\|\s*\n\S\| \{8}\|\%$\)\@=" contained contains=markdownListItalic,markdownListBold,markdownListBoldItalic,markdownListCodeSpan
+syn region markdownListItalic matchgroup=markdownItalicDelimiter start="\S\@<=\*\|\*\S\@=" end="\S\@<=\*\|\*\S\@=" keepend contains=markdownLineStart,@Spell concealends
+syn region markdownListBold matchgroup=markdownBoldDelimiter start="\S\@<=\*\*\|\*\*\S\@=" end="\S\@<=\*\*\|\*\*\S\@=" keepend contains=markdownLineStart,markdownItalic,@Spell concealends
+syn region markdownListBoldItalic matchgroup=markdownBoldItalicDelimiter start="\S\@<=\*\*\*\|\*\*\*\S\@=" end="\S\@<=\*\*\*\|\*\*\*\S\@=" keepend contains=markdownLineStart,@Spell concealends
+syn region markdownListCodeSpan matchgroup=markdownCodeDelimiter start="`" end="`" keepend contains=markdownLineStart concealends
 
 syn match markdownRule "\* *\* *\*[ *]*$" contained
 syn match markdownRule "- *- *-[ -]*$" contained
@@ -245,9 +249,9 @@ syn region markdownBold matchgroup=markdownBoldDelimiter start="\S\@<=__\|__\S\@
 syn region markdownBoldItalic matchgroup=markdownBoldItalicDelimiter start="\S\@<=\*\*\*\|\*\*\*\S\@=" end="\S\@<=\*\*\*\|\*\*\*\S\@=" keepend contains=markdownLineStart,@Spell concealends
 syn region markdownBoldItalic matchgroup=markdownBoldItalicDelimiter start="\S\@<=___\|___\S\@=" end="\S\@<=___\|___\S\@=" keepend contains=markdownLineStart,@Spell concealends
 
-syn region markdownCode matchgroup=markdownCodeDelimiter start="`" end="`" keepend contains=markdownLineStart concealends
-syn region markdownCode matchgroup=markdownCodeDelimiter start="`` \=" end=" \=``" keepend contains=markdownLineStart
-syn region markdownCode matchgroup=markdownCodeDelimiter start="^\s*````*.*$" end="^\s*````*\ze\s*$" keepend
+syn region markdownCodeSpan matchgroup=markdownCodeDelimiter start="`" end="`" keepend contains=markdownLineStart concealends
+syn region markdownCodeSpan matchgroup=markdownCodeDelimiter start="`` \=" end=" \=``" keepend contains=markdownLineStart
+syn region markdownCodeSpan matchgroup=markdownCodeDelimiter start="^\s*````*.*$" end="^\s*````*\ze\s*$" keepend
 
 " Why is `keepend` important here?{{{
 "
@@ -267,7 +271,7 @@ syn region markdownCode matchgroup=markdownCodeDelimiter start="^\s*````*.*$" en
 " `keepend`  prevents a  possible broken  contained region  from being  extended
 " outside the initial containing region.
 "}}}
-syn match markdownBlockquote "^>\+\%(\s.*\|$\)" contained contains=markdownBlockquoteBold,markdownCode,markdownItalic,markdownBlockquoteLeadingChar keepend nextgroup=@markdownBlock
+syn match markdownBlockquote "^>\+\%(\s.*\|$\)" contained contains=markdownBlockquoteBold,markdownCodeSpan,markdownItalic,markdownBlockquoteLeadingChar keepend nextgroup=@markdownBlock
 syn match markdownBlockquoteLeadingChar "^>\+\s" contained conceal
 " `markdownBlockquoteBold` must be defined *after* `markdownItalic`
 syn region markdownBlockquoteBold matchgroup=markdownCodeDelimiter start="\*\*" end="\*\*" keepend contains=markdownLineStart concealends
@@ -318,7 +322,7 @@ hi link markdownH5Delimiter           markdownHeadingDelimiter
 hi link markdownH6Delimiter           markdownHeadingDelimiter
 hi link markdownHeadingDelimiter      Delimiter
 " Originally, it was linked to `Statement`, but I find `Repeat` more readable.
-hi link markdownList                  Repeat
+hi link markdownList                  CommentList
 hi link markdownBlockquote            CommentBlockQuote
 hi link markdownRule                  Comment
 
@@ -361,40 +365,37 @@ hi link markdownBoldItalicDelimiter   markdownBoldItalic
 hi link markdownCodeDelimiter         Delimiter
 
 hi link markdownEscape                Special
-"         foo_bar "{{{
-"            ^
-"            └ markdownError → red
+" Why do you highlight some underscores as errors, and how to avoid them?{{{
 "
-" We don't want that. We could get rid of `markdownError`, but it doesn't work
-" in a title, and it would cause other syntax rules to start an italic section
-" on some `_` chars.
+" According  to tpope,  we should  always wrap a  word containing  an underscore
+" inside a code span:
 "
-" We could also add a syntax group, linked to no HG:
+" > There's no such thing as an underscore in natural language.
+" > What you want is an inline code block, no two ways about it.
 "
-"         syntax match markdownIgnore '\w_\w'
+" > Different  markdown  engines  have  different tolerance  levels  for  inline
+" > underscores.
+" > Many will screw  you over with a  giant block of emphasized  text the second
+" > you use 2 in one paragraph.
+" > I flag them  as errors because they  *are* errors, even if  some engines are
+" > more forgiving about them.
+"
+" Source:
+"
+"     https://github.com/tpope/vim-markdown/issues/85#issuecomment-149206804
+"}}}
+" Are there other ways to eliminate them?{{{
+"
+" You could get rid  of `markdownError`, but it doesn't work in  a title, and it
+" would cause other syntax rules to start an italic section on some underscores.
+"
+" You could also add a syntax group, linked to no HG:
+"
+"     syntax match markdownIgnore '\w_\w'
 "
 " But again, it doesn't work in titles.
-"
-" Solution:
-" }}}
-hi link markdownError                 Normal
-" Source: {{{
-"
-"     http://stackoverflow.com/a/19137899
-"
-" FIXME:
-"
-" Also, read this:
-"     https://github.com/tpope/vim-markdown/issues/85#issuecomment-149206804
-"
-" What is an inline code block? How to write one? `inline code block`
-" Would this get rid of ugly red on underscores?
-" If so, can we conceal the backticks?
-" If yes, then link back `markdownError` to `Error`, and conceal backticks.
-" If no, how to get rid of `markdownError` entirely, without any side-effect
-" (italic)?
 "}}}
-hi link markdownCode                  CodeSpan
+hi link markdownError                 Error
 hi link markdownCodeBlock             Comment
 hi link markdownBlockquoteBold        CommentBlockquoteBold
 
