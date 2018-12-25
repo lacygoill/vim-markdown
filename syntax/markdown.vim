@@ -218,10 +218,10 @@ syn match markdownList '^ \{,3\}\%([-*+•]\|\d\+\.\)\s\+\S\_.\{-}\n\s*\n \{,2}\
 " If no, remove support for one of them for text inside/outside lists.
 syn region markdownListItalic matchgroup=markdownItalicDelimiter start='\S\@1<=\*\|\*\S\@=' end='\S\@1<=\*\|\*\S\@=' keepend contains=markdownLineStart,@Spell concealends
 syn region markdownListItalic matchgroup=markdownItalicDelimiter start='\S\@1<=_\|_\S\@=' end='\S\@1<=_\|_\S\@=' keepend contains=markdownLineStart,@Spell concealends
-syn region markdownListBold matchgroup=markdownBoldDelimiter start='\S\@2<=\*\*\|\*\*\S\@=' end='\S\@2<=\*\*\|\*\*\S\@=' keepend contains=markdownLineStart,markdownItalic,@Spell concealends
-syn region markdownListBold matchgroup=markdownBoldDelimiter start='\S\@2<=__\|__\S\@=' end='\S\@2<=__\|__\S\@=' keepend contains=markdownLineStart,markdownItalic,@Spell concealends
-syn region markdownListBoldItalic matchgroup=markdownBoldItalicDelimiter start='\S\@3<=\*\*\*\|\*\*\*\S\@=' end='\S\@3<=\*\*\*\|\*\*\*\S\@=' keepend contains=markdownLineStart,@Spell concealends
-syn region markdownListBoldItalic matchgroup=markdownBoldItalicDelimiter start='\S\@3<=___\|___\S\@=' end='\S\@3<=___\|___\S\@=' keepend contains=markdownLineStart,@Spell concealends
+syn region markdownListBold matchgroup=markdownBoldDelimiter start='\S\@1<=\*\*\|\*\*\S\@=' end='\S\@1<=\*\*\|\*\*\S\@=' keepend contains=markdownLineStart,markdownItalic,@Spell concealends
+syn region markdownListBold matchgroup=markdownBoldDelimiter start='\S\@1<=__\|__\S\@=' end='\S\@1<=__\|__\S\@=' keepend contains=markdownLineStart,markdownItalic,@Spell concealends
+syn region markdownListBoldItalic matchgroup=markdownBoldItalicDelimiter start='\S\@1<=\*\*\*\|\*\*\*\S\@=' end='\S\@1<=\*\*\*\|\*\*\*\S\@=' keepend contains=markdownLineStart,@Spell concealends
+syn region markdownListBoldItalic matchgroup=markdownBoldItalicDelimiter start='\S\@1<=___\|___\S\@=' end='\S\@1<=___\|___\S\@=' keepend contains=markdownLineStart,@Spell concealends
 syn region markdownListCodeSpan matchgroup=markdownCodeDelimiter start='`' end='`' keepend contains=markdownLineStart concealends
 
 syn match markdownRule '^\* *\* *\*[ *]*$' contained
@@ -246,10 +246,10 @@ syn region markdownAutomaticLink matchgroup=markdownUrlDelimiter start='<\%(\w\+
 
 syn region markdownItalic matchgroup=markdownItalicDelimiter start='\S\@1<=\*\|\*\S\@=' end='\S\@1<=\*\|\*\S\@=' keepend contains=markdownLineStart,@Spell concealends
 syn region markdownItalic matchgroup=markdownItalicDelimiter start='\S\@1<=_\|_\S\@=' end='\S\@1<=_\|_\S\@=' keepend contains=markdownLineStart,@Spell concealends
-syn region markdownBold matchgroup=markdownBoldDelimiter start='\S\@2<=\*\*\|\*\*\S\@=' end='\S\@2<=\*\*\|\*\*\S\@=' keepend contains=markdownLineStart,markdownItalic,@Spell concealends
-syn region markdownBold matchgroup=markdownBoldDelimiter start='\S\@2<=__\|__\S\@=' end='\S\@2<=__\|__\S\@=' keepend contains=markdownLineStart,markdownItalic,@Spell concealends
-syn region markdownBoldItalic matchgroup=markdownBoldItalicDelimiter start='\S\@3<=\*\*\*\|\*\*\*\S\@=' end='\S\@3<=\*\*\*\|\*\*\*\S\@=' keepend contains=markdownLineStart,@Spell concealends
-syn region markdownBoldItalic matchgroup=markdownBoldItalicDelimiter start='\S\@3<=___\|___\S\@=' end='\S\@3<=___\|___\S\@=' keepend contains=markdownLineStart,@Spell concealends
+syn region markdownBold matchgroup=markdownBoldDelimiter start='\S\@1<=\*\*\|\*\*\S\@=' end='\S\@1<=\*\*\|\*\*\S\@=' keepend contains=markdownLineStart,markdownItalic,@Spell concealends
+syn region markdownBold matchgroup=markdownBoldDelimiter start='\S\@1<=__\|__\S\@=' end='\S\@1<=__\|__\S\@=' keepend contains=markdownLineStart,markdownItalic,@Spell concealends
+syn region markdownBoldItalic matchgroup=markdownBoldItalicDelimiter start='\S\@1<=\*\*\*\|\*\*\*\S\@=' end='\S\@1<=\*\*\*\|\*\*\*\S\@=' keepend contains=markdownLineStart,@Spell concealends
+syn region markdownBoldItalic matchgroup=markdownBoldItalicDelimiter start='\S\@1<=___\|___\S\@=' end='\S\@1<=___\|___\S\@=' keepend contains=markdownLineStart,@Spell concealends
 
 syn region markdownCodeSpan matchgroup=markdownCodeDelimiter start='`' end='`' keepend contains=markdownLineStart concealends
 syn region markdownCodeSpan matchgroup=markdownCodeDelimiter start='`` \=' end=' \=``' keepend contains=markdownLineStart
