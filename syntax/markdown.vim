@@ -201,7 +201,17 @@ syn region markdownCodeBlock start='    \|\t' end='$' contained contains=@Spell 
 "        │
 "        └ the beginning of a paragraph
 "}}}
-syn match markdownList '^ \{,3\}\%([-*+•]\|\d\+\.\)\s\+\S\_.\{-}\n\%(\s*\n\S\|\%$\)\@=' contained contains=markdownListItalic,markdownListBold,markdownListBoldItalic,markdownListCodeSpan
+syn match markdownList '^ \{,3\}\%([-*+•]\|\d\+\.\)\s\+\S\_.\{-}\n\s*\n\%(\S\|\%$\)\@=' contained contains=markdownListItalic,markdownListBold,markdownListBoldItalic,markdownListCodeSpan
+" TODO: improve performance{{{
+"
+" Sometimes, moving in a buffer is slow, when there are many lists.
+" Maybe we could improve the performance by eliminating `\@<=` and `@=`.
+" We could do the same to `markdownItalic` & friends.
+"
+" Btw:
+" Shouldn't we use `_` instead of `*` to  avoid a conflict with `*` when used as
+" an item leader.
+"}}}
 syn region markdownListItalic matchgroup=markdownItalicDelimiter start='\S\@<=\*\|\*\S\@=' end='\S\@<=\*\|\*\S\@=' keepend contains=markdownLineStart,@Spell concealends
 syn region markdownListBold matchgroup=markdownBoldDelimiter start='\S\@<=\*\*\|\*\*\S\@=' end='\S\@<=\*\*\|\*\*\S\@=' keepend contains=markdownLineStart,markdownItalic,@Spell concealends
 syn region markdownListBoldItalic matchgroup=markdownBoldItalicDelimiter start='\S\@<=\*\*\*\|\*\*\*\S\@=' end='\S\@<=\*\*\*\|\*\*\*\S\@=' keepend contains=markdownLineStart,@Spell concealends
