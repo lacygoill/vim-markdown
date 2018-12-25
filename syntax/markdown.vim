@@ -330,7 +330,7 @@ hi link markdownFootnote              Typedef
 hi link markdownFootnoteDefinition    Typedef
 
 " TODO:
-" We should not  link `markdownLinkText` and `markdownUrl`  to `Conditional` and
+" We should  not link `markdownLinkText`  and `markdownUrl` to  `Underlined` and
 " `Float`.
 " We should link them to `CommentLinkText` and `CommentUrl`, and define
 " the latter in:
@@ -341,13 +341,12 @@ hi link markdownFootnoteDefinition    Typedef
 " This way our global theme will be consistent.
 " If we change the colors of links in the customizations of our colorscheme, the
 " change will be reflected in our markdown notes.
+hi link markdownLinkText              Underlined
+"                                     │{{{
+"                                     └ From `:h group-name`:
 "
-" TODO:
-" Originally, it was linked to `Underlined`, but in my current colorscheme,
-" it's pink and underlined: too noisy.
-" Create your own  HG for links, because I'm not  sure `Conditional` will always
-" be a good choice if you change your colorscheme.
-hi link markdownLinkText              Conditional
+"                                         *Underlined text that stands out, HTML links
+"}}}
 hi link markdownIdDeclaration         Typedef
 hi link markdownId                    Type
 hi link markdownAutomaticLink         markdownUrl
