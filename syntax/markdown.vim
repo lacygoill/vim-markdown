@@ -2,8 +2,6 @@ if exists('b:current_syntax')
     finish
 endif
 
-" TODO: Highlight lists as a whole (not just bullets)?
-
 " TODO:
 " Read:
 "     https://daringfireball.net/projects/markdown/syntax
@@ -67,28 +65,24 @@ syn case ignore
 "}}}
 syn match markdownHideVimlSeparations '^\s*"$' conceal containedin=markdownCodeBlock
 
-" To understand why these lines are necessary, insert this at the beginning of a
-" line:
+" TODO: Explain why `markdownValid` is necessary?{{{
+"
+" To understand, insert this at the beginning of a line:
+"
 "     <'abc
-" And read this: https://github.com/tpope/vim-markdown/pull/31
+"
+" Also read this: https://github.com/tpope/vim-markdown/pull/31
+"}}}
 syn match markdownValid '[<>]\c[a-z/$!]\@!'
 syn match markdownValid '&\%(#\=\w*;\)\@!'
 
 syn match markdownLineStart "^[<@]\@!" nextgroup=@markdownBlock,htmlSpecialChar
 
-" FIXME: Why does this line need to be after the `markdownLineStart` item?
-" Update: It doesn't seem to be true anymore...
-" Try to move the previous line after the next two ones, and visit this file:
-"
-"     ~/.vim/after/plugin/README/sandwich.md
-"
-" The conceal seems to work fine.
-"
-" TODO: How to include italics inside a hidden answer?
+" TODO: How to include italics inside a hidden answer?{{{
 " We could add `contains=markdownItalic`.
 " But the text in italics would not be concealed...
 " We probably have the same issue with other styles (bold, ...).
-"
+"}}}
 " TODO: Instead of inventing a weird ad-hoc system, you should rely on some existing html tags:{{{
 "
 "     <details><summary>
