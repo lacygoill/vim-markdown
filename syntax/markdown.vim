@@ -191,17 +191,18 @@ syn region markdownCodeBlock start='    \|\t' end='$' contained contains=@Spell 
 " Second Part:
 "
 "     \%(\s*\n\S\|\%$\)\@=
+"     \s*\n \{,3}\%([^-*+• \t]\|\%$\)\@=
 "
 " This describes when a list item should stop.
 " It can be broken down further:
 "
-"     \%(\s*\n\S\|\%$\)\@=
-"        ├─────┘  ├─┘
-"        │        └ the end of the buffer
-"        │
-"        └ the beginning of a paragraph
+"     \s*\n \{,3}\%([^-*+• \t]\|\%$\)\@=
+"     ├──────────────────────┘  ├─┘
+"     │                         └ the end of the buffer
+"     │
+"     └ the beginning of a regular paragraph, outside any list
 "}}}
-syn match markdownList '^ \{,3\}\%([-*+•]\|\d\+\.\)\s\+\S\_.\{-}\n\s*\n\%(\S\|\%$\)\@=' contained contains=markdownListItalic,markdownListBold,markdownListBoldItalic,markdownListCodeSpan
+syn match markdownList '^ \{,3\}\%([-*+•]\|\d\+\.\)\s\+\S\_.\{-}\n\s*\n \{,3}\%([^-*+• \t]\|\%$\)\@=' contained contains=markdownListItalic,markdownListBold,markdownListBoldItalic,markdownListCodeSpan
 " TODO: improve performance{{{
 "
 " Sometimes, moving in a buffer is slow, when there are many lists.
@@ -299,6 +300,13 @@ syn match markdownTodo  /\CTODO\|FIXME/ contained
 syn match markdownOutput /\s*\zs.\{-}\ze\s\=\~$/ contained containedin=markdownCodeBlock nextgroup=markdownIgnore
 syn match markdownIgnore /.$/ contained containedin=markdownOutput conceal
 
+" FIXME: This diagram, written in a codeblock, is highlighted as a table:{{{
+"
+"     rbbb rrr bbbr
+"     │  │
+"     │  └ blue
+"     └ red
+"}}}
 syn match markdownTable /^\s\{4}[│─┌└├].*/
 
 syn region markdownOption matchgroup=markdownCodeDelimiter start=+`'+ end=+'`+ concealends keepend oneline
