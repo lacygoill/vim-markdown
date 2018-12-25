@@ -2,6 +2,22 @@ if exists('b:current_syntax')
     finish
 endif
 
+" TODO: Highlight lists as a whole (not just bullets)?
+
+" TODO:
+" Read:
+"     https://daringfireball.net/projects/markdown/syntax
+"     https://daringfireball.net/projects/markdown/basics
+"
+" `markdown` provides some  useful syntax which our syntax  plugin don't emulate
+" yet.
+"
+" Like the fact that a list item can include a blockquote or a code block.  Make
+" some tests on github, stackexchange, reddit,  and with `:Preview`, to see what
+" the current syntax is (markdown has evolved I guess...).
+"
+" And try to emulate every interesting syntax you find.
+
 " TODO:
 " read and take inspiration from:
 "         https://github.com/vim-pandoc/vim-pandoc-syntax
@@ -72,10 +88,34 @@ syn match markdownLineStart "^[<@]\@!" nextgroup=@markdownBlock,htmlSpecialChar
 " We could add `contains=markdownItalic`.
 " But the text in italics would not be concealed...
 " We probably have the same issue with other styles (bold, ...).
-syn region markdownHideAnswers start='^↣' end='^↢.*' conceal cchar=? containedin=markdownCodeBlock
-syn match markdownHideAnswers '↣.\{-}↢' conceal cchar=? containedin=markdownCodeBlock
+"
+" TODO: Instead of inventing a weird ad-hoc system, you should rely on some existing html tags:{{{
+"
+"     <details><summary>
+"     question</summary>
+"     hidden answer</details>
+"
+" Update:
+" Here's some code implementing the idea:
+"
+"     syn match markdownHideAnswer '<details>\n\=<summary>' conceal containedin=markdownCodeBlock
+"     syn region markdownShowAnswer matchgroup=Ignore start='</summary>' end='</details>' conceal containedin=markdownCodeBlock
+"     hi link markdownHideAnswer Ignore
+"     hi link markdownShowAnswer PreProc
+"
+" However, sometimes, it's too cumbersome to use to hide inline answers.
+" Have a look at the answers we hide in:
+"
+"     ~/Dropbox/wiki/vim/command.md
+"     ~/Dropbox/wiki/vim/exception.md
+"
+" Maybe we  should keep our  ad-hoc system to hide  inline answers, and  use the
+" html tags to hide blocks of lines...
+"}}}
+syn region markdownHideAnswer start='^↣' end='^↢.*' conceal cchar=? containedin=markdownCodeBlock keepend
+syn match markdownHideAnswer '↣.\{-}↢' conceal cchar=? containedin=markdownCodeBlock
 
-syn cluster markdownBlock contains=markdownH1,markdownH2,markdownH3,markdownH4,markdownH5,markdownH6,markdownBlockquote,markdownListMarker,markdownOrderedListMarker,markdownCodeBlock,markdownRule
+syn cluster markdownBlock contains=markdownH1,markdownH2,markdownH3,markdownH4,markdownH5,markdownH6,markdownBlockquote,markdownList,markdownOrderedListMarker,markdownCodeBlock,markdownRule
 syn cluster markdownInline contains=markdownLineBreak,markdownLinkText,markdownItalic,markdownBold,markdownCode,markdownEscape,@htmlTop,markdownError
 
 syn match markdownH1 "^.\+\n=\+$" contained contains=@markdownInline,markdownHeadingRule,markdownAutomaticLink
@@ -109,25 +149,40 @@ syn region markdownH6 matchgroup=markdownH6Delimiter start="#######\@!" end="#*\
 " outside the initial containing region.
 "}}}
 syn match markdownBlockquote "^>\+\%(\s.*\|$\)" contained contains=markdownBold,markdownCode,markdownItalic,markdownBlockquoteLeadingChar keepend nextgroup=@markdownBlock
-syn match markdownBlockquoteLeadingChar "^>\+\s*" contained conceal
+syn match markdownBlockquoteLeadingChar "^>\+\s" contained conceal
 
-syn region markdownCodeBlock start="    \|\t" end="$" contained contains=@Spell
+" TODO:
+" Comment on the fact that the  region must be contained because of `contained`,
+" and yet, in practice, it doesn't seem to be contained in anything.
+" Press `!s`  on a  codeblock, and  you won't  see a  containing item,  in which
+" `markdownCodeBlock` would be contained.
+" I think it's contained in the cluster `@markdownBlock`.
+" Is it necessary for `markdownCodeBlock` to be contained?
+" Or is it just because `@markdownBlock` is convenient...
+" Once you  understand, have a  look at  what we did  for our comments  in other
+" filetypes.
+" Maybe we should use a cluster too...
+syn region markdownCodeBlock start="    \|\t" end="$" contained contains=@Spell keepend
 "                                                                         │{{{
 " When we enable 'spell', errors aren't highlighted inside a code block.  ┘
 " So we add the @Spell cluster. See `:h spell-syntax`
 "}}}
 
 " TODO: real nesting
+" TODO: other styles should be included inside a list (bold, italic, bold+italic, codespan ...)
 " Why did you add `•` in the collection `[-*+•]`?{{{
 "
 " It makes the bullets prettier, because they're highlighted.
 " When we indent  a list with 4 spaces or  more, it prevents `markdownCodeBlock`
 " to match, which in turn allows `markdownCode` to match.
 "}}}
-" TODO: Maybe we should remove `•`, and instead use `-` to format our lists.
-" This would give us the benefit of having our bulleted list recognized by a markdown viewer/parser.{{{
+" TODO: We should remove `•`, and instead use `-` to format our lists.{{{
 "
-"     syn match markdownListMarkerPretty "\%(\t\| \{0,4\}\)\@<=[-*+]\%(\s\+\S\)\@=" contained containedin=markdownListMarker conceal cchar=•
+" `•` is not recognized as the beginning of a list item by the markdown spec.
+"
+" Also, this would give us the benefit of having our bulleted list recognized by a markdown viewer/parser.
+"
+"     syn match markdownListMarkerPretty "\%(\t\| \{0,4\}\)\@<=[-*+]\%(\s\+\S\)\@=" contained containedin=markdownList conceal cchar=•
 "
 " Also, when  we would read  a markdown file written  by someone else,  we would
 " automatically see `•` instead of `-`.
@@ -138,7 +193,7 @@ syn region markdownCodeBlock start="    \|\t" end="$" contained contains=@Spell
 "
 "     hi! link Conceal Statement
 "                      │
-"                      └ HG used by markdownListMarker
+"                      └ HG used by markdownList
 "
 " And  we  would  need  to  refactor   `coc`  so  that  it  temporarily  resets
 " `hl-Conceal` with its old attributes (more visible):
@@ -148,21 +203,47 @@ syn region markdownCodeBlock start="    \|\t" end="$" contained contains=@Spell
 " And we would need to refactor `vim-bullet-list`.
 " And we would need to replace `•` with `-` everywhere:
 "
-"     `noa vim /•/gj ~/.vim/**/*.{vim,md} ~/.vim/**/*.snippets ~/.vim/template/** ~/.vim/vimrc ~/Dropbox/wiki/**/*.md ~/.zsh/** ~/.config/** ~/.zshrc ~/.zshenv ~/.Xresources ~/.tmux.conf ... | cw`
+"     noa vim /•/gj ~/.vim/**/*.{vim,md} ~/.vim/**/*.snippets ~/.vim/template/** ~/.vim/vimrc ~/Dropbox/wiki/**/*.md ~/.zsh/** ~/.config/** ~/.zshrc ~/.zshenv ~/.Xresources ~/.tmux.conf ... | cw
 "
 " Also,  should we  add the  same  kind of  conceal  in all  filetypes, but  for
 " comments only?
-"
-" Issue:
-" If we do this, lists indented with 4 spaces would be highlighted as code.
-" Solution:
-" Indent them with Tabs instead.
-" And tweak the syntax match `xCommentCodeBlock` in `lg#styled_comment#syntax()`.
-" Remove `•`  from its regex,  and specify  that the there  should not be  a tab
-" after the comment leader.
 "}}}
-syn match markdownListMarker "\%(\t\| \{0,4\}\)[-*+•]\%(\s\+\S\)\@=" contained
-syn match markdownOrderedListMarker "\%(\t\| \{0,4}\)\<\d\+\.\%(\s\+\S\)\@=" contained
+" FIXME: Originally, there were 2 items (ordered + unordered lists), and they used the quantifier `\{0,4\}`.{{{
+"
+" But it seems too much.
+" Try to write a list indented with 4 spaces, and run `:Preview`.
+" The list is formatted as a codeblock, instead of a list!
+" So, why did tpope used 4 spaces, instead of 3?
+" Also, it included a tab, which causes the same issue:
+"
+"     syn match markdownList "\%(\t\| \{0,3\}\)[-*+•]\%(\s\+\S\)\@=" contained
+"}}}
+" The regex can be broken down like this:{{{
+"
+" First Part:
+"
+"     ^ \{,3\}\%([-*+]\|\d\+\.\)\s\+\S\_.\{-}\n
+"
+" This describes the first line of a list item.
+"
+" Second Part:
+"
+"     \%( \{,3}[-*+]\| \{,3}\d\+\.\|\s*\n\S\| \{8}\|\%$\)\@=
+"
+" This describes when a list item should stop.
+" It can be broken down further:
+"
+"     \%( \{,3}[-*+]\| \{,3}\d\+\.\|\s*\n\S\| \{8}\|\%$\)\@=
+"        ├─────────┘  ├──────────┘  ├─────┘  ├───┘  ├─┘
+"        │            │             │        │      └ the end of the buffer
+"        │            │             │        │
+"        │            │             │        └ a codeblock inside a list item
+"        │            │             │
+"        │            │             └ the beginning of a paragraph
+"        │            └ the beginning of another ordered list item
+"        └ the beginning of another unordered list item
+"}}}
+syn match markdownList "^ \{,3\}\%([-*+•]\|\d\+\.\)\s\+\S\_.\{-}\n\%( \{,3}[-*+•]\| \{,3}\d\+\.\|\s*\n\S\| \{8}\|\%$\)\@=" contained
 
 syn match markdownRule "\* *\* *\*[ *]*$" contained
 syn match markdownRule "- *- *-[ -]*$" contained
@@ -178,7 +259,7 @@ syn region markdownUrlTitle matchgroup=markdownUrlTitleDelimiter start=+(+ end=+
 
 " We add the  `concealends` argument to hide the square  brackets [] surrounding
 " the text describing the url.
-syn region markdownLinkText matchgroup=markdownLinkTextDelimiter start="!\=\[\%(\_[^]]*]\%( \=[[(]\)\)\@=" end="\]\%( \=[[(]\)\@=" nextgroup=markdownLink,markdownId skipwhite contains=@markdownInline,markdownLineStart concealends
+syn region markdownLinkText matchgroup=markdownLinkTextDelimiter start="!\=\[\%(\_[^]]*]\%( \=[[(]\)\)\@=" end="\]\%( \=[[(]\)\@=" nextgroup=markdownLink,markdownId skipwhite contains=@markdownInline,markdownLineStart concealends keepend
 " We add the `conceal` argument to hide the url of a link.
 syn region markdownLink matchgroup=markdownLinkDelimiter start="(" end=")" contains=markdownUrl keepend contained conceal
 syn region markdownId matchgroup=markdownIdDelimiter start="\[" end="\]" keepend contained
@@ -203,8 +284,25 @@ syn match markdownError "\w\@<=_\w\@="
 
 syn match markdownPointer "^\s*[v^✘✔]\+$"
 
-syn match markdownCommentTitle /\s*\u\w*\(\s\+\u\w*\)*:/ contains=markdownTodo
-syn keyword markdownTodo contained FIXME TODO
+syn match markdownCommentTitle /^\s\{0,2}\u\w*\(\s\+\u\w*\)*:/ contains=markdownTodo
+"                                  ├────┘
+"                                  └ Why?
+" Because:{{{
+"
+" We don't want  `markdownCommentTitle` to match in a codeblock,  nor in an item
+" list.
+" It would break the highlighting of the text which follows on the line.
+" So, we can't allow more than 2 leading spaces.
+"}}}
+syn match markdownTodo  /\CTODO\|FIXME/ contained
+
+" inspired from `helpHeader`
+syn match markdownOutput /\s*\zs.\{-}\ze\s\=\~$/ contained containedin=markdownCodeBlock nextgroup=markdownIgnore
+syn match markdownIgnore /.$/ contained containedin=markdownOutput conceal
+
+syn match markdownTable /^\s\{4}[│─┌└├].*/
+
+syn region markdownOption matchgroup=markdownCodeDelimiter start="`'" end="'`" concealends keepend oneline
 
 call markdown#define_include_clusters()
 call markdown#highlight_embedded_languages()
@@ -223,14 +321,27 @@ hi link markdownH4Delimiter           markdownHeadingDelimiter
 hi link markdownH5Delimiter           markdownHeadingDelimiter
 hi link markdownH6Delimiter           markdownHeadingDelimiter
 hi link markdownHeadingDelimiter      Delimiter
-hi link markdownOrderedListMarker     markdownListMarker
-hi link markdownListMarker            Statement
-hi link markdownBlockquote            Comment
+" Originally, it was linked to `Statement`, but I find `Repeat` more readable.
+hi link markdownList                  Repeat
+hi link markdownBlockquote            CommentBlockQuote
 hi link markdownRule                  Comment
 
 hi link markdownFootnote              Typedef
 hi link markdownFootnoteDefinition    Typedef
 
+" TODO:
+" We should not  link `markdownLinkText` and `markdownUrl`  to `Conditional` and
+" `Float`.
+" We should link them to `CommentLinkText` and `CommentUrl`, and define
+" the latter in:
+"
+"     ~/.vim/autoload/colorscheme.vim
+"     /s:styled_comments(
+"
+" This way our global theme will be consistent.
+" If we change the colors of links in the customizations of our colorscheme, the
+" change will be reflected in our markdown notes.
+"
 " TODO:
 " Originally, it was linked to `Underlined`, but in my current colorscheme,
 " it's pink and underlined: too noisy.
@@ -289,11 +400,17 @@ hi link markdownError                 Normal
 " (italic)?
 "}}}
 hi link markdownCode                  CodeSpan
-" hi link markdownCodeBlock             CodeSpan
+hi link markdownCodeBlock             Comment
 
-hi link markdownPointer               Comment
-hi link markdownCommentTitle PreProc
+hi link markdownPointer               Title
+hi link markdownCommentTitle          PreProc
 hi link markdownTodo Todo
+
+hi link markdownOutput                PreProc
+hi link markdownIgnore                Ignore
+hi link markdownTable                 Structure
+
+hi link markdownOption                Type
 
 let b:current_syntax = 'markdown'
 
