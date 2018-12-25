@@ -140,6 +140,7 @@ syn region markdownCodeBlock start='^    \|^\t' end='$' contained contains=@Spel
 " When we enable 'spell', errors aren't highlighted inside a code block.  ┘
 " So we add the @Spell cluster. See `:h spell-syntax`
 "}}}
+syn region markdownListCodeBlock start='^       \|^\t\t' end='$' contained contains=@Spell keepend
 
 " TODO: real nesting
 " Why did you add `•` in the collection `[-*+•]`?{{{
@@ -154,7 +155,7 @@ syn region markdownCodeBlock start='^    \|^\t' end='$' contained contains=@Spel
 "
 " Also, this would give us the benefit of having our bulleted list recognized by a markdown viewer/parser.
 "
-"     syn match markdownListMarkerPretty "\%(\t\| \{0,4\}\)\@<=[-*+]\%(\s\+\S\)\@=" contained containedin=markdownList conceal cchar=•
+"     syn match markdownListMarkerPretty "\%(\t\| \{,4\}\)\@4<=[-*+]\%(\s\+\S\)\@=" contained containedin=markdownList conceal cchar=•
 "
 " Also, when  we would read  a markdown file written  by someone else,  we would
 " automatically see `•` instead of `-`.
@@ -202,7 +203,7 @@ syn region markdownCodeBlock start='^    \|^\t' end='$' contained contains=@Spel
 "     │
 "     └ the beginning of a regular paragraph, outside any list
 "}}}
-syn match markdownList '^ \{,3\}\%([-*+•]\|\d\+\.\)\s\+\S\_.\{-}\n\s*\n \{,2}\%([^-*+• \t]\|\%$\)\@=' contained contains=markdownListItalic,markdownListBold,markdownListBoldItalic,markdownListCodeSpan
+syn match markdownList '^ \{,3\}\%([-*+•]\|\d\+\.\)\s\+\S\_.\{-}\n\s*\n \{,2}\%([^-*+• \t]\|\%$\)\@=' contained contains=markdownListItalic,markdownListBold,markdownListBoldItalic,markdownListCodeSpan,markdownListCodeBlock,markdownListBlockquote
 " TODO: improve performance{{{
 "
 " Sometimes, moving in a buffer is slow, when there are many lists.
@@ -215,12 +216,12 @@ syn match markdownList '^ \{,3\}\%([-*+•]\|\d\+\.\)\s\+\S\_.\{-}\n\s*\n \{,2}\
 "}}}
 " TODO: do we really need underscores + asterisks?
 " If no, remove support for one of them for text inside/outside lists.
-syn region markdownListItalic matchgroup=markdownItalicDelimiter start='\S\@<=\*\|\*\S\@=' end='\S\@<=\*\|\*\S\@=' keepend contains=markdownLineStart,@Spell concealends
-syn region markdownListItalic matchgroup=markdownItalicDelimiter start='\S\@<=_\|_\S\@=' end='\S\@<=_\|_\S\@=' keepend contains=markdownLineStart,@Spell concealends
-syn region markdownListBold matchgroup=markdownBoldDelimiter start='\S\@<=\*\*\|\*\*\S\@=' end='\S\@<=\*\*\|\*\*\S\@=' keepend contains=markdownLineStart,markdownItalic,@Spell concealends
-syn region markdownListBold matchgroup=markdownBoldDelimiter start='\S\@<=__\|__\S\@=' end='\S\@<=__\|__\S\@=' keepend contains=markdownLineStart,markdownItalic,@Spell concealends
-syn region markdownListBoldItalic matchgroup=markdownBoldItalicDelimiter start='\S\@<=\*\*\*\|\*\*\*\S\@=' end='\S\@<=\*\*\*\|\*\*\*\S\@=' keepend contains=markdownLineStart,@Spell concealends
-syn region markdownListBoldItalic matchgroup=markdownBoldItalicDelimiter start='\S\@<=___\|___\S\@=' end='\S\@<=___\|___\S\@=' keepend contains=markdownLineStart,@Spell concealends
+syn region markdownListItalic matchgroup=markdownItalicDelimiter start='\S\@1<=\*\|\*\S\@1=' end='\S\@1<=\*\|\*\S\@1=' keepend contains=markdownLineStart,@Spell concealends
+syn region markdownListItalic matchgroup=markdownItalicDelimiter start='\S\@1<=_\|_\S\@1=' end='\S\@1<=_\|_\S\@1=' keepend contains=markdownLineStart,@Spell concealends
+syn region markdownListBold matchgroup=markdownBoldDelimiter start='\S\@2<=\*\*\|\*\*\S\@2=' end='\S\@2<=\*\*\|\*\*\S\@2=' keepend contains=markdownLineStart,markdownItalic,@Spell concealends
+syn region markdownListBold matchgroup=markdownBoldDelimiter start='\S\@2<=__\|__\S\@2=' end='\S\@2<=__\|__\S\@2=' keepend contains=markdownLineStart,markdownItalic,@Spell concealends
+syn region markdownListBoldItalic matchgroup=markdownBoldItalicDelimiter start='\S\@3<=\*\*\*\|\*\*\*\S\@3=' end='\S\@3<=\*\*\*\|\*\*\*\S\@3=' keepend contains=markdownLineStart,@Spell concealends
+syn region markdownListBoldItalic matchgroup=markdownBoldItalicDelimiter start='\S\@3<=___\|___\S\@3=' end='\S\@3<=___\|___\S\@3=' keepend contains=markdownLineStart,@Spell concealends
 syn region markdownListCodeSpan matchgroup=markdownCodeDelimiter start='`' end='`' keepend contains=markdownLineStart concealends
 
 syn match markdownRule '^\* *\* *\*[ *]*$' contained
@@ -228,7 +229,7 @@ syn match markdownRule '^- *- *-[ -]*$' contained
 
 syn match markdownLineBreak ' \{2,\}$'
 
-syn region markdownIdDeclaration matchgroup=markdownLinkDelimiter start='^ \{0,3\}!\=\[' end='\]:' oneline keepend nextgroup=markdownUrl skipwhite
+syn region markdownIdDeclaration matchgroup=markdownLinkDelimiter start='^ \{,3\}!\=\[' end='\]:' oneline keepend nextgroup=markdownUrl skipwhite
 syn match markdownUrl '\S\+' nextgroup=markdownUrlTitle skipwhite contained
 syn region markdownUrl matchgroup=markdownUrlDelimiter start='<' end='>' oneline keepend nextgroup=markdownUrlTitle skipwhite contained
 syn region markdownUrlTitle matchgroup=markdownUrlTitleDelimiter start=+"+ end=+"+ keepend contained
@@ -243,12 +244,12 @@ syn region markdownLink matchgroup=markdownLinkDelimiter start='(' end=')' conta
 syn region markdownId matchgroup=markdownIdDelimiter start='\[' end='\]' keepend contained
 syn region markdownAutomaticLink matchgroup=markdownUrlDelimiter start='<\%(\w\+:\|[[:alnum:]_+-]\+@\)\@=' end='>' keepend oneline
 
-syn region markdownItalic matchgroup=markdownItalicDelimiter start='\S\@<=\*\|\*\S\@=' end='\S\@<=\*\|\*\S\@=' keepend contains=markdownLineStart,@Spell concealends
-syn region markdownItalic matchgroup=markdownItalicDelimiter start='\S\@<=_\|_\S\@=' end='\S\@<=_\|_\S\@=' keepend contains=markdownLineStart,@Spell concealends
-syn region markdownBold matchgroup=markdownBoldDelimiter start='\S\@<=\*\*\|\*\*\S\@=' end='\S\@<=\*\*\|\*\*\S\@=' keepend contains=markdownLineStart,markdownItalic,@Spell concealends
-syn region markdownBold matchgroup=markdownBoldDelimiter start='\S\@<=__\|__\S\@=' end='\S\@<=__\|__\S\@=' keepend contains=markdownLineStart,markdownItalic,@Spell concealends
-syn region markdownBoldItalic matchgroup=markdownBoldItalicDelimiter start='\S\@<=\*\*\*\|\*\*\*\S\@=' end='\S\@<=\*\*\*\|\*\*\*\S\@=' keepend contains=markdownLineStart,@Spell concealends
-syn region markdownBoldItalic matchgroup=markdownBoldItalicDelimiter start='\S\@<=___\|___\S\@=' end='\S\@<=___\|___\S\@=' keepend contains=markdownLineStart,@Spell concealends
+syn region markdownItalic matchgroup=markdownItalicDelimiter start='\S\@1<=\*\|\*\S\@1=' end='\S\@1<=\*\|\*\S\@1=' keepend contains=markdownLineStart,@Spell concealends
+syn region markdownItalic matchgroup=markdownItalicDelimiter start='\S\@1<=_\|_\S\@1=' end='\S\@1<=_\|_\S\@1=' keepend contains=markdownLineStart,@Spell concealends
+syn region markdownBold matchgroup=markdownBoldDelimiter start='\S\@2<=\*\*\|\*\*\S\@2=' end='\S\@2<=\*\*\|\*\*\S\@2=' keepend contains=markdownLineStart,markdownItalic,@Spell concealends
+syn region markdownBold matchgroup=markdownBoldDelimiter start='\S\@2<=__\|__\S\@2=' end='\S\@2<=__\|__\S\@2=' keepend contains=markdownLineStart,markdownItalic,@Spell concealends
+syn region markdownBoldItalic matchgroup=markdownBoldItalicDelimiter start='\S\@3<=\*\*\*\|\*\*\*\S\@3=' end='\S\@3<=\*\*\*\|\*\*\*\S\@3=' keepend contains=markdownLineStart,@Spell concealends
+syn region markdownBoldItalic matchgroup=markdownBoldItalicDelimiter start='\S\@3<=___\|___\S\@3=' end='\S\@3<=___\|___\S\@3=' keepend contains=markdownLineStart,@Spell concealends
 
 syn region markdownCodeSpan matchgroup=markdownCodeDelimiter start='`' end='`' keepend contains=markdownLineStart concealends
 syn region markdownCodeSpan matchgroup=markdownCodeDelimiter start='`` \=' end=' \=``' keepend contains=markdownLineStart
@@ -272,21 +273,26 @@ syn region markdownCodeSpan matchgroup=markdownCodeDelimiter start='^\s*````*.*$
 " `keepend`  prevents a  possible broken  contained region  from being  extended
 " outside the initial containing region.
 "}}}
-syn match markdownBlockquote '^>\+\%(\s.*\|$\)' contained contains=markdownBlockquoteBold,markdownCodeSpan,markdownItalic,markdownBlockquoteLeadingChar keepend nextgroup=@markdownBlock
-syn match markdownBlockquoteLeadingChar '^>\+\s' contained conceal
+syn match markdownBlockquote '^\s\{,3}>\+\%(\s.*\|$\)' contained contains=markdownBlockquoteBold,markdownCodeSpan,markdownItalic,markdownBlockquoteLeadingChar keepend nextgroup=@markdownBlock
+syn match markdownListBlockquote '^\s\{,7}>\+\%(\s.*\|$\)' contained contains=markdownBlockquoteBold,markdownCodeSpan,markdownItalic,markdownListBlockquoteLeadingChar keepend nextgroup=@markdownBlock
+syn match markdownBlockquoteLeadingChar '\%(^ \{,3}\)\@3<=>\+\s' contained conceal
+syn match markdownListBlockquoteLeadingChar '\%(^ \{,7}\)\@7<=>\+\s' contained conceal
 " `markdownBlockquoteBold` must be defined *after* `markdownItalic`
-syn region markdownBlockquoteBold matchgroup=markdownCodeDelimiter start='\*\*' end='\*\*' keepend contains=markdownLineStart concealends
+syn region markdownBlockquoteBold matchgroup=markdownCodeDelimiter start='\*\*' end='\*\*' keepend contained contains=markdownLineStart concealends
+" TODO: are there similar items which need to be positioned after another?
+" If so,  move them as far  to the bottom of  the file as possible,  and leave a
+" comment explaining they must stay there.
 
 syn match markdownFootnote '\[^[^\]]\+\]'
 syn match markdownFootnoteDefinition '^\[^[^\]]\+\]:'
 
 syn match markdownEscape '\\[][\\`*_{}()<>#+.!-]'
-syn match markdownError '\w\@<=_\w\@='
+syn match markdownError '\w\@1<=_\w\@1='
 
 syn match markdownPointer '^\s*[v^✘✔]\+$'
 
-syn match markdownCommentTitle /^\s\{0,2}\u\w*\(\s\+\u\w*\)*:/ contains=markdownTodo
-"                                  ├────┘
+syn match markdownCommentTitle /^\s\{,2}\u\w*\(\s\+\u\w*\)*:/ contains=markdownTodo
+"                                  ├───┘
 "                                  └ Why?
 " Because:{{{
 "
@@ -396,6 +402,8 @@ hi link markdownIgnore                Ignore
 hi link markdownTable                 Structure
 
 hi link markdownOption                Type
+hi link markdownListBlockquote        markdownBlockquote
+hi link markdownListCodeBlock         markdownCodeBlock
 
 let b:current_syntax = 'markdown'
 
