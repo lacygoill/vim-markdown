@@ -76,7 +76,7 @@ syn match markdownHideVimlSeparations '^\s*"$' conceal containedin=markdownCodeB
 syn match markdownValid '[<>]\c[a-z/$!]\@!'
 syn match markdownValid '&\%(#\=\w*;\)\@!'
 
-syn match markdownLineStart "^[<@]\@!" nextgroup=@markdownBlock,htmlSpecialChar
+syn match markdownLineStart '^[<@]\@!' nextgroup=@markdownBlock,htmlSpecialChar
 
 " TODO: How to include italics inside a hidden answer?{{{
 " We could add `contains=markdownItalic`.
@@ -112,17 +112,17 @@ syn match markdownHideAnswer '↣.\{-}↢' conceal cchar=? containedin=markdownC
 syn cluster markdownBlock contains=markdownH1,markdownH2,markdownH3,markdownH4,markdownH5,markdownH6,markdownBlockquote,markdownList,markdownOrderedListMarker,markdownCodeBlock,markdownRule
 syn cluster markdownInline contains=markdownLineBreak,markdownLinkText,markdownItalic,markdownBold,markdownCodeSpan,markdownEscape,@htmlTop,markdownError
 
-syn match markdownH1 "^.\+\n=\+$" contained contains=@markdownInline,markdownHeadingRule,markdownAutomaticLink
-syn match markdownH2 "^.\+\n-\+$" contained contains=@markdownInline,markdownHeadingRule,markdownAutomaticLink
+syn match markdownH1 '^.\+\n=\+$' contained contains=@markdownInline,markdownHeadingRule,markdownAutomaticLink
+syn match markdownH2 '^.\+\n-\+$' contained contains=@markdownInline,markdownHeadingRule,markdownAutomaticLink
 
-syn match markdownHeadingRule "^[=-]\+$" contained
+syn match markdownHeadingRule '^[=-]\+$' contained
 
-syn region markdownH1 matchgroup=markdownH1Delimiter start="##\@!"      end="#*\s*$" keepend oneline contains=@markdownInline,markdownAutomaticLink contained
-syn region markdownH2 matchgroup=markdownH2Delimiter start="###\@!"     end="#*\s*$" keepend oneline contains=@markdownInline,markdownAutomaticLink contained
-syn region markdownH3 matchgroup=markdownH3Delimiter start="####\@!"    end="#*\s*$" keepend oneline contains=@markdownInline,markdownAutomaticLink contained
-syn region markdownH4 matchgroup=markdownH4Delimiter start="#####\@!"   end="#*\s*$" keepend oneline contains=@markdownInline,markdownAutomaticLink contained
-syn region markdownH5 matchgroup=markdownH5Delimiter start="######\@!"  end="#*\s*$" keepend oneline contains=@markdownInline,markdownAutomaticLink contained
-syn region markdownH6 matchgroup=markdownH6Delimiter start="#######\@!" end="#*\s*$" keepend oneline contains=@markdownInline,markdownAutomaticLink contained
+syn region markdownH1 matchgroup=markdownH1Delimiter start='##\@!'      end='#*\s*$' keepend oneline contains=@markdownInline,markdownAutomaticLink contained
+syn region markdownH2 matchgroup=markdownH2Delimiter start='###\@!'     end='#*\s*$' keepend oneline contains=@markdownInline,markdownAutomaticLink contained
+syn region markdownH3 matchgroup=markdownH3Delimiter start='####\@!'    end='#*\s*$' keepend oneline contains=@markdownInline,markdownAutomaticLink contained
+syn region markdownH4 matchgroup=markdownH4Delimiter start='#####\@!'   end='#*\s*$' keepend oneline contains=@markdownInline,markdownAutomaticLink contained
+syn region markdownH5 matchgroup=markdownH5Delimiter start='######\@!'  end='#*\s*$' keepend oneline contains=@markdownInline,markdownAutomaticLink contained
+syn region markdownH6 matchgroup=markdownH6Delimiter start='#######\@!' end='#*\s*$' keepend oneline contains=@markdownInline,markdownAutomaticLink contained
 
 " TODO:
 " Comment on the fact that the  region must be contained because of `contained`,
@@ -135,7 +135,7 @@ syn region markdownH6 matchgroup=markdownH6Delimiter start="#######\@!" end="#*\
 " Once you  understand, have a  look at  what we did  for our comments  in other
 " filetypes.
 " Maybe we should use a cluster too...
-syn region markdownCodeBlock start="    \|\t" end="$" contained contains=@Spell keepend
+syn region markdownCodeBlock start='    \|\t' end='$' contained contains=@Spell keepend
 "                                                                         │{{{
 " When we enable 'spell', errors aren't highlighted inside a code block.  ┘
 " So we add the @Spell cluster. See `:h spell-syntax`
@@ -201,42 +201,42 @@ syn region markdownCodeBlock start="    \|\t" end="$" contained contains=@Spell 
 "        │
 "        └ the beginning of a paragraph
 "}}}
-syn match markdownList "^ \{,3\}\%([-*+•]\|\d\+\.\)\s\+\S\_.\{-}\n\%(\s*\n\S\|\%$\)\@=" contained contains=markdownListItalic,markdownListBold,markdownListBoldItalic,markdownListCodeSpan
-syn region markdownListItalic matchgroup=markdownItalicDelimiter start="\S\@<=\*\|\*\S\@=" end="\S\@<=\*\|\*\S\@=" keepend contains=markdownLineStart,@Spell concealends
-syn region markdownListBold matchgroup=markdownBoldDelimiter start="\S\@<=\*\*\|\*\*\S\@=" end="\S\@<=\*\*\|\*\*\S\@=" keepend contains=markdownLineStart,markdownItalic,@Spell concealends
-syn region markdownListBoldItalic matchgroup=markdownBoldItalicDelimiter start="\S\@<=\*\*\*\|\*\*\*\S\@=" end="\S\@<=\*\*\*\|\*\*\*\S\@=" keepend contains=markdownLineStart,@Spell concealends
-syn region markdownListCodeSpan matchgroup=markdownCodeDelimiter start="`" end="`" keepend contains=markdownLineStart concealends
+syn match markdownList '^ \{,3\}\%([-*+•]\|\d\+\.\)\s\+\S\_.\{-}\n\%(\s*\n\S\|\%$\)\@=' contained contains=markdownListItalic,markdownListBold,markdownListBoldItalic,markdownListCodeSpan
+syn region markdownListItalic matchgroup=markdownItalicDelimiter start='\S\@<=\*\|\*\S\@=' end='\S\@<=\*\|\*\S\@=' keepend contains=markdownLineStart,@Spell concealends
+syn region markdownListBold matchgroup=markdownBoldDelimiter start='\S\@<=\*\*\|\*\*\S\@=' end='\S\@<=\*\*\|\*\*\S\@=' keepend contains=markdownLineStart,markdownItalic,@Spell concealends
+syn region markdownListBoldItalic matchgroup=markdownBoldItalicDelimiter start='\S\@<=\*\*\*\|\*\*\*\S\@=' end='\S\@<=\*\*\*\|\*\*\*\S\@=' keepend contains=markdownLineStart,@Spell concealends
+syn region markdownListCodeSpan matchgroup=markdownCodeDelimiter start='`' end='`' keepend contains=markdownLineStart concealends
 
-syn match markdownRule "\* *\* *\*[ *]*$" contained
-syn match markdownRule "- *- *-[ -]*$" contained
+syn match markdownRule '\* *\* *\*[ *]*$' contained
+syn match markdownRule '- *- *-[ -]*$' contained
 
-syn match markdownLineBreak " \{2,\}$"
+syn match markdownLineBreak ' \{2,\}$'
 
-syn region markdownIdDeclaration matchgroup=markdownLinkDelimiter start="^ \{0,3\}!\=\[" end="\]:" oneline keepend nextgroup=markdownUrl skipwhite
-syn match markdownUrl "\S\+" nextgroup=markdownUrlTitle skipwhite contained
-syn region markdownUrl matchgroup=markdownUrlDelimiter start="<" end=">" oneline keepend nextgroup=markdownUrlTitle skipwhite contained
+syn region markdownIdDeclaration matchgroup=markdownLinkDelimiter start='^ \{0,3\}!\=\[' end='\]:' oneline keepend nextgroup=markdownUrl skipwhite
+syn match markdownUrl '\S\+' nextgroup=markdownUrlTitle skipwhite contained
+syn region markdownUrl matchgroup=markdownUrlDelimiter start='<' end='>' oneline keepend nextgroup=markdownUrlTitle skipwhite contained
 syn region markdownUrlTitle matchgroup=markdownUrlTitleDelimiter start=+"+ end=+"+ keepend contained
 syn region markdownUrlTitle matchgroup=markdownUrlTitleDelimiter start=+'+ end=+'+ keepend contained
 syn region markdownUrlTitle matchgroup=markdownUrlTitleDelimiter start=+(+ end=+)+ keepend contained
 
 " We add the  `concealends` argument to hide the square  brackets [] surrounding
 " the text describing the url.
-syn region markdownLinkText matchgroup=markdownLinkTextDelimiter start="!\=\[\%(\_[^]]*]\%( \=[[(]\)\)\@=" end="\]\%( \=[[(]\)\@=" nextgroup=markdownLink,markdownId skipwhite contains=@markdownInline,markdownLineStart concealends keepend
+syn region markdownLinkText matchgroup=markdownLinkTextDelimiter start='!\=\[\%(\_[^]]*]\%( \=[[(]\)\)\@=' end='\]\%( \=[[(]\)\@=' nextgroup=markdownLink,markdownId skipwhite contains=@markdownInline,markdownLineStart concealends keepend
 " We add the `conceal` argument to hide the url of a link.
-syn region markdownLink matchgroup=markdownLinkDelimiter start="(" end=")" contains=markdownUrl keepend contained conceal
-syn region markdownId matchgroup=markdownIdDelimiter start="\[" end="\]" keepend contained
-syn region markdownAutomaticLink matchgroup=markdownUrlDelimiter start="<\%(\w\+:\|[[:alnum:]_+-]\+@\)\@=" end=">" keepend oneline
+syn region markdownLink matchgroup=markdownLinkDelimiter start='(' end=')' contains=markdownUrl keepend contained conceal
+syn region markdownId matchgroup=markdownIdDelimiter start='\[' end='\]' keepend contained
+syn region markdownAutomaticLink matchgroup=markdownUrlDelimiter start='<\%(\w\+:\|[[:alnum:]_+-]\+@\)\@=' end='>' keepend oneline
 
-syn region markdownItalic matchgroup=markdownItalicDelimiter start="\S\@<=\*\|\*\S\@=" end="\S\@<=\*\|\*\S\@=" keepend contains=markdownLineStart,@Spell concealends
-syn region markdownItalic matchgroup=markdownItalicDelimiter start="\S\@<=_\|_\S\@=" end="\S\@<=_\|_\S\@=" keepend contains=markdownLineStart,@Spell concealends
-syn region markdownBold matchgroup=markdownBoldDelimiter start="\S\@<=\*\*\|\*\*\S\@=" end="\S\@<=\*\*\|\*\*\S\@=" keepend contains=markdownLineStart,markdownItalic,@Spell concealends
-syn region markdownBold matchgroup=markdownBoldDelimiter start="\S\@<=__\|__\S\@=" end="\S\@<=__\|__\S\@=" keepend contains=markdownLineStart,markdownItalic,@Spell concealends
-syn region markdownBoldItalic matchgroup=markdownBoldItalicDelimiter start="\S\@<=\*\*\*\|\*\*\*\S\@=" end="\S\@<=\*\*\*\|\*\*\*\S\@=" keepend contains=markdownLineStart,@Spell concealends
-syn region markdownBoldItalic matchgroup=markdownBoldItalicDelimiter start="\S\@<=___\|___\S\@=" end="\S\@<=___\|___\S\@=" keepend contains=markdownLineStart,@Spell concealends
+syn region markdownItalic matchgroup=markdownItalicDelimiter start='\S\@<=\*\|\*\S\@=' end='\S\@<=\*\|\*\S\@=' keepend contains=markdownLineStart,@Spell concealends
+syn region markdownItalic matchgroup=markdownItalicDelimiter start='\S\@<=_\|_\S\@=' end='\S\@<=_\|_\S\@=' keepend contains=markdownLineStart,@Spell concealends
+syn region markdownBold matchgroup=markdownBoldDelimiter start='\S\@<=\*\*\|\*\*\S\@=' end='\S\@<=\*\*\|\*\*\S\@=' keepend contains=markdownLineStart,markdownItalic,@Spell concealends
+syn region markdownBold matchgroup=markdownBoldDelimiter start='\S\@<=__\|__\S\@=' end='\S\@<=__\|__\S\@=' keepend contains=markdownLineStart,markdownItalic,@Spell concealends
+syn region markdownBoldItalic matchgroup=markdownBoldItalicDelimiter start='\S\@<=\*\*\*\|\*\*\*\S\@=' end='\S\@<=\*\*\*\|\*\*\*\S\@=' keepend contains=markdownLineStart,@Spell concealends
+syn region markdownBoldItalic matchgroup=markdownBoldItalicDelimiter start='\S\@<=___\|___\S\@=' end='\S\@<=___\|___\S\@=' keepend contains=markdownLineStart,@Spell concealends
 
-syn region markdownCodeSpan matchgroup=markdownCodeDelimiter start="`" end="`" keepend contains=markdownLineStart concealends
-syn region markdownCodeSpan matchgroup=markdownCodeDelimiter start="`` \=" end=" \=``" keepend contains=markdownLineStart
-syn region markdownCodeSpan matchgroup=markdownCodeDelimiter start="^\s*````*.*$" end="^\s*````*\ze\s*$" keepend
+syn region markdownCodeSpan matchgroup=markdownCodeDelimiter start='`' end='`' keepend contains=markdownLineStart concealends
+syn region markdownCodeSpan matchgroup=markdownCodeDelimiter start='`` \=' end=' \=``' keepend contains=markdownLineStart
+syn region markdownCodeSpan matchgroup=markdownCodeDelimiter start='^\s*````*.*$' end='^\s*````*\ze\s*$' keepend
 
 " Why is `keepend` important here?{{{
 "
@@ -256,18 +256,18 @@ syn region markdownCodeSpan matchgroup=markdownCodeDelimiter start="^\s*````*.*$
 " `keepend`  prevents a  possible broken  contained region  from being  extended
 " outside the initial containing region.
 "}}}
-syn match markdownBlockquote "^>\+\%(\s.*\|$\)" contained contains=markdownBlockquoteBold,markdownCodeSpan,markdownItalic,markdownBlockquoteLeadingChar keepend nextgroup=@markdownBlock
-syn match markdownBlockquoteLeadingChar "^>\+\s" contained conceal
+syn match markdownBlockquote '^>\+\%(\s.*\|$\)' contained contains=markdownBlockquoteBold,markdownCodeSpan,markdownItalic,markdownBlockquoteLeadingChar keepend nextgroup=@markdownBlock
+syn match markdownBlockquoteLeadingChar '^>\+\s' contained conceal
 " `markdownBlockquoteBold` must be defined *after* `markdownItalic`
-syn region markdownBlockquoteBold matchgroup=markdownCodeDelimiter start="\*\*" end="\*\*" keepend contains=markdownLineStart concealends
+syn region markdownBlockquoteBold matchgroup=markdownCodeDelimiter start='\*\*' end='\*\*' keepend contains=markdownLineStart concealends
 
-syn match markdownFootnote "\[^[^\]]\+\]"
-syn match markdownFootnoteDefinition "^\[^[^\]]\+\]:"
+syn match markdownFootnote '\[^[^\]]\+\]'
+syn match markdownFootnoteDefinition '^\[^[^\]]\+\]:'
 
-syn match markdownEscape "\\[][\\`*_{}()<>#+.!-]"
-syn match markdownError "\w\@<=_\w\@="
+syn match markdownEscape '\\[][\\`*_{}()<>#+.!-]'
+syn match markdownError '\w\@<=_\w\@='
 
-syn match markdownPointer "^\s*[v^✘✔]\+$"
+syn match markdownPointer '^\s*[v^✘✔]\+$'
 
 syn match markdownCommentTitle /^\s\{0,2}\u\w*\(\s\+\u\w*\)*:/ contains=markdownTodo
 "                                  ├────┘
@@ -287,7 +287,7 @@ syn match markdownIgnore /.$/ contained containedin=markdownOutput conceal
 
 syn match markdownTable /^\s\{4}[│─┌└├].*/
 
-syn region markdownOption matchgroup=markdownCodeDelimiter start="`'" end="'`" concealends keepend oneline
+syn region markdownOption matchgroup=markdownCodeDelimiter start=+`'+ end=+'`+ concealends keepend oneline
 
 call markdown#define_include_clusters()
 call markdown#highlight_embedded_languages()
