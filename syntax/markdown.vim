@@ -163,7 +163,7 @@ syn region markdownCodeBlock start="    \|\t" end="$" contained contains=@Spell 
 " If we do this, we would need to conceal `-`, and replace it with `•`.
 " And we would need to make `hl-Conceal` less visible:
 "
-"     hi! link Conceal Statement
+"     hi! link Conceal Repeat
 "                      │
 "                      └ HG used by markdownList
 "
@@ -190,22 +190,20 @@ syn region markdownCodeBlock start="    \|\t" end="$" contained contains=@Spell 
 "
 " Second Part:
 "
-"     \%( \{,3}[-*+]\| \{,3}\d\+\.\|\s*\n\S\| \{8}\|\%$\)\@=
+"     \%(\s*\n\S\| \{8}\|\%$\)\@=
 "
 " This describes when a list item should stop.
 " It can be broken down further:
 "
-"     \%( \{,3}[-*+]\| \{,3}\d\+\.\|\s*\n\S\| \{8}\|\%$\)\@=
-"        ├─────────┘  ├──────────┘  ├─────┘  ├───┘  ├─┘
-"        │            │             │        │      └ the end of the buffer
-"        │            │             │        │
-"        │            │             │        └ a codeblock inside a list item
-"        │            │             │
-"        │            │             └ the beginning of a paragraph
-"        │            └ the beginning of another ordered list item
-"        └ the beginning of another unordered list item
+"     \%(\s*\n\S\| \{8}\|\%$\)\@=
+"        ├─────┘  ├───┘  ├─┘
+"        │        │      └ the end of the buffer
+"        │        │
+"        │        └ a codeblock inside a list item
+"        │
+"        └ the beginning of a paragraph
 "}}}
-syn match markdownList "^ \{,3\}\%([-*+•]\|\d\+\.\)\s\+\S\_.\{-}\n\%( \{,3}[-*+•]\| \{,3}\d\+\.\|\s*\n\S\| \{8}\|\%$\)\@=" contained contains=markdownListItalic,markdownListBold,markdownListBoldItalic,markdownListCodeSpan
+syn match markdownList "^ \{,3\}\%([-*+•]\|\d\+\.\)\s\+\S\_.\{-}\n\%(\s*\n\S\| \{8}\|\%$\)\@=" contained contains=markdownListItalic,markdownListBold,markdownListBoldItalic,markdownListCodeSpan
 syn region markdownListItalic matchgroup=markdownItalicDelimiter start="\S\@<=\*\|\*\S\@=" end="\S\@<=\*\|\*\S\@=" keepend contains=markdownLineStart,@Spell concealends
 syn region markdownListBold matchgroup=markdownBoldDelimiter start="\S\@<=\*\*\|\*\*\S\@=" end="\S\@<=\*\*\|\*\*\S\@=" keepend contains=markdownLineStart,markdownItalic,@Spell concealends
 syn region markdownListBoldItalic matchgroup=markdownBoldItalicDelimiter start="\S\@<=\*\*\*\|\*\*\*\S\@=" end="\S\@<=\*\*\*\|\*\*\*\S\@=" keepend contains=markdownLineStart,@Spell concealends
