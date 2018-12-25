@@ -18,7 +18,7 @@ endif
 "     let line = getline(v:lnum)
 
 "     " Regular headers
-"     let depth = match(line, '\(^#\+\)\@<=\( .*$\)\@=')
+"     let depth = match(line, '\(^#\+\)\@7<=\( .*$\)\@=')
 "     if depth > 0
 "         return '>'.depth
 "     endif
