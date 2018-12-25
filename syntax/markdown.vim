@@ -124,27 +124,6 @@ syn region markdownH4 matchgroup=markdownH4Delimiter start="#####\@!"   end="#*\
 syn region markdownH5 matchgroup=markdownH5Delimiter start="######\@!"  end="#*\s*$" keepend oneline contains=@markdownInline,markdownAutomaticLink contained
 syn region markdownH6 matchgroup=markdownH6Delimiter start="#######\@!" end="#*\s*$" keepend oneline contains=@markdownInline,markdownAutomaticLink contained
 
-" Why is `keepend` important here?{{{
-"
-" Suppose you emphasize some text in bold, while quoting a sentence.
-" But you forget to add `**` at the end of the emphasized text.
-" The `markdownBold` region will go on until the end of the quoted sentence.
-"
-" This is expected, and *not* avoidable.
-"
-" But, it will also consume the  end of `markdownBlockquote`, which will have to
-" be extended, as well as `markdownBold`.
-" As a  result, after your quoted  sentence, the following text  will be wrongly
-" highlighted by the stack of items `markdownBold markdownBlockquote`.
-" IOW, the text will be in bold, even *after* you've finished writing your quote.
-"
-" This is UNexpected, but *avoidable*.
-" `keepend`  prevents a  possible broken  contained region  from being  extended
-" outside the initial containing region.
-"}}}
-syn match markdownBlockquote "^>\+\%(\s.*\|$\)" contained contains=markdownBold,markdownCode,markdownItalic,markdownBlockquoteLeadingChar keepend nextgroup=@markdownBlock
-syn match markdownBlockquoteLeadingChar "^>\+\s" contained conceal
-
 " TODO:
 " Comment on the fact that the  region must be contained because of `contained`,
 " and yet, in practice, it doesn't seem to be contained in anything.
@@ -270,6 +249,29 @@ syn region markdownCode matchgroup=markdownCodeDelimiter start="`" end="`" keepe
 syn region markdownCode matchgroup=markdownCodeDelimiter start="`` \=" end=" \=``" keepend contains=markdownLineStart
 syn region markdownCode matchgroup=markdownCodeDelimiter start="^\s*````*.*$" end="^\s*````*\ze\s*$" keepend
 
+" Why is `keepend` important here?{{{
+"
+" Suppose you emphasize some text in bold, while quoting a sentence.
+" But you forget to add `**` at the end of the emphasized text.
+" The `markdownBold` region will go on until the end of the quoted sentence.
+"
+" This is expected, and *not* avoidable.
+"
+" But, it will also consume the  end of `markdownBlockquote`, which will have to
+" be extended, as well as `markdownBold`.
+" As a  result, after your quoted  sentence, the following text  will be wrongly
+" highlighted by the stack of items `markdownBold markdownBlockquote`.
+" IOW, the text will be in bold, even *after* you've finished writing your quote.
+"
+" This is UNexpected, but *avoidable*.
+" `keepend`  prevents a  possible broken  contained region  from being  extended
+" outside the initial containing region.
+"}}}
+syn match markdownBlockquote "^>\+\%(\s.*\|$\)" contained contains=markdownBlockquoteBold,markdownCode,markdownItalic,markdownBlockquoteLeadingChar keepend nextgroup=@markdownBlock
+syn match markdownBlockquoteLeadingChar "^>\+\s" contained conceal
+" `markdownBlockquoteBold` must be defined *after* `markdownItalic`
+syn region markdownBlockquoteBold matchgroup=markdownCodeDelimiter start="\*\*" end="\*\*" keepend contains=markdownLineStart concealends
+
 syn match markdownFootnote "\[^[^\]]\+\]"
 syn match markdownFootnoteDefinition "^\[^[^\]]\+\]:"
 
@@ -394,6 +396,7 @@ hi link markdownError                 Normal
 "}}}
 hi link markdownCode                  CodeSpan
 hi link markdownCodeBlock             Comment
+hi link markdownBlockquoteBold        CommentBlockquoteBold
 
 hi link markdownPointer               Title
 hi link markdownCommentTitle          PreProc
