@@ -2,6 +2,28 @@ if exists('b:current_syntax')
     finish
 endif
 
+" TODO: When should we prefer `containedin` vs `contained`?
+" Once you take a decision, apply your choice here and in:
+"
+"     ~/.vim/plugged/vim-lg-lib/autoload/lg/styled_comment.vim
+
+" FIXME: Write this in a markdown buffer:
+" - item1
+" - ** foo `item2` bar**
+" - item3
+"
+" The next lines are wrongly highlighted as list items.
+" Make sure your solution works in other filetypes.
+
+" FIXME: Write this in a markdown buffer:
+"
+" - item1
+" - **foo `item2` bar**
+" - item3
+"
+" The backticks around `item2` should be concealed.
+" Make sure your solution works in other filetypes.
+
 " TODO:
 " Read:
 "     https://daringfireball.net/projects/markdown/syntax
@@ -63,7 +85,7 @@ syn case ignore
 " But we still want to be able to source them with a simple `+sip`.
 " So we separate them with empty commented lines.
 "}}}
-syn match markdownHideVimlSeparations '^\s*"$' conceal containedin=markdownCodeBlock
+syn match markdownHideVimlSeparations '^\s*"$' conceal contained containedin=markdownCodeBlock
 
 " TODO: Explain why `markdownValid` is necessary?{{{
 "
@@ -109,25 +131,19 @@ syn match markdownLineStart '^[<@]\@!' nextgroup=@markdownBlock,htmlSpecialChar
 syn region markdownHideAnswer start='^↣' end='^↢.*' conceal cchar=? containedin=markdownCodeBlock keepend
 syn match markdownHideAnswer '↣.\{-}↢' conceal cchar=? containedin=markdownCodeBlock
 
-syn cluster markdownBlock contains=markdownH1,markdownH2,markdownH3,markdownH4,markdownH5,markdownH6,markdownBlockquote,markdownList,markdownOrderedListMarker,markdownCodeBlock,markdownRule
+syn cluster markdownBlock contains=markdownH1,markdownH2,markdownHeader,markdownBlockquote,markdownList,markdownCodeBlock,markdownRule
 syn cluster markdownInline contains=markdownLineBreak,markdownLinkText,markdownItalic,markdownBold,markdownCodeSpan,markdownEscape,@htmlTop,markdownError
-
-syn match markdownH1 '^.\+\n=\+$' contained contains=@markdownInline,markdownHeadingRule,markdownAutomaticLink
-syn match markdownH2 '^.\+\n-\+$' contained contains=@markdownInline,markdownHeadingRule,markdownAutomaticLink
 
 syn match markdownHeadingRule '^[=-]\+$' contained
 
-syn region markdownH1 matchgroup=markdownH1Delimiter start='^##\@!'      end='$' keepend oneline contains=@markdownInline,markdownAutomaticLink contained
-syn region markdownH2 matchgroup=markdownH2Delimiter start='^###\@!'     end='$' keepend oneline contains=@markdownInline,markdownAutomaticLink contained
-syn region markdownH3 matchgroup=markdownH3Delimiter start='^####\@!'    end='$' keepend oneline contains=@markdownInline,markdownAutomaticLink contained
-syn region markdownH4 matchgroup=markdownH4Delimiter start='^#####\@!'   end='$' keepend oneline contains=@markdownInline,markdownAutomaticLink contained
-syn region markdownH5 matchgroup=markdownH5Delimiter start='^######\@!'  end='$' keepend oneline contains=@markdownInline,markdownAutomaticLink contained
-syn region markdownH6 matchgroup=markdownH6Delimiter start='^#######\@!' end='$' keepend oneline contains=@markdownInline,markdownAutomaticLink contained
+syn region markdownHeader matchgroup=Delimiter start='^#\{1,6}#\@!' end='$' keepend oneline contains=@markdownInline,markdownAutomaticLink contained
+syn match  markdownHeader '^.\+\n=\+$' contained contains=@markdownInline,markdownHeadingRule,markdownAutomaticLink
+syn match  markdownHeader '^.\+\n-\+$' contained contains=@markdownInline,markdownHeadingRule,markdownAutomaticLink
 
 " TODO:
 " Comment on the fact that the  region must be contained because of `contained`,
 " and yet, in practice, it doesn't seem to be contained in anything.
-" Press `!s`  on a  codeblock, and  you won't  see a  containing item,  in which
+" Press `!s`  on a code  block, and  you won't see  a containing item,  in which
 " `markdownCodeBlock` would be contained.
 " I think it's contained in the cluster `@markdownBlock`.
 " Is it necessary for `markdownCodeBlock` to be contained?
@@ -207,8 +223,9 @@ syn match markdownList '^ \{,3\}\%([-*+•]\|\d\+\.\)\s\+\S\_.\{-}\n\s*\n \{,2}\
 " TODO: improve performance{{{
 "
 " Sometimes, moving in a buffer is slow, when there are many lists.
-" Maybe we could improve the performance by eliminating `\@<=` and `@=`.
-" We could do the same to `markdownItalic` & friends.
+" We could improve the performance by stopping loading the html syntax plugin.
+"
+" Also we could try to eliminate `\@<=` and `@=` as frequently as possible.
 "
 " Btw:
 " Shouldn't we use `_` instead of `*` to  avoid a conflict with `*` when used as
@@ -251,8 +268,8 @@ syn region markdownBold matchgroup=markdownBoldDelimiter start='\S\@1<=__\|__\S\
 syn region markdownBoldItalic matchgroup=markdownBoldItalicDelimiter start='\S\@1<=\*\*\*\|\*\*\*\S\@=' end='\S\@1<=\*\*\*\|\*\*\*\S\@=' keepend contains=markdownLineStart,@Spell concealends
 syn region markdownBoldItalic matchgroup=markdownBoldItalicDelimiter start='\S\@1<=___\|___\S\@=' end='\S\@1<=___\|___\S\@=' keepend contains=markdownLineStart,@Spell concealends
 
-syn region markdownCodeSpan matchgroup=markdownCodeDelimiter start='`' end='`' keepend contains=markdownLineStart concealends
-syn region markdownCodeSpan matchgroup=markdownCodeDelimiter start='`` \=' end=' \=``' keepend contains=markdownLineStart
+syn region markdownCodeSpan matchgroup=markdownCodeDelimiter start='`' end='`' keepend contains=markdownLineStart containedin=markdownBold concealends
+syn region markdownCodeSpan matchgroup=markdownCodeDelimiter start='`` \=' end=' \=``' keepend contains=markdownLineStart containedin=markdownBold concealends
 syn region markdownCodeSpan matchgroup=markdownCodeDelimiter start='^\s*````*.*$' end='^\s*````*\ze\s*$' keepend
 
 " Why is `keepend` important here?{{{
@@ -273,14 +290,14 @@ syn region markdownCodeSpan matchgroup=markdownCodeDelimiter start='^\s*````*.*$
 " `keepend`  prevents a  possible broken  contained region  from being  extended
 " outside the initial containing region.
 "}}}
-syn match markdownBlockquote '^\s\{,3}>\+\%(\s.*\|$\)' contained contains=markdownBlockquoteBold,markdownCodeSpan,markdownItalic,markdownBlockquoteLeadingChar keepend nextgroup=@markdownBlock
-syn match markdownListBlockquote '^\s\{,7}>\+\%(\s.*\|$\)' contained contains=markdownBlockquoteBold,markdownCodeSpan,markdownItalic,markdownListBlockquoteLeadingChar keepend nextgroup=@markdownBlock
+syn match markdownBlockquote '^ \{,3}>\+\%(\s.*\|$\)' contained contains=markdownBlockquoteBold,markdownCodeSpan,markdownItalic,markdownBlockquoteLeadingChar keepend nextgroup=@markdownBlock
+syn match markdownListBlockquote '^ \{,7}>\+\%(\s.*\|$\)' contained contains=markdownBlockquoteBold,markdownCodeSpan,markdownItalic,markdownListBlockquoteLeadingChar keepend nextgroup=@markdownBlock
 syn match markdownBlockquoteLeadingChar '\%(^ \{,3}\)\@3<=>\+\s' contained conceal
 syn match markdownListBlockquoteLeadingChar '\%(^ \{,7}\)\@7<=>\+\s' contained conceal
 " `markdownBlockquoteBold` must be defined *after* `markdownItalic`
 syn region markdownBlockquoteBold matchgroup=markdownCodeDelimiter start='\*\*' end='\*\*' keepend contained contains=markdownLineStart concealends
-" TODO: are there similar items which need to be positioned after another?
-" If so,  move them as far  to the bottom of  the file as possible,  and leave a
+" TODO: are there similar items which need to be positioned before another?
+" If so,  move them  as far  to the  top of the  file as  possible, and  leave a
 " comment explaining they must stay there.
 
 syn match markdownFootnote '\[^[^\]]\+\]'
@@ -289,14 +306,14 @@ syn match markdownFootnoteDefinition '^\[^[^\]]\+\]:'
 syn match markdownEscape '\\[][\\`*_{}()<>#+.!-]'
 syn match markdownError '\w\@1<=_\w\@='
 
-syn match markdownPointer '^\s*[v^✘✔]\+$'
+syn match markdownPointer '^\s*\%([v^✘✔]\+\s*\)\+$'
 
-syn match markdownCommentTitle /^\s\{,2}\u\w*\(\s\+\u\w*\)*:/ contains=markdownTodo
-"                                  ├───┘
-"                                  └ Why?
+syn match markdownCommentTitle /^ \{,2}\u\w*\(\s\+\u\w*\)*:/ contains=markdownTodo
+"                                 ├───┘
+"                                 └ Why?
 " Because:{{{
 "
-" We don't want  `markdownCommentTitle` to match in a codeblock,  nor in an item
+" We don't want `markdownCommentTitle` to match in  a code block, nor in an item
 " list.
 " It would break the highlighting of the text which follows on the line.
 " So, we can't allow more than 2 leading spaces.
@@ -307,37 +324,39 @@ syn match markdownTodo  /\CTODO\|FIXME/ contained
 syn match markdownOutput /^.*\~$/ contained containedin=markdownCodeBlock nextgroup=markdownIgnore
 syn match markdownIgnore /.$/ contained containedin=markdownOutput conceal
 
-" FIXME: This diagram, written in a codeblock, is highlighted as a table:{{{
+" FIXME: This diagram, written in a code block, is highlighted as a table:{{{
 "
 "     rbbb rrr bbbr
 "     │  │
 "     │  └ blue
 "     └ red
 "
-" Maybe it's an argument in favor of using 8 spaces to indent codeblocks.
+" Maybe it's an argument in favor of using 8 spaces to indent code blocks.
 " This would leave us indentations of 3 spaces up to 7 spaces for other usage...
+"
+" Alternative:
+" Use a literal tab character to indent a table.
+" We  could distinguish  code from  a  table by  looking  at whether  a line  is
+" indented with spaces or tabs.
+" We would need to tweak `:RemoveTabs` so that it doesn't remove a tab character
+" at the beginning of a line when it's followed by a table.
 "}}}
-syn match markdownTable /^\s\{4}[│─┌└├].*/
+syn match markdownTable /^    [│─┌└├].*/
 
-syn region markdownOption matchgroup=markdownCodeDelimiter start=+`'+ end=+'`+ concealends keepend oneline
+syn match markdownOption +`\@1<='.\{-}'`\@=+ containedin=markdownCodeSpan
 
 call markdown#define_include_clusters()
 call markdown#highlight_embedded_languages()
 
-hi link markdownH1                    Title
-hi link markdownH2                    Title
-hi link markdownH3                    Title
-hi link markdownH4                    Title
-hi link markdownH5                    Title
-hi link markdownH6                    Title
+" TODO:
+" Make sure that the HG used by any style  that we use in a markdown buffer + in
+" the  comments  of  other  filetypes  is  always  defined  in  our  colorscheme
+" customizations.
+" This  way,  we have  a  central  location from  which  we  can change  the
+" highlighting of *all* the filetypes.
+
+hi link markdownHeader                Title
 hi link markdownHeadingRule           markdownRule
-hi link markdownH1Delimiter           markdownHeadingDelimiter
-hi link markdownH2Delimiter           markdownHeadingDelimiter
-hi link markdownH3Delimiter           markdownHeadingDelimiter
-hi link markdownH4Delimiter           markdownHeadingDelimiter
-hi link markdownH5Delimiter           markdownHeadingDelimiter
-hi link markdownH6Delimiter           markdownHeadingDelimiter
-hi link markdownHeadingDelimiter      Delimiter
 hi link markdownRule                  Comment
 
 hi link markdownFootnote              Typedef
@@ -391,17 +410,16 @@ hi link markdownEscape                Special
 " But again, it doesn't work in titles.
 "}}}
 hi link markdownError                 Error
+
 hi link markdownCodeBlock             Comment
 
-hi link markdownPointer               Title
 hi link markdownCommentTitle          PreProc
-hi link markdownTodo Todo
+hi link markdownTodo                  Todo
 
 hi link markdownOutput                PreProc
 hi link markdownIgnore                Ignore
 hi link markdownTable                 Structure
 
-hi link markdownOption                Type
 hi link markdownListBlockquote        markdownBlockquote
 hi link markdownListCodeBlock         markdownCodeBlock
 
