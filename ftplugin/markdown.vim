@@ -114,7 +114,7 @@ endif
 
 com! -bar -buffer -range=%  FoldSortBySize  exe fold#md#sort#by_size(<line1>,<line2>)
 
-cnorea  <buffer><expr>  foldsortbysize  getcmdtype() is# ':' && getcmdline() is# 'foldsortbysize'
+cnorea  <buffer><expr>  foldsortbysize  getcmdtype() is# ':' && getcmdpos() ==# 15
 \                                       ?    'FoldSortBySize'
 \                                       :    'foldsortbysize'
 

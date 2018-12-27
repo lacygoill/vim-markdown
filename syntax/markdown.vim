@@ -201,23 +201,19 @@ syn region markdownListCodeBlock start='^       \|^\t\t' end='$' contained conta
 "
 " First Part:
 "
-"     ^ \{,3\}\%([-*+]\|\d\+\.\)\s\+\S\_.\{-}\n
+"     ^ \{,3\}\%([-*+•]\|\d\+\.\)\s\+\S\_.\{-}\n
 "
 " This describes the first line of a list item.
 "
 " Second Part:
 "
-"     \%(\s*\n\S\|\%$\)\@=
-"     \s*\n \{,3}\%([^-*+• \t]\|\%$\)\@=
-"
-" This describes when a list item should stop.
-" It can be broken down further:
-"
-"     \s*\n \{,3}\%([^-*+• \t]\|\%$\)\@=
+"     \s*\n \{,2}\%([^-*+• \t]\|\%$\)\@=
 "     ├──────────────────────┘  ├─┘
 "     │                         └ the end of the buffer
 "     │
 "     └ the beginning of a regular paragraph, outside any list
+"
+" This describes when a list should stop.
 "}}}
 syn match markdownList '^ \{,3\}\%([-*+•]\|\d\+\.\)\s\+\S\_.\{-}\n\s*\n \{,2}\%([^-*+• \t]\|\%$\)\@=' contained contains=markdownListItalic,markdownListBold,markdownListBoldItalic,markdownListCodeSpan,markdownListCodeBlock,markdownListBlockquote
 " TODO: improve performance{{{
@@ -231,15 +227,10 @@ syn match markdownList '^ \{,3\}\%([-*+•]\|\d\+\.\)\s\+\S\_.\{-}\n\s*\n \{,2}\
 " Shouldn't we use `_` instead of `*` to  avoid a conflict with `*` when used as
 " an item leader.
 "}}}
-" TODO: do we really need underscores + asterisks?
-" If no, remove support for one of them for text inside/outside lists.
-syn region markdownListItalic matchgroup=markdownItalicDelimiter start='\S\@1<=\*\|\*\S\@=' end='\S\@1<=\*\|\*\S\@=' keepend contains=markdownLineStart,@Spell concealends
-syn region markdownListItalic matchgroup=markdownItalicDelimiter start='\S\@1<=_\|_\S\@=' end='\S\@1<=_\|_\S\@=' keepend contains=markdownLineStart,@Spell concealends
-syn region markdownListBold matchgroup=markdownBoldDelimiter start='\S\@1<=\*\*\|\*\*\S\@=' end='\S\@1<=\*\*\|\*\*\S\@=' keepend contains=markdownLineStart,markdownItalic,@Spell concealends
-syn region markdownListBold matchgroup=markdownBoldDelimiter start='\S\@1<=__\|__\S\@=' end='\S\@1<=__\|__\S\@=' keepend contains=markdownLineStart,markdownItalic,@Spell concealends
-syn region markdownListBoldItalic matchgroup=markdownBoldItalicDelimiter start='\S\@1<=\*\*\*\|\*\*\*\S\@=' end='\S\@1<=\*\*\*\|\*\*\*\S\@=' keepend contains=markdownLineStart,@Spell concealends
-syn region markdownListBoldItalic matchgroup=markdownBoldItalicDelimiter start='\S\@1<=___\|___\S\@=' end='\S\@1<=___\|___\S\@=' keepend contains=markdownLineStart,@Spell concealends
-syn region markdownListCodeSpan matchgroup=markdownCodeDelimiter start='`' end='`' keepend contains=markdownLineStart concealends
+syn region markdownListItalic     matchgroup=markdownItalicDelimiter     start='\S\@1<=\*\|\*\S\@='         end='\S\@1<=\*\|\*\S\@='         keepend contained contains=markdownLineStart,@Spell concealends
+syn region markdownListBold       matchgroup=markdownBoldDelimiter       start='\S\@1<=\*\*\|\*\*\S\@='     end='\S\@1<=\*\*\|\*\*\S\@='     keepend contained contains=markdownLineStart,markdownItalic,@Spell concealends
+syn region markdownListBoldItalic matchgroup=markdownBoldItalicDelimiter start='\S\@1<=\*\*\*\|\*\*\*\S\@=' end='\S\@1<=\*\*\*\|\*\*\*\S\@=' keepend contained contains=markdownLineStart,@Spell concealends
+syn region markdownListCodeSpan   matchgroup=markdownCodeDelimiter       start='`'                          end='`'                          keepend contained contains=markdownLineStart concealends
 
 syn match markdownRule '^\* *\* *\*[ *]*$' contained
 syn match markdownRule '^- *- *-[ -]*$' contained
@@ -261,12 +252,30 @@ syn region markdownLink matchgroup=markdownLinkDelimiter start='(' end=')' conta
 syn region markdownId matchgroup=markdownIdDelimiter start='\[' end='\]' keepend contained
 syn region markdownAutomaticLink matchgroup=markdownUrlDelimiter start='<\%(\w\+:\|[[:alnum:]_+-]\+@\)\@=' end='>' keepend oneline
 
+" Why don't you support the syntax using underscores?{{{
+"
+"    1. I don't use underscores
+"    2. it has a high impact on performance
+"}}}
+" I want to add support for it!{{{
+"
+" Duplicate each statement, replacing each escaped asterisk with an underscore.
+"
+" Or tweak the  existing regions to include the `\z()`  item and capture `[*_]`,
+" `\*\*\|__`, `\*\*\*\|___` in  the start pattern, and refer to  it via `\z1` in
+" the end pattern.
+"
+" ---
+"
+" Do the same for:
+"
+"    • `markdownListItalic`
+"    • `markdownListBold`
+"    • `markdownListBoldItalic`
+"}}}
 syn region markdownItalic matchgroup=markdownItalicDelimiter start='\S\@1<=\*\|\*\S\@=' end='\S\@1<=\*\|\*\S\@=' keepend contains=markdownLineStart,@Spell concealends
-syn region markdownItalic matchgroup=markdownItalicDelimiter start='\S\@1<=_\|_\S\@=' end='\S\@1<=_\|_\S\@=' keepend contains=markdownLineStart,@Spell concealends
 syn region markdownBold matchgroup=markdownBoldDelimiter start='\S\@1<=\*\*\|\*\*\S\@=' end='\S\@1<=\*\*\|\*\*\S\@=' keepend contains=markdownLineStart,markdownItalic,@Spell concealends
-syn region markdownBold matchgroup=markdownBoldDelimiter start='\S\@1<=__\|__\S\@=' end='\S\@1<=__\|__\S\@=' keepend contains=markdownLineStart,markdownItalic,@Spell concealends
 syn region markdownBoldItalic matchgroup=markdownBoldItalicDelimiter start='\S\@1<=\*\*\*\|\*\*\*\S\@=' end='\S\@1<=\*\*\*\|\*\*\*\S\@=' keepend contains=markdownLineStart,@Spell concealends
-syn region markdownBoldItalic matchgroup=markdownBoldItalicDelimiter start='\S\@1<=___\|___\S\@=' end='\S\@1<=___\|___\S\@=' keepend contains=markdownLineStart,@Spell concealends
 
 syn region markdownCodeSpan matchgroup=markdownCodeDelimiter start='`' end='`' keepend contains=markdownLineStart containedin=markdownBold concealends
 syn region markdownCodeSpan matchgroup=markdownCodeDelimiter start='`` \=' end=' \=``' keepend contains=markdownLineStart containedin=markdownBold concealends
