@@ -74,8 +74,15 @@ endif
 "
 " We have some html settings which are undesirable in markdown.
 "
-" Example: we set 'sw' to 2 in an  html file (as per google style guide), but we
-" prefer to set it to 4 in a markdown file.
+" Examples:
+" We set `'sw'` to 2 in an html  file (as per google style guide), but we prefer
+" to set it to 4 in a markdown file.
+"
+" In our  HTML plugin (`~/.vim/after/ftplugin/html.vim`),
+" We set up  the web browser to look for the word under the cursor when we press `K`.
+" But, in a markdown buffer, we prefer a more granular approach.
+" Sometimes, `:Man`,  sometimes `:help`,  and maybe other  values in  the future
+" depending on the location of the file.
 "}}}
 
 " TODO:
@@ -407,11 +414,7 @@ let &l:fp = 'par -w'.&l:tw.'rjeq'
 
 " kp "{{{2
 
-" In our HTML plugin (~/.vim/after/ftplugin/html.vim), we've set up the web
-" browser to look for the word under the cursor when we hit K.
-" But, in a markdown buffer, we prefer `:Man` or `:help`.
-
-if expand('%:p') =~# 'wiki/vim'
+if expand('%:p') =~# '/wiki/vim/'
     setl kp=:help
 else
     setl kp=:Man

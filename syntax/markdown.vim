@@ -2,12 +2,53 @@ if exists('b:current_syntax')
     finish
 endif
 
+" TODO: integrate most of the comments from this file in our notes
+
+" TODO: support a url inside a quote (do the same for comments in other filetypes)
+
 " TODO: When should we prefer `containedin` vs `contained`?
 " Once you take a decision, apply your choice here and in:
 "
 "     ~/.vim/plugged/vim-lg-lib/autoload/lg/styled_comment.vim
 
-" FIXME: Write this in a markdown buffer:
+" FIXME:
+"
+" Write this in a markdown buffer:
+"
+" - *item
+"
+" some text
+" some text
+"
+" `some text` is written in blue and italics.
+"
+" MWE:
+"
+"     syn clear
+"
+"     syn match  xList '^ \{,3\}- \_.\{-}\n\s*\n \{,2}\S\@=' contained contains=xListItalic
+"     syn region xListItalic start='\S\@<=\*\|\*\S\@=' end='\S\@<=\*\|\*\S\@=' contained
+"     syn match xLineStart '^[<@]\@!' nextgroup=@xList
+"
+"     hi link xListItalic DiffAdd
+"
+" Something is weird with this MWE.
+" The first `some text` is highlighted, but there's no syntax item there.
+" The second `some text` is highlighted, and there's a syntax item there.
+"
+" Questions:
+" Why does tpope:
+"
+"    - define `markdownLineStart`
+"    - use `nextgroup=@markdownBlock` in the definition
+"
+" And, what's the purpose of `@markdownBlock`?
+" Do we need to include `markdownList` inside this cluster?
+"
+" ---
+"
+" Also, write this:
+"
 " - item1
 " - ** foo `item2` bar**
 " - item3
@@ -215,7 +256,17 @@ syn region markdownListCodeBlock start='^       \|^\t\t' end='$' contained conta
 "
 " This describes when a list should stop.
 "}}}
-syn match markdownList '^ \{,3\}\%([-*+•]\|\d\+\.\)\s\+\S\_.\{-}\n\s*\n \{,2}\%([^-*+• \t]\|\%$\)\@=' contained contains=markdownListItalic,markdownListBold,markdownListBoldItalic,markdownListCodeSpan,markdownListCodeBlock,markdownListBlockquote
+" Don't remove `keepend`!{{{
+"
+" Without, if  you forget to  write the closing backtick  of an italic  word, it
+" could go on beyond the end of  `markdownList`, which would cause the latter to
+" be extended.
+"
+" In reality, it depends on whether you define `markdownItalic` with `oneline`.
+" But the point is, we want a list to stop where we expect it to.
+" We don't want a buggy contained item to make a list continue way beyond its end.
+"}}}
+syn match markdownList '^ \{,3\}\%([-*+•]\|\d\+\.\)\s\+\S\_.\{-}\n\s*\n \{,2}\%([^-*+• \t]\|\%$\)\@=' contained contains=markdownListItalic,markdownListBold,markdownListBoldItalic,markdownListCodeSpan,markdownListCodeBlock,markdownListBlockquote keepend
 " TODO: improve performance{{{
 "
 " Sometimes, moving in a buffer is slow, when there are many lists.
@@ -238,11 +289,11 @@ syn match markdownRule '^- *- *-[ -]*$' contained
 syn match markdownLineBreak ' \{2,\}$'
 
 syn region markdownIdDeclaration matchgroup=markdownLinkDelimiter start='^ \{,3\}!\=\[' end='\]:' oneline keepend nextgroup=markdownUrl skipwhite
-syn match markdownUrl '\S\+' nextgroup=markdownUrlTitle skipwhite contained
-syn region markdownUrl matchgroup=markdownUrlDelimiter start='<' end='>' oneline keepend nextgroup=markdownUrlTitle skipwhite contained
-syn region markdownUrlTitle matchgroup=markdownUrlTitleDelimiter start=+"+ end=+"+ keepend contained
-syn region markdownUrlTitle matchgroup=markdownUrlTitleDelimiter start=+'+ end=+'+ keepend contained
-syn region markdownUrlTitle matchgroup=markdownUrlTitleDelimiter start=+(+ end=+)+ keepend contained
+syn match  markdownUrl '\S\+'    nextgroup=markdownUrlTitle skipwhite contained
+syn region markdownUrl           matchgroup=markdownUrlDelimiter start='<' end='>' oneline keepend nextgroup=markdownUrlTitle skipwhite contained
+syn region markdownUrlTitle      matchgroup=markdownUrlTitleDelimiter start=+"+ end=+"+ keepend contained
+syn region markdownUrlTitle      matchgroup=markdownUrlTitleDelimiter start=+'+ end=+'+ keepend contained
+syn region markdownUrlTitle      matchgroup=markdownUrlTitleDelimiter start=+(+ end=+)+ keepend contained
 
 " We add the  `concealends` argument to hide the square  brackets [] surrounding
 " the text describing the url.
@@ -255,7 +306,7 @@ syn region markdownAutomaticLink matchgroup=markdownUrlDelimiter start='<\%(\w\+
 " Why don't you support the syntax using underscores?{{{
 "
 "    1. I don't use underscores
-"    2. it has a high impact on performance
+"    2. it has an impact on performance
 "}}}
 " I want to add support for it!{{{
 "
@@ -264,6 +315,10 @@ syn region markdownAutomaticLink matchgroup=markdownUrlDelimiter start='<\%(\w\+
 " Or tweak the  existing regions to include the `\z()`  item and capture `[*_]`,
 " `\*\*\|__`, `\*\*\*\|___` in  the start pattern, and refer to  it via `\z1` in
 " the end pattern.
+" Note that when I tried `\z()`, the time taken for `markdownItalic` was doubled,
+" and for `markdownBold`, `markdownBoldItalic` the time was tripled.
+" So, I don't think that `\z()` reduces the time taken to parse the syntax.
+" It just makes the latter more concise/readable.
 "
 " ---
 "
@@ -277,9 +332,16 @@ syn region markdownItalic matchgroup=markdownItalicDelimiter start='\S\@1<=\*\|\
 syn region markdownBold matchgroup=markdownBoldDelimiter start='\S\@1<=\*\*\|\*\*\S\@=' end='\S\@1<=\*\*\|\*\*\S\@=' keepend contains=markdownLineStart,markdownItalic,@Spell concealends
 syn region markdownBoldItalic matchgroup=markdownBoldItalicDelimiter start='\S\@1<=\*\*\*\|\*\*\*\S\@=' end='\S\@1<=\*\*\*\|\*\*\*\S\@=' keepend contains=markdownLineStart,@Spell concealends
 
-syn region markdownCodeSpan matchgroup=markdownCodeDelimiter start='`' end='`' keepend contains=markdownLineStart containedin=markdownBold concealends
-syn region markdownCodeSpan matchgroup=markdownCodeDelimiter start='`` \=' end=' \=``' keepend contains=markdownLineStart containedin=markdownBold concealends
-syn region markdownCodeSpan matchgroup=markdownCodeDelimiter start='^\s*````*.*$' end='^\s*````*\ze\s*$' keepend
+" Why `oneline`?{{{
+"
+" Without it, if you insert a backtick, all the following text is highlighted.
+" Even on the next lines.
+" It can continue on a whole screen, until you insert the closing backtick.
+" This is distracting.
+"}}}
+syn region markdownCodeSpan matchgroup=markdownCodeDelimiter start='`' end='`' keepend contains=markdownLineStart containedin=markdownBold concealends oneline
+syn region markdownCodeSpan matchgroup=markdownCodeDelimiter start='`` \=' end=' \=``' keepend contains=markdownLineStart containedin=markdownBold concealends oneline
+syn region markdownCodeSpan matchgroup=markdownCodeDelimiter start='^\s*````*.*$' end='^\s*````*\ze\s*$' keepend oneline
 
 " Why is `keepend` important here?{{{
 "
@@ -301,8 +363,8 @@ syn region markdownCodeSpan matchgroup=markdownCodeDelimiter start='^\s*````*.*$
 "}}}
 syn match markdownBlockquote '^ \{,3}>\+\%(\s.*\|$\)' contained contains=markdownBlockquoteBold,markdownCodeSpan,markdownItalic,markdownBlockquoteLeadingChar keepend nextgroup=@markdownBlock
 syn match markdownListBlockquote '^ \{,7}>\+\%(\s.*\|$\)' contained contains=markdownBlockquoteBold,markdownCodeSpan,markdownItalic,markdownListBlockquoteLeadingChar keepend nextgroup=@markdownBlock
-syn match markdownBlockquoteLeadingChar '\%(^ \{,3}\)\@3<=>\+\s' contained conceal
-syn match markdownListBlockquoteLeadingChar '\%(^ \{,7}\)\@7<=>\+\s' contained conceal
+syn match markdownBlockquoteLeadingChar '\%(^ \{,3}\)\@3<=>\+\s\=' contained conceal
+syn match markdownListBlockquoteLeadingChar '\%(^ \{,7}\)\@7<=>\+\s\=' contained conceal
 " `markdownBlockquoteBold` must be defined *after* `markdownItalic`
 syn region markdownBlockquoteBold matchgroup=markdownCodeDelimiter start='\*\*' end='\*\*' keepend contained contains=markdownLineStart concealends
 " TODO: are there similar items which need to be positioned before another?
