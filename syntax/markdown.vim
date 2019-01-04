@@ -342,6 +342,8 @@ exe 'syn region markdownListCodeSpan'
     \ . ' contains=markdownLineStart'
     \ . ' concealends'
 
+" A horizontal rule must contain at least 3 asterisks or hyphens.
+" They may be separated by whitespace.
 syn match markdownRule '^\* *\* *\*[ *]*$' contained
 syn match markdownRule '^- *- *-[ -]*$' contained
 
@@ -357,7 +359,7 @@ exe 'syn region markdownIdDeclaration'
     \ . ' skipwhite'
 
 exe 'syn match markdownUrl /\S\+/'
-    \ . ' nextgroup=markdownUrlTitle'
+    \ . ' nextgroup=markdownLinkRefTitle'
     \ . ' skipwhite'
     \ . ' contained'
 
@@ -367,35 +369,39 @@ exe 'syn region markdownUrl'
     \ . ' end=/>/'
     \ . ' oneline'
     \ . ' keepend'
-    \ . ' nextgroup=markdownUrlTitle'
+    \ . ' nextgroup=markdownLinkRefTitle'
     \ . ' skipwhite'
     \ . ' contained'
-exe 'syn region markdownUrlTitle'
+
+" in  addition to double  quotes, the official  spec supports single  quotes and
+" parentheses too
+exe 'syn region markdownLinkRefTitle'
     \ . ' matchgroup=markdownUrlTitleDelimiter'
     \ . ' start=/"/'
     \ . ' end=/"/'
     \ . ' keepend'
     \ . ' contained'
 
-exe 'syn region markdownUrlTitle'
-    \ . ' matchgroup=markdownUrlTitleDelimiter'
-    \ . ' start=/''/'
-    \ . ' end=/''/'
-    \ . ' keepend'
-    \ . ' contained'
-
-exe 'syn region markdownUrlTitle'
-    \ . ' matchgroup=markdownUrlTitleDelimiter'
-    \ . ' start=/(/'
-    \ . ' end=/)/'
-    \ . ' keepend'
-    \ . ' contained'
-
-" We add the  `concealends` argument to hide the square  brackets [] surrounding
-" the text describing the url.
+" Break down the `start` pattern:{{{
+"
+"          ┌ optional subpattern
+"          ├─────────────────────┐
+"     !\=\[\%(\_[^]]*] \=[[(]\)\@=
+"     ├─┘├┘   ├─────┘│├─┘├──┘
+"     │  │    │      ││  └ an opening square bracket or parenthesis
+"     │  │    │      │└ an optional space
+"     │  │    │      └ a closing square bracket
+"     │  │    │
+"     │  │    └ a newline and any other character,
+"     │  │      except a closing square bracket,
+"     │  │      as many as possible
+"     │  │
+"     │  └ an opening square bracket
+"     └ an optional bang
+"}}}
 exe 'syn region markdownLinkText'
     \ . ' matchgroup=markdownLinkTextDelimiter'
-    \ . ' start=/!\=\[\%(\_[^]]*]\%( \=[[(]\)\)\@=/'
+    \ . ' start=/!\=\[\%(\_[^]]*] \=[[(]\)\@=/'
     \ . ' end=/\]\%( \=[[(]\)\@=/'
     \ . ' nextgroup=markdownLink,markdownId'
     \ . ' skipwhite'
@@ -403,7 +409,6 @@ exe 'syn region markdownLinkText'
     \ . ' concealends'
     \ . ' keepend'
 
-" We add the `conceal` argument to hide the url of a link.
 exe 'syn region markdownLink'
     \ . ' matchgroup=markdownLinkDelimiter'
     \ . ' start=/(/'
@@ -579,6 +584,8 @@ syn match markdownError '\w\@1<=_\w\@='
 
 syn match markdownPointer '^\s*\%([v^✘✔]\+\s*\)\+$'
 
+syn region markdownKey matchgroup=Special start=/<kbd>/ end=/<\/kbd>/ concealends
+
 syn match markdownCommentTitle /^ \{,2}\u\w*\(\s\+\u\w*\)*:/ contains=markdownTodo
 "                                 ├───┘
 "                                 └ Why?
@@ -634,18 +641,21 @@ call markdown#highlight_embedded_languages()
 " customizations.
 " This  way,  we have  a  central  location from  which  we  can change  the
 " highlighting of *all* the filetypes.
+"
+" Also, some of our syntax items in comments rely on a markdown syntax group.
+" Example, `markdownListBlockquote`.
+" If we define  the latter here, our comments wouldn't  be correctly highlighted
+" as long as a markdown buffer hasn't been loaded.
 
 hi link markdownHeader                Title
 hi link markdownHeadingRule           markdownRule
-hi link markdownRule                  Comment
 
 hi link markdownFootnote              Typedef
 hi link markdownFootnoteDefinition    Typedef
 
-hi link markdownIdDeclaration         Typedef
 hi link markdownId                    Type
 hi link markdownAutomaticLink         markdownUrl
-hi link markdownUrlTitle              String
+hi link markdownLinkRefTitle          String
 hi link markdownIdDelimiter           markdownLinkDelimiter
 hi link markdownUrlDelimiter          Function
 hi link markdownUrlTitleDelimiter     Delimiter
@@ -691,17 +701,11 @@ hi link markdownEscape                Special
 "}}}
 hi link markdownError                 Error
 
-hi link markdownCodeBlock             Comment
-
 hi link markdownCommentTitle          PreProc
 hi link markdownTodo                  Todo
-
 hi link markdownOutput                PreProc
 hi link markdownIgnore                Ignore
 hi link markdownTable                 Structure
-
-hi link markdownListBlockquote        markdownBlockquote
-hi link markdownListCodeBlock         markdownCodeBlock
 
 let b:current_syntax = 'markdown'
 
