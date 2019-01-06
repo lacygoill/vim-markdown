@@ -444,8 +444,8 @@ exe 'syn region markdownAutomaticLink'
 " Or tweak the  existing regions to include the `\z()`  item and capture `[*_]`,
 " `\*\*\|__`, `\*\*\*\|___` in  the start pattern, and refer to  it via `\z1` in
 " the end pattern.
-" Note that when I tried `\z()`, the time taken for `markdownItalic` was doubled,
-" and for `markdownBold`, `markdownBoldItalic` the time was tripled.
+" Note that when I tried `\z()`, the time taken for `markdownItalic` was doubled.
+" And for `markdownBold`, `markdownBoldItalic` the time was tripled.
 " So, I don't think that `\z()` reduces the time taken to parse the syntax.
 " It just makes the latter more concise/readable.
 "
@@ -457,7 +457,6 @@ exe 'syn region markdownAutomaticLink'
 "    • `markdownListBold`
 "    • `markdownListBoldItalic`
 "}}}
-
 exe 'syn region markdownItalic'
     \ . ' matchgroup=markdownItalicDelimiter'
     \ . ' start=/\S\@1<=\*\|\*\S\@=/'
