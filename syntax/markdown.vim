@@ -274,6 +274,151 @@ exe 'syn cluster markdownListElements contains='
     \ . 'markdownListCodeBlock,'
     \ . 'markdownListBlockquote'
 
+" Italic {{{1
+
+" TODO: explain that  we need `oneline`, otherwise, there would  be issues for a
+" list item whose leader is `*`.
+" The alternative would probably consist of refining the regexes to tell Vim
+" to look for a non-whitespace before or after `*`:
+"
+"     \S\@<=\*\|\*\S\@=
+"
+" I think that's what tpope does, and I think he does it for the same reason.
+"
+" Btw, should we use `oneline` everywhere it's possible?
+
+" Why don't you support the syntax using underscores?{{{
+"
+"    1. I don't use underscores
+"    2. it has an impact on performance
+"}}}
+" I want to add support for it!{{{
+"
+" Duplicate each statement, replacing each escaped asterisk with an underscore.
+"
+" Or tweak the  existing regions to include the `\z()`  item and capture `[*_]`,
+" `\*\*\|__`, `\*\*\*\|___` in  the start pattern, and refer to  it via `\z1` in
+" the end pattern.
+" Note that when I tried `\z()`, the time taken for `markdownItalic` was doubled.
+" And for `markdownBold`, `markdownBoldItalic` the time was tripled.
+" So, I don't think that `\z()` reduces the time taken to parse the syntax.
+" It just makes the latter more concise/readable.
+"
+" ---
+"
+" Do the same for:
+"
+"    • `markdownListItalic`
+"    • `markdownListBold`
+"    • `markdownListBoldItalic`
+"}}}
+exe 'syn region markdownItalic'
+    \ . ' matchgroup=markdownItalicDelimiter'
+    \ . ' start=/\*/'
+    \ . ' end=/\*/'
+    \ . ' oneline'
+    \ . ' keepend'
+    \ . ' contains=markdownLineStart,@Spell'
+    \ . ' concealends'
+
+" TODO: improve performance{{{
+"
+" Sometimes, moving in a buffer is slow, when there are many lists.
+" We could improve the performance by stopping loading the html syntax plugin.
+"
+" Also we could try to eliminate `\@<=` and `@=` as frequently as possible.
+"
+" Btw:
+" Shouldn't we use `_` instead of `*` to  avoid a conflict with `*` when used as
+" an item leader.
+"}}}
+exe 'syn region markdownListItalic'
+    \ . ' matchgroup=markdownItalicDelimiter'
+    \ . ' start=/\*/'
+    \ . ' end=/\*/'
+    \ . ' oneline'
+    \ . ' keepend'
+    \ . ' contained'
+    \ . ' contains=markdownLineStart,@Spell'
+    \ . ' concealends'
+
+exe 'syn region markdownBlockquoteItalic'
+    \ . ' matchgroup=markdownCodeDelimiter'
+    \ . ' start=/\*/'
+    \ . ' end=/\*/'
+    \ . ' oneline'
+    \ . ' keepend'
+    \ . ' contained'
+    \ . ' contains=markdownLineStart'
+    \ . ' concealends'
+" }}}1
+" Bold {{{1
+
+exe 'syn region markdownBold'
+    \ . ' matchgroup=markdownBoldDelimiter'
+    \ . ' start=/\*\*/'
+    \ . ' end=/\*\*/'
+    \ . ' oneline'
+    \ . ' keepend'
+    \ . ' contains=markdownLineStart,markdownItalic,@Spell'
+    \ . ' concealends'
+
+exe 'syn region markdownListBold'
+    \ . ' matchgroup=markdownBoldDelimiter'
+    \ . ' start=/\*\*/'
+    \ . ' end=/\*\*/'
+    \ . ' oneline'
+    \ . ' keepend'
+    \ . ' contained'
+    \ . ' contains=markdownLineStart,markdownItalic,@Spell'
+    \ . ' concealends'
+
+" `markdownBlockquoteBold` must be defined *after* `markdownItalic`
+" TODO: are there similar items which need to be positioned before another?
+" If so,  move them  as far  to the  top of the  file as  possible, and  leave a
+" comment explaining they must stay there.
+exe 'syn region markdownBlockquoteBold'
+    \ . ' matchgroup=markdownBoldDelimiter'
+    \ . ' start=/\*\*/'
+    \ . ' end=/\*\*/'
+    \ . ' oneline'
+    \ . ' keepend'
+    \ . ' contained'
+    \ . ' contains=markdownLineStart'
+    \ . ' concealends'
+" }}}1
+" Bold+Italic {{{1
+
+exe 'syn region markdownBoldItalic'
+    \ . ' matchgroup=markdownBoldItalicDelimiter'
+    \ . ' start=/\*\*\*/'
+    \ . ' end=/\*\*\*/'
+    \ . ' oneline'
+    \ . ' keepend'
+    \ . ' contains=markdownLineStart,@Spell'
+    \ . ' concealends'
+
+exe 'syn region markdownListBoldItalic'
+    \ . ' matchgroup=markdownBoldItalicDelimiter'
+    \ . ' start=/\*\*\*/'
+    \ . ' end=/\*\*\*/'
+    \ . ' oneline'
+    \ . ' keepend'
+    \ . ' contained'
+    \ . ' contains=markdownLineStart,@Spell'
+    \ . ' concealends'
+
+exe 'syn region markdownBlockquoteBoldItalic'
+    \ . ' matchgroup=markdownBoldItalicDelimiter'
+    \ . ' start=/\*\*\*/'
+    \ . ' end=/\*\*\*/'
+    \ . ' oneline'
+    \ . ' keepend'
+    \ . ' contained'
+    \ . ' contains=markdownLineStart,@Spell'
+    \ . ' concealends'
+" }}}1
+
 " Why ` \{,3}` in the `end` pattern?{{{
 "
 " If  there are  4  spaces between  the  beginning  of the  line  and the  first
@@ -294,44 +439,6 @@ exe 'syn region markdownList'
     \ . ' keepend'
     \ . ' contained'
     \ . ' contains=@markdownListElements'
-
-" TODO: improve performance{{{
-"
-" Sometimes, moving in a buffer is slow, when there are many lists.
-" We could improve the performance by stopping loading the html syntax plugin.
-"
-" Also we could try to eliminate `\@<=` and `@=` as frequently as possible.
-"
-" Btw:
-" Shouldn't we use `_` instead of `*` to  avoid a conflict with `*` when used as
-" an item leader.
-"}}}
-exe 'syn region markdownListItalic'
-    \ . ' matchgroup=markdownItalicDelimiter'
-    \ . ' start=/\S\@1<=\*\|\*\S\@=/'
-    \ . ' end=/\S\@1<=\*\|\*\S\@=/'
-    \ . ' keepend'
-    \ . ' contained'
-    \ . ' contains=markdownLineStart,@Spell'
-    \ . ' concealends'
-
-exe 'syn region markdownListBold'
-    \ . ' matchgroup=markdownBoldDelimiter'
-    \ . ' start=/\S\@1<=\*\*\|\*\*\S\@=/'
-    \ . ' end=/\S\@1<=\*\*\|\*\*\S\@=/'
-    \ . ' keepend'
-    \ . ' contained'
-    \ . ' contains=markdownLineStart,markdownItalic,@Spell'
-    \ . ' concealends'
-
-exe 'syn region markdownListBoldItalic'
-    \ . ' matchgroup=markdownBoldItalicDelimiter'
-    \ . ' start=/\S\@1<=\*\*\*\|\*\*\*\S\@=/'
-    \ . ' end=/\S\@1<=\*\*\*\|\*\*\*\S\@=/'
-    \ . ' keepend'
-    \ . ' contained'
-    \ . ' contains=markdownLineStart,@Spell'
-    \ . ' concealends'
 
 exe 'syn region markdownListCodeSpan'
     \ . ' matchgroup=markdownCodeDelimiter'
@@ -432,55 +539,6 @@ exe 'syn region markdownAutomaticLink'
     \ . ' keepend'
     \ . ' oneline'
 
-" Why don't you support the syntax using underscores?{{{
-"
-"    1. I don't use underscores
-"    2. it has an impact on performance
-"}}}
-" I want to add support for it!{{{
-"
-" Duplicate each statement, replacing each escaped asterisk with an underscore.
-"
-" Or tweak the  existing regions to include the `\z()`  item and capture `[*_]`,
-" `\*\*\|__`, `\*\*\*\|___` in  the start pattern, and refer to  it via `\z1` in
-" the end pattern.
-" Note that when I tried `\z()`, the time taken for `markdownItalic` was doubled.
-" And for `markdownBold`, `markdownBoldItalic` the time was tripled.
-" So, I don't think that `\z()` reduces the time taken to parse the syntax.
-" It just makes the latter more concise/readable.
-"
-" ---
-"
-" Do the same for:
-"
-"    • `markdownListItalic`
-"    • `markdownListBold`
-"    • `markdownListBoldItalic`
-"}}}
-exe 'syn region markdownItalic'
-    \ . ' matchgroup=markdownItalicDelimiter'
-    \ . ' start=/\S\@1<=\*\|\*\S\@=/'
-    \ . ' end=/\S\@1<=\*\|\*\S\@=/'
-    \ . ' keepend'
-    \ . ' contains=markdownLineStart,@Spell'
-    \ . ' concealends'
-
-exe 'syn region markdownBold'
-    \ . ' matchgroup=markdownBoldDelimiter'
-    \ . ' start=/\S\@1<=\*\*\|\*\*\S\@=/'
-    \ . ' end=/\S\@1<=\*\*\|\*\*\S\@=/'
-    \ . ' keepend'
-    \ . ' contains=markdownLineStart,markdownItalic,@Spell'
-    \ . ' concealends'
-
-exe 'syn region markdownBoldItalic'
-    \ . ' matchgroup=markdownBoldItalicDelimiter'
-    \ . ' start=/\S\@1<=\*\*\*\|\*\*\*\S\@=/'
-    \ . ' end=/\S\@1<=\*\*\*\|\*\*\*\S\@=/'
-    \ . ' keepend'
-    \ . ' contains=markdownLineStart,@Spell'
-    \ . ' concealends'
-
 " Why `oneline`?{{{
 "
 " Without it, if you insert a backtick, all the following text is highlighted.
@@ -517,7 +575,10 @@ exe 'syn region markdownCodeSpan'
     \ . ' oneline'
 
 exe 'syn cluster markdownElements contains='
+    \ . 'markdownBlockquoteItalic,'
     \ . 'markdownBlockquoteBold,'
+    \ . 'markdownBlockquoteBoldItalic,'
+    \ . 'markdownBlockquoteCodeSpan,'
     \ . 'markdownCodeSpan,'
     \ . 'markdownItalic'
 " Why is `keepend` important here?{{{
@@ -562,14 +623,10 @@ exe 'syn match markdownListBlockquoteLeadingChar'
     \ . ' contained'
     \ . ' conceal'
 
-" `markdownBlockquoteBold` must be defined *after* `markdownItalic`
-" TODO: are there similar items which need to be positioned before another?
-" If so,  move them  as far  to the  top of the  file as  possible, and  leave a
-" comment explaining they must stay there.
-exe 'syn region markdownBlockquoteBold'
+exe 'syn region markdownBlockquoteCodeSpan'
     \ . ' matchgroup=markdownCodeDelimiter'
-    \ . ' start=/\*\*/'
-    \ . ' end=/\*\*/'
+    \ . ' start=/`/'
+    \ . ' end=/`/'
     \ . ' keepend'
     \ . ' contained'
     \ . ' contains=markdownLineStart'
@@ -633,6 +690,8 @@ syn match markdownOption +`\@1<='.\{-}'`\@=+ containedin=markdownCodeSpan
 
 call markdown#define_include_clusters()
 call markdown#highlight_embedded_languages()
+
+" HG {{{1
 
 " TODO:
 " Make sure that the HG used by any style  that we use in a markdown buffer + in
@@ -705,6 +764,7 @@ hi link markdownTodo                  Todo
 hi link markdownOutput                PreProc
 hi link markdownIgnore                Ignore
 hi link markdownTable                 Structure
+" }}}1
 
 let b:current_syntax = 'markdown'
 
