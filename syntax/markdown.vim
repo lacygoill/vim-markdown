@@ -24,8 +24,7 @@ endif
 "
 " Update:
 " We need `containedin`,  for example, to allow `xCommentTitle`  to be contained
-" in `xComment`, which is necessary for the `awk`, `conf`, `tmux` and `zsh` filetypes.
-
+" in `xComment`.
 " TODO:
 "
 "     https://daringfireball.net/projects/markdown/syntax
