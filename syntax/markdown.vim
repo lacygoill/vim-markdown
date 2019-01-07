@@ -21,6 +21,10 @@ endif
 " Once you take a decision, apply your choice here and in:
 "
 "     ~/.vim/plugged/vim-lg-lib/autoload/lg/styled_comment.vim
+"
+" Update:
+" We need `containedin`,  for example, to allow `xCommentTitle`  to be contained
+" in `xComment`, which is necessary for the `awk`, `conf`, `tmux` and `zsh` filetypes.
 
 " TODO:
 "
@@ -274,6 +278,11 @@ exe 'syn cluster markdownListElements contains='
     \ . 'markdownListCodeBlock,'
     \ . 'markdownListBlockquote'
 
+" Don't change the order of `Italic`, `Bold` and `Bold+Italic`!{{{
+"
+" It would break the syntax highlighting of some style (italic, bold, bold+italic).
+"}}}
+
 " Italic {{{1
 
 " TODO: explain that  we need `oneline`, otherwise, there would  be issues for a
@@ -285,7 +294,7 @@ exe 'syn cluster markdownListElements contains='
 "
 " I think that's what tpope does, and I think he does it for the same reason.
 "
-" Btw, should we use `oneline` everywhere it's possible?
+" Btw, should we use `oneline` whenever it's possible?
 
 " Why don't you support the syntax using underscores?{{{
 "
@@ -374,9 +383,6 @@ exe 'syn region markdownListBold'
     \ . ' concealends'
 
 " `markdownBlockquoteBold` must be defined *after* `markdownItalic`
-" TODO: are there similar items which need to be positioned before another?
-" If so,  move them  as far  to the  top of the  file as  possible, and  leave a
-" comment explaining they must stay there.
 exe 'syn region markdownBlockquoteBold'
     \ . ' matchgroup=markdownBoldDelimiter'
     \ . ' start=/\*\*/'
