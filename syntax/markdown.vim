@@ -735,7 +735,6 @@ hi link markdownIdDelimiter           markdownLinkDelimiter
 hi link markdownUrlDelimiter          Function
 hi link markdownUrlTitleDelimiter     Delimiter
 
-" hi link markdownItalic                htmlItalic
 hi link markdownItalicDelimiter       markdownItalic
 hi link markdownBoldDelimiter         markdownBold
 hi link markdownBoldItalicDelimiter   markdownBoldItalic
