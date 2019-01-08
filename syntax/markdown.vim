@@ -45,33 +45,33 @@ endif
 "         http://pandoc.org/MANUAL.html#pandocs-markdown
 "         https://github.com/junegunn/vim-journal/blob/master/syntax/journal.vim
 
-" Why do you enable html syntax plugins?{{{
+" Should I source the html syntax plugin?{{{
 "
-" We use some of their HGs and syntax groups, in our markdown syntax plugin.
-" Namely:
+" The default markdown syntax plugin does it:
 "
-"     • syntax group: htmlSpecialChar
-"     • syntax cluster: @htmlTop
-"     • HG: htmlItalic
-"     • HG: htmlBold
-"     • HG: htmlBoldItalic
+"     runtime! syntax/html.vim syntax/html/*.vim
+"     unlet! b:current_syntax
 "
-" That's what the original plugin does:
+" And it uses some of the html HGs and syntax groups:
 "
-"     $VIMRUNTIME/syntax/markdown.vim
+"    • syntax group: htmlSpecialChar
+"    • syntax cluster: @htmlTop
+"    • HG: htmlItalic
+"    • HG: htmlBold
+"    • HG: htmlBoldItalic
+"
+" But I don't source it, because it  adds a lot of syntax groups, which probably
+" has an impact on performance.
+"
+" It  also makes  the  code of  the  markdown syntax  plugin  more difficult  to
+" understand.
+"
+" Finally, I don't care about html in a markdown file.
+" I like markdown because it's easy to read.
+" Html is not easy to read, hence goes against markdown philosophy.
+" If I  really want  html syntax highlighting,  I can always  use a  fenced code
+" block.
 "}}}
-" Is `syntax/html_*.vim` a valid file pattern for an html syntax plugin?{{{
-"
-" No.
-"
-" Vim doesn't use it when we do `:set syn=foo`:
-"
-"     :2Verbose set syn=foo
-"         → Searching for "syntax/foo.vim syntax/foo/*.vim" in ...
-"           not found in 'runtimepath': "syntax/foobar.vim syntax/foobar/*.vim"
-"}}}
-runtime! syntax/html.vim syntax/html/*.vim
-unlet! b:current_syntax
 
 " Syntax highlight is synchronized in 50 lines.
 " It may cause collapsed highlighting at large fenced code block.
@@ -103,7 +103,14 @@ exe 'syn match markdownHideVimlSeparations'
 syn match markdownValid '[<>]\c[a-z/$!]\@!'
 syn match markdownValid '&\%(#\=\w*;\)\@!'
 
-syn match markdownLineStart '^[<@]\@!' nextgroup=@markdownBlock,htmlSpecialChar
+exe 'syn cluster markdownBlock contains='
+    \ . 'markdownHeader,'
+    \ . 'markdownBlockquote,'
+    \ . 'markdownListItem,'
+    \ . 'markdownCodeBlock,'
+    \ . 'markdownRule'
+
+syn match markdownLineStart '^[<@]\@!' nextgroup=@markdownBlock
 
 " TODO: How to include italics inside a hidden answer?{{{
 " We could add `contains=markdownItalic`.
@@ -147,15 +154,6 @@ exe 'syn match markdownHideAnswer'
     \ . ' cchar=?'
     \ . ' containedin=markdownCodeBlock'
 
-exe 'syn cluster markdownBlock contains='
-    \ . 'markdownH1,'
-    \ . 'markdownH2,'
-    \ . 'markdownHeader,'
-    \ . 'markdownBlockquote,'
-    \ . 'markdownListItem,'
-    \ . 'markdownCodeBlock,'
-    \ . 'markdownRule'
-
 exe 'syn cluster markdownInline contains='
     \ . 'markdownLineBreak,'
     \ . 'markdownLinkText,'
@@ -163,29 +161,9 @@ exe 'syn cluster markdownInline contains='
     \ . 'markdownBold,'
     \ . 'markdownCodeSpan,'
     \ . 'markdownEscape,'
-    \ . '@htmlTop,'
     \ . 'markdownError'
 
 syn match markdownHeadingRule '^[=-]\+$' contained
-
-exe 'syn region markdownHeader'
-    \ . ' matchgroup=Delimiter'
-    \ . ' start=/^#\{1,6}#\@!/'
-    \ . ' end=/$/'
-    \ . ' keepend'
-    \ . ' oneline'
-    \ . ' contains=@markdownInline,markdownAutomaticLink'
-    \ . ' contained'
-
-exe 'syn match markdownHeader'
-    \ . ' /^.\+\n=\+$/'
-    \ . ' contained'
-    \ . ' contains=@markdownInline,markdownHeadingRule,markdownAutomaticLink'
-
-exe 'syn match markdownHeader'
-    \ . ' /^.\+\n-\+$/'
-    \ . ' contained'
-    \ . ' contains=@markdownInline,markdownHeadingRule,markdownAutomaticLink'
 
 " TODO:
 " Comment on the fact that the  region must be contained because of `contained`,
@@ -212,7 +190,7 @@ exe 'syn region markdownCodeBlock'
     \ . ' contains=@Spell'
     \ . ' keepend'
 
-exe 'syn region markdownListCodeBlock'
+exe 'syn region markdownListItemCodeBlock'
     \ . ' start=/^        \|^\t\t/'
     \ . ' end=/$/'
     \ . ' contained'
@@ -232,7 +210,7 @@ exe 'syn region markdownListCodeBlock'
 " Also, this would give us the benefit of having our bulleted list recognized by
 " a markdown viewer/parser.
 "
-"     syn match markdownListMarkerPretty "\%(\t\| \{,4\}\)\@4<=[-*+]\%(\s\+\S\)\@=" contained containedin=markdownListItem conceal cchar=•
+"     syn match markdownListItemMarkerPretty "\%(\t\| \{,4\}\)\@4<=[-*+]\%(\s\+\S\)\@=" contained containedin=markdownListItem conceal cchar=•
 "
 " Also, when  we would read  a markdown file written  by someone else,  we would
 " automatically see `•` instead of `-`.
@@ -269,13 +247,13 @@ exe 'syn region markdownListCodeBlock'
 " We don't want a buggy contained item to make a list continue way beyond its end.
 "}}}
 
-exe 'syn cluster markdownListElements contains='
-    \ . 'markdownListItalic,'
-    \ . 'markdownListBold,'
-    \ . 'markdownListBoldItalic,'
-    \ . 'markdownListCodeSpan,'
-    \ . 'markdownListCodeBlock,'
-    \ . 'markdownListBlockquote'
+exe 'syn cluster markdownListItemElements contains='
+    \ . 'markdownListItemItalic,'
+    \ . 'markdownListItemBold,'
+    \ . 'markdownListItemBoldItalic,'
+    \ . 'markdownListItemCodeSpan,'
+    \ . 'markdownListItemCodeBlock,'
+    \ . 'markdownListItemBlockquote'
 
 " Don't change the order of `Italic`, `Bold` and `Bold+Italic`!{{{
 "
@@ -316,9 +294,9 @@ exe 'syn cluster markdownListElements contains='
 "
 " Do the same for:
 "
-"    • `markdownListItalic`
-"    • `markdownListBold`
-"    • `markdownListBoldItalic`
+"    • `markdownListItemItalic`
+"    • `markdownListItemBold`
+"    • `markdownListItemBoldItalic`
 "}}}
 exe 'syn region markdownItalic'
     \ . ' matchgroup=markdownItalicDelimiter'
@@ -340,7 +318,7 @@ exe 'syn region markdownItalic'
 " Shouldn't we use `_` instead of `*` to  avoid a conflict with `*` when used as
 " an item leader.
 "}}}
-exe 'syn region markdownListItalic'
+exe 'syn region markdownListItemItalic'
     \ . ' matchgroup=markdownItalicDelimiter'
     \ . ' start=/\*/'
     \ . ' end=/\*/'
@@ -371,7 +349,7 @@ exe 'syn region markdownBold'
     \ . ' contains=markdownLineStart,markdownItalic,@Spell'
     \ . ' concealends'
 
-exe 'syn region markdownListBold'
+exe 'syn region markdownListItemBold'
     \ . ' matchgroup=markdownBoldDelimiter'
     \ . ' start=/\*\*/'
     \ . ' end=/\*\*/'
@@ -403,7 +381,7 @@ exe 'syn region markdownBoldItalic'
     \ . ' contains=markdownLineStart,@Spell'
     \ . ' concealends'
 
-exe 'syn region markdownListBoldItalic'
+exe 'syn region markdownListItemBoldItalic'
     \ . ' matchgroup=markdownBoldItalicDelimiter'
     \ . ' start=/\*\*\*/'
     \ . ' end=/\*\*\*/'
@@ -422,6 +400,28 @@ exe 'syn region markdownBlockquoteBoldItalic'
     \ . ' contained'
     \ . ' contains=markdownLineStart,@Spell'
     \ . ' concealends'
+" }}}1
+
+" Header {{{1
+
+exe 'syn region markdownHeader'
+    \ . ' matchgroup=Delimiter'
+    \ . ' start=/^#\{1,6}#\@!/'
+    \ . ' end=/$/'
+    \ . ' keepend'
+    \ . ' oneline'
+    \ . ' contains=@markdownInline,markdownAutomaticLink'
+    \ . ' contained'
+
+exe 'syn match markdownHeader'
+    \ . ' /^.\+\n=\+$/'
+    \ . ' contained'
+    \ . ' contains=@markdownInline,markdownHeadingRule,markdownAutomaticLink'
+
+exe 'syn match markdownHeader'
+    \ . ' /^.\+\n-\+$/'
+    \ . ' contained'
+    \ . ' contains=@markdownInline,markdownHeadingRule,markdownAutomaticLink'
 " }}}1
 
 " Why ` \{,3}` in the `start` pattern?{{{
@@ -450,9 +450,9 @@ exe 'syn region markdownListItem'
     \ . ' end=/^\s*\n\%( \{,3}\S\)\@=/'
     \ . ' keepend'
     \ . ' contained'
-    \ . ' contains=@markdownListElements'
+    \ . ' contains=@markdownListItemElements'
 
-exe 'syn region markdownListCodeSpan'
+exe 'syn region markdownListItemCodeSpan'
     \ . ' matchgroup=markdownCodeDelimiter'
     \ . ' start=/`/'
     \ . ' end=/`/'
@@ -593,6 +593,7 @@ exe 'syn cluster markdownElements contains='
     \ . 'markdownBlockquoteCodeSpan,'
     \ . 'markdownCodeSpan,'
     \ . 'markdownItalic'
+
 " Why is `keepend` important here?{{{
 "
 " Suppose you emphasize some text in bold, while quoting a sentence.
@@ -618,10 +619,10 @@ exe 'syn match markdownBlockquote'
     \ . ' keepend'
     \ . ' nextgroup=@markdownBlock'
 
-exe 'syn match markdownListBlockquote'
+exe 'syn match markdownListItemBlockquote'
     \ . ' /^ \{4}>\+\%(\s.*\|$\)/'
     \ . ' contained'
-    \ . ' contains=@markdownElements,markdownListBlockquoteLeadingChar'
+    \ . ' contains=@markdownElements,markdownListItemBlockquoteLeadingChar'
     \ . ' keepend'
     \ . ' nextgroup=@markdownBlock'
 
@@ -630,7 +631,7 @@ exe 'syn match markdownBlockquoteLeadingChar'
     \ . ' contained'
     \ . ' conceal'
 
-exe 'syn match markdownListBlockquoteLeadingChar'
+exe 'syn match markdownListItemBlockquoteLeadingChar'
     \ . ' /\%(^ \{4}\)\@4<=>\+\s\=/'
     \ . ' contained'
     \ . ' conceal'
@@ -713,7 +714,7 @@ call markdown#highlight_embedded_languages()
 " highlighting of *all* the filetypes.
 "
 " Also, some of our syntax items in comments rely on a markdown syntax group.
-" Example, `markdownListBlockquote`.
+" Example, `markdownListItemBlockquote`.
 " If we define  the latter here, our comments wouldn't  be correctly highlighted
 " as long as a markdown buffer hasn't been loaded.
 
@@ -730,11 +731,9 @@ hi link markdownIdDelimiter           markdownLinkDelimiter
 hi link markdownUrlDelimiter          Function
 hi link markdownUrlTitleDelimiter     Delimiter
 
-hi link markdownItalic                htmlItalic
+" hi link markdownItalic                htmlItalic
 hi link markdownItalicDelimiter       markdownItalic
-hi link markdownBold                  htmlBold
 hi link markdownBoldDelimiter         markdownBold
-hi link markdownBoldItalic            htmlBoldItalic
 hi link markdownBoldItalicDelimiter   markdownBoldItalic
 hi link markdownCodeDelimiter         Delimiter
 
