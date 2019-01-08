@@ -152,7 +152,7 @@ exe 'syn cluster markdownBlock contains='
     \ . 'markdownH2,'
     \ . 'markdownHeader,'
     \ . 'markdownBlockquote,'
-    \ . 'markdownList,'
+    \ . 'markdownListItem,'
     \ . 'markdownCodeBlock,'
     \ . 'markdownRule'
 
@@ -232,7 +232,7 @@ exe 'syn region markdownListCodeBlock'
 " Also, this would give us the benefit of having our bulleted list recognized by
 " a markdown viewer/parser.
 "
-"     syn match markdownListMarkerPretty "\%(\t\| \{,4\}\)\@4<=[-*+]\%(\s\+\S\)\@=" contained containedin=markdownList conceal cchar=•
+"     syn match markdownListMarkerPretty "\%(\t\| \{,4\}\)\@4<=[-*+]\%(\s\+\S\)\@=" contained containedin=markdownListItem conceal cchar=•
 "
 " Also, when  we would read  a markdown file written  by someone else,  we would
 " automatically see `•` instead of `-`.
@@ -243,7 +243,7 @@ exe 'syn region markdownListCodeBlock'
 "
 "     hi! link Conceal Repeat
 "                      │
-"                      └ HG used by markdownList
+"                      └ HG used by markdownListItem
 "
 " And  we  would  need  to  refactor   `coc`  so  that  it  temporarily  resets
 " `hl-Conceal` with its old attributes (more visible):
@@ -261,8 +261,8 @@ exe 'syn region markdownListCodeBlock'
 " Don't remove `keepend`!{{{
 "
 " Without, if  you forget to  write the closing backtick  of an italic  word, it
-" could go on beyond the end of  `markdownList`, which would cause the latter to
-" be extended.
+" could go on beyond the end of `markdownListItem`, which would cause the latter
+" to be extended.
 "
 " In reality, it depends on whether you define `markdownItalic` with `oneline`.
 " But the point is, we want a list to stop where we expect it to.
@@ -424,6 +424,13 @@ exe 'syn region markdownBlockquoteBoldItalic'
     \ . ' concealends'
 " }}}1
 
+" Why ` \{,3}` in the `start` pattern?{{{
+"
+" From: https://daringfireball.net/projects/markdown/syntax#list
+"
+" > List markers typically start  at the left margin, but may  be indented by up
+" > to three spaces.
+" }}}
 " Why ` \{,3}` in the `end` pattern?{{{
 "
 " If  there are  4  spaces between  the  beginning  of the  line  and the  first
@@ -438,7 +445,7 @@ exe 'syn region markdownBlockquoteBoldItalic'
 " In any case, more than 4 spaces means that we're still in the current list item.
 " So, we need 3 spaces or less to end the latter.
 "}}}
-exe 'syn region markdownList'
+exe 'syn region markdownListItem'
     \ . ' start=/ \{,3\}\%([-*+•]\|\d\+\.\)\s\+\S/'
     \ . ' end=/^\s*\n\%( \{,3}\S\)\@=/'
     \ . ' keepend'
