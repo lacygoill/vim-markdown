@@ -718,6 +718,10 @@ call markdown#highlight_embedded_languages()
 " If we define  the latter here, our comments wouldn't  be correctly highlighted
 " as long as a markdown buffer hasn't been loaded.
 
+hi markdownItalic     term=italic      cterm=italic      gui=italic
+hi markdownBold       term=bold        cterm=bold        gui=bold
+hi markdownBoldItalic term=bold,italic cterm=bold,italic gui=bold,italic
+
 hi link markdownHeader                Title
 hi link markdownHeadingRule           markdownRule
 
