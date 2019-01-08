@@ -80,79 +80,12 @@ endif
 syn sync minlines=50
 syn case ignore
 
-" Why?{{{
-"
-" Sometimes we need to separate some blocks of VimL code in our notes.
-" But we still want to be able to source them with a simple `+sip`.
-" So we separate them with empty commented lines.
-"}}}
-exe 'syn match markdownHideVimlSeparations'
-    \ . ' /^\s*"$/'
-    \ . ' conceal'
-    \ . ' contained'
-    \ . ' containedin=markdownCodeBlock'
-
-" TODO: Explain why `markdownValid` is necessary?{{{
-"
-" To understand, insert this at the beginning of a line:
-"
-"     <'abc
-"
-" Also read this: https://github.com/tpope/vim-markdown/pull/31
-"}}}
-syn match markdownValid '[<>]\c[a-z/$!]\@!'
-syn match markdownValid '&\%(#\=\w*;\)\@!'
-
 exe 'syn cluster markdownBlock contains='
     \ . 'markdownHeader,'
     \ . 'markdownBlockquote,'
     \ . 'markdownListItem,'
     \ . 'markdownCodeBlock,'
     \ . 'markdownRule'
-
-syn match markdownLineStart '^[<@]\@!' nextgroup=@markdownBlock
-
-" TODO: How to include italics inside a hidden answer?{{{
-" We could add `contains=markdownItalic`.
-" But the text in italics would not be concealed...
-" We probably have the same issue with other styles (bold, ...).
-"}}}
-" TODO: Instead of inventing a weird ad-hoc system, you should rely on some existing html tags:{{{
-"
-"     <details><summary>
-"     question</summary>
-"     hidden answer</details>
-"
-" Update:
-" Here's some code implementing the idea:
-"
-"     syn match markdownHideAnswer '<details>\n\=<summary>' conceal containedin=markdownCodeBlock
-"     syn region markdownShowAnswer matchgroup=Ignore start='</summary>' end='</details>' conceal containedin=markdownCodeBlock
-"     hi link markdownHideAnswer Ignore
-"     hi link markdownShowAnswer PreProc
-"
-" However, sometimes, it's too cumbersome to use to hide inline answers.
-" Have a look at the answers we hide in:
-"
-"     ~/Dropbox/wiki/vim/command.md
-"     ~/Dropbox/wiki/vim/exception.md
-"
-" Maybe we  should keep our  ad-hoc system to hide  inline answers, and  use the
-" html tags to hide blocks of lines...
-"}}}
-exe 'syn region markdownHideAnswer'
-    \ . ' start=/^↣/'
-    \ . ' end=/^↢.*/'
-    \ . ' conceal'
-    \ . ' cchar=?'
-    \ . ' containedin=markdownCodeBlock'
-    \ . ' keepend'
-
-exe 'syn match markdownHideAnswer'
-    \ . ' /↣.\{-}↢/'
-    \ . ' conceal'
-    \ . ' cchar=?'
-    \ . ' containedin=markdownCodeBlock'
 
 exe 'syn cluster markdownInline contains='
     \ . 'markdownLineBreak,'
@@ -304,7 +237,7 @@ exe 'syn region markdownItalic'
     \ . ' end=/\*/'
     \ . ' oneline'
     \ . ' keepend'
-    \ . ' contains=markdownLineStart,@Spell'
+    \ . ' contains=@Spell'
     \ . ' concealends'
 
 " TODO: improve performance{{{
@@ -325,7 +258,7 @@ exe 'syn region markdownListItemItalic'
     \ . ' oneline'
     \ . ' keepend'
     \ . ' contained'
-    \ . ' contains=markdownLineStart,@Spell'
+    \ . ' contains=@Spell'
     \ . ' concealends'
 
 exe 'syn region markdownBlockquoteItalic'
@@ -335,7 +268,6 @@ exe 'syn region markdownBlockquoteItalic'
     \ . ' oneline'
     \ . ' keepend'
     \ . ' contained'
-    \ . ' contains=markdownLineStart'
     \ . ' concealends'
 " }}}1
 " Bold {{{1
@@ -346,7 +278,7 @@ exe 'syn region markdownBold'
     \ . ' end=/\*\*/'
     \ . ' oneline'
     \ . ' keepend'
-    \ . ' contains=markdownLineStart,markdownItalic,@Spell'
+    \ . ' contains=markdownItalic,@Spell'
     \ . ' concealends'
 
 exe 'syn region markdownListItemBold'
@@ -356,7 +288,7 @@ exe 'syn region markdownListItemBold'
     \ . ' oneline'
     \ . ' keepend'
     \ . ' contained'
-    \ . ' contains=markdownLineStart,markdownItalic,@Spell'
+    \ . ' contains=markdownItalic,@Spell'
     \ . ' concealends'
 
 " `markdownBlockquoteBold` must be defined *after* `markdownItalic`
@@ -367,7 +299,6 @@ exe 'syn region markdownBlockquoteBold'
     \ . ' oneline'
     \ . ' keepend'
     \ . ' contained'
-    \ . ' contains=markdownLineStart'
     \ . ' concealends'
 " }}}1
 " Bold+Italic {{{1
@@ -378,7 +309,7 @@ exe 'syn region markdownBoldItalic'
     \ . ' end=/\*\*\*/'
     \ . ' oneline'
     \ . ' keepend'
-    \ . ' contains=markdownLineStart,@Spell'
+    \ . ' contains=@Spell'
     \ . ' concealends'
 
 exe 'syn region markdownListItemBoldItalic'
@@ -388,7 +319,7 @@ exe 'syn region markdownListItemBoldItalic'
     \ . ' oneline'
     \ . ' keepend'
     \ . ' contained'
-    \ . ' contains=markdownLineStart,@Spell'
+    \ . ' contains=@Spell'
     \ . ' concealends'
 
 exe 'syn region markdownBlockquoteBoldItalic'
@@ -398,7 +329,7 @@ exe 'syn region markdownBlockquoteBoldItalic'
     \ . ' oneline'
     \ . ' keepend'
     \ . ' contained'
-    \ . ' contains=markdownLineStart,@Spell'
+    \ . ' contains=@Spell'
     \ . ' concealends'
 " }}}1
 
@@ -422,6 +353,114 @@ exe 'syn match markdownHeader'
     \ . ' /^.\+\n-\+$/'
     \ . ' contained'
     \ . ' contains=@markdownInline,markdownHeadingRule,markdownAutomaticLink'
+" }}}1
+
+" Codespan {{{1
+
+" Why `oneline`?{{{
+"
+" Without it, if you insert a backtick, all the following text is highlighted.
+" Even on the next lines.
+" It can continue on a whole screen, until you insert the closing backtick.
+" This is distracting.
+"}}}
+exe 'syn region markdownCodeSpan'
+    \ . ' matchgroup=markdownCodeDelimiter'
+    \ . ' start=/`/'
+    \ . ' end=/`/'
+    \ . ' keepend'
+    \ . ' containedin=markdownBold'
+    \ . ' concealends'
+    \ . ' oneline'
+
+exe 'syn region markdownCodeSpan'
+    \ . ' matchgroup=markdownCodeDelimiter'
+    \ . ' start=/`` \=/'
+    \ . ' end=/ \=``/'
+    \ . ' keepend'
+    \ . ' containedin=markdownBold'
+    \ . ' concealends'
+    \ . ' oneline'
+
+exe 'syn region markdownCodeSpan'
+    \ . ' matchgroup=markdownCodeDelimiter'
+    \ . ' start=/^\s*````*.*$/'
+    \ . ' end=/^\s*````*\ze\s*$/'
+    \ . ' keepend'
+    \ . ' oneline'
+" }}}1
+
+" HideAnswer {{{1
+" Is there a more conventional way of hiding text in markdown?{{{
+"
+" Yes.
+"
+" The default spec for markdown supports html.
+" And in html, you can use the `<details>` tag:
+"
+"     <details><summary>
+"     question</summary>
+"     hidden answer</details>
+"}}}
+"    How could I use implement it?{{{
+"
+"     syn match markdownHideAnswer '<details>\n\=<summary>' conceal containedin=markdownCodeBlock
+"     syn region markdownShowAnswer matchgroup=Ignore start='</summary>' end='</details>' conceal containedin=markdownCodeBlock
+"     hi link markdownHideAnswer Ignore
+"     hi link markdownShowAnswer PreProc
+"}}}
+"    Why don't you use it?{{{
+"
+" It's too cumbersome to hide inline answers.
+" Have a look at the answers we hide in:
+"
+"     ~/Dropbox/wiki/vim/command.md
+"     ~/Dropbox/wiki/vim/exception.md
+"
+" So, for the moment, we keep our  ad-hoc system to hide inline answers.
+"
+" To hide blocks of lines, do what you want:
+"
+"    - use `<details>`
+"    - use `↣ ↢`
+"}}}
+
+exe 'syn match markdownHideAnswer'
+    \ . ' /↣.\{-}↢/'
+    \ . ' conceal'
+    \ . ' cchar=?'
+    \ . ' containedin=markdownCodeBlock'
+
+exe 'syn region markdownHideAnswer'
+    \ . ' start=/^↣/'
+    \ . ' end=/^↢.*/'
+    \ . ' conceal'
+    \ . ' cchar=?'
+    \ . ' containedin=markdownCodeBlock'
+    \ . ' keepend'
+
+" TODO: How to include italics inside a hidden answer?{{{
+"
+" We could add `contains=markdownItalic`.
+" But the text in italics would not be concealed...
+" We probably have the same issue with other styles (bold, ...).
+"}}}
+" }}}1
+
+" Output {{{1
+
+" vaguely inspired from `helpHeader`
+exe 'syn match markdownOutput'
+    \ . ' /^.*\~$/'
+    \ . ' contained'
+    \ . ' containedin=markdownCodeBlock'
+    \ . ' nextgroup=markdownIgnore'
+
+exe 'syn match markdownIgnore'
+    \ . ' /.$/'
+    \ . ' contained'
+    \ . ' containedin=markdownOutput'
+    \ . ' conceal'
 " }}}1
 
 " Why ` \{,3}` in the `start` pattern?{{{
@@ -458,7 +497,6 @@ exe 'syn region markdownListItemCodeSpan'
     \ . ' end=/`/'
     \ . ' keepend'
     \ . ' contained'
-    \ . ' contains=markdownLineStart'
     \ . ' concealends'
 
 " A horizontal rule must contain at least 3 asterisks or hyphens.
@@ -524,7 +562,7 @@ exe 'syn region markdownLinkText'
     \ . ' end=/\]\%( \=[[(]\)\@=/'
     \ . ' nextgroup=markdownLink,markdownId'
     \ . ' skipwhite'
-    \ . ' contains=@markdownInline,markdownLineStart'
+    \ . ' contains=@markdownInline'
     \ . ' concealends'
     \ . ' keepend'
 
@@ -548,41 +586,6 @@ exe 'syn region markdownAutomaticLink'
     \ . ' matchgroup=markdownUrlDelimiter'
     \ . ' start=/<\%(\w\+:\|[[:alnum:]_+-]\+@\)\@=/'
     \ . ' end=/>/'
-    \ . ' keepend'
-    \ . ' oneline'
-
-" Why `oneline`?{{{
-"
-" Without it, if you insert a backtick, all the following text is highlighted.
-" Even on the next lines.
-" It can continue on a whole screen, until you insert the closing backtick.
-" This is distracting.
-"}}}
-
-exe 'syn region markdownCodeSpan'
-    \ . ' matchgroup=markdownCodeDelimiter'
-    \ . ' start=/`/'
-    \ . ' end=/`/'
-    \ . ' keepend'
-    \ . ' contains=markdownLineStart'
-    \ . ' containedin=markdownBold'
-    \ . ' concealends'
-    \ . ' oneline'
-
-exe 'syn region markdownCodeSpan'
-    \ . ' matchgroup=markdownCodeDelimiter'
-    \ . ' start=/`` \=/'
-    \ . ' end=/ \=``/'
-    \ . ' keepend'
-    \ . ' contains=markdownLineStart'
-    \ . ' containedin=markdownBold'
-    \ . ' concealends'
-    \ . ' oneline'
-
-exe 'syn region markdownCodeSpan'
-    \ . ' matchgroup=markdownCodeDelimiter'
-    \ . ' start=/^\s*````*.*$/'
-    \ . ' end=/^\s*````*\ze\s*$/'
     \ . ' keepend'
     \ . ' oneline'
 
@@ -642,7 +645,6 @@ exe 'syn region markdownBlockquoteCodeSpan'
     \ . ' end=/`/'
     \ . ' keepend'
     \ . ' contained'
-    \ . ' contains=markdownLineStart'
     \ . ' concealends'
 
 syn match markdownFootnote '\[^[^\]]\+\]'
@@ -666,19 +668,6 @@ syn match markdownCommentTitle /^ \{,2}\u\w*\(\s\+\u\w*\)*:/ contains=markdownTo
 " So, we can't allow more than 2 leading spaces.
 "}}}
 exe 'syn match markdownTodo  /\CTO'.'DO\|FIX'.'ME/ contained'
-
-" vaguely inspired from `helpHeader`
-exe 'syn match markdownOutput'
-    \ . ' /^.*\~$/'
-    \ . ' contained'
-    \ . ' containedin=markdownCodeBlock'
-    \ . ' nextgroup=markdownIgnore'
-
-exe 'syn match markdownIgnore'
-    \ . ' /.$/'
-    \ . ' contained'
-    \ . ' containedin=markdownOutput'
-    \ . ' conceal'
 
 " FIXME: This diagram, written in a code block, is highlighted as a table:{{{
 "
