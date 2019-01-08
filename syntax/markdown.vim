@@ -241,9 +241,7 @@ exe 'syn region markdownItalic'
 " TODO: improve performance{{{
 "
 " Sometimes, moving in a buffer is slow, when there are many lists.
-" We could improve the performance by stopping loading the html syntax plugin.
-"
-" Also we could try to eliminate `\@<=` and `@=` as frequently as possible.
+" We could try to eliminate `\@<=` and `@=` as frequently as possible.
 "
 " Btw:
 " Shouldn't we use `_` instead of `*` to  avoid a conflict with `*` when used as
