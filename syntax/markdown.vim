@@ -166,7 +166,8 @@ exe 'syn cluster markdownListItemElements contains='
     \ . 'markdownListItemBoldItalic,'
     \ . 'markdownListItemCodeSpan,'
     \ . 'markdownListItemCodeBlock,'
-    \ . 'markdownListItemBlockquote'
+    \ . 'markdownListItemBlockquote,'
+    \ . 'markdownListItemOutput'
 
 " Header {{{1
 
@@ -377,6 +378,18 @@ exe 'syn match markdownIgnore'
     \ . ' /.$/'
     \ . ' contained'
     \ . ' containedin=markdownOutput'
+    \ . ' conceal'
+
+exe 'syn match markdownListItemOutput'
+    \ . ' /^.*\~$/'
+    \ . ' contained'
+    \ . ' containedin=markdownListItemCodeBlock'
+    \ . ' nextgroup=markdownListItemIgnore'
+
+exe 'syn match markdownListItemIgnore'
+    \ . ' /.$/'
+    \ . ' contained'
+    \ . ' containedin=markdownListItemOutput'
     \ . ' conceal'
 " }}}1
 
@@ -734,6 +747,7 @@ hi link markdownError                 Error
 hi link markdownCommentTitle          PreProc
 hi link markdownTodo                  Todo
 hi link markdownOutput                PreProc
+hi link markdownListItemOutput        markdownOutput
 hi link markdownIgnore                Ignore
 hi link markdownTable                 Structure
 " }}}1
