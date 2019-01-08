@@ -80,15 +80,6 @@ endif
 syn sync minlines=50
 syn case ignore
 
-exe 'syn cluster markdownBlock contains='
-    \ . 'markdownHeader,'
-    \ . 'markdownBlockquote,'
-    \ . 'markdownListItem,'
-    \ . 'markdownCodeBlock,'
-    \ . 'markdownRule'
-
-syn match markdownLineStart '^[<@]\@!' nextgroup=@markdownBlock
-
 exe 'syn cluster markdownInline contains='
     \ . 'markdownLineBreak,'
     \ . 'markdownLinkText,'
@@ -100,18 +91,6 @@ exe 'syn cluster markdownInline contains='
 
 syn match markdownHeadingRule '^[=-]\+$' contained
 
-" TODO:
-" Comment on the fact that the  region must be contained because of `contained`,
-" and yet, in practice, it doesn't seem to be contained in anything.
-" Press `!s`  on a code  block, and  you won't see  a containing item,  in which
-" `markdownCodeBlock` would be contained.
-" I think it's contained in the cluster `@markdownBlock`.
-" Is it necessary for `markdownCodeBlock` to be contained?
-" Or is it just because `@markdownBlock` is convenient...
-" Once you  understand, have a  look at  what we did  for our comments  in other
-" filetypes.
-" Maybe we should use a cluster too...
-
 " Why `contains=@Spell`?{{{
 "
 " When we enable 'spell', errors aren't highlighted inside a code block.
@@ -121,7 +100,6 @@ syn match markdownHeadingRule '^[=-]\+$' contained
 exe 'syn region markdownCodeBlock'
     \ . ' start=/^    \|^\t/'
     \ . ' end=/$/'
-    \ . ' contained'
     \ . ' contains=@Spell'
     \ . ' keepend'
 
@@ -190,12 +168,30 @@ exe 'syn cluster markdownListItemElements contains='
     \ . 'markdownListItemCodeBlock,'
     \ . 'markdownListItemBlockquote'
 
+" Header {{{1
+
+exe 'syn region markdownHeader'
+    \ . ' matchgroup=Delimiter'
+    \ . ' start=/^#\{1,6}#\@!/'
+    \ . ' end=/$/'
+    \ . ' keepend'
+    \ . ' oneline'
+    \ . ' contains=@markdownInline,markdownAutomaticLink'
+
+exe 'syn match markdownHeader'
+    \ . ' /^.\+\n=\+$/'
+    \ . ' contains=@markdownInline,markdownHeadingRule,markdownAutomaticLink'
+
+exe 'syn match markdownHeader'
+    \ . ' /^.\+\n-\+$/'
+    \ . ' contains=@markdownInline,markdownHeadingRule,markdownAutomaticLink'
+" }}}1
+
 " Don't change the order of `Italic`, `Bold` and `Bold+Italic`!{{{
 "
 " It would break the syntax highlighting of some style (italic, bold, bold+italic).
 "}}}
-
-" Italic {{{1
+"    Italic {{{1
 
 " TODO: explain that  we need `oneline`, otherwise, there would  be issues for a
 " list item whose leader is `*`.
@@ -239,7 +235,7 @@ exe 'syn region markdownItalic'
     \ . ' end=/\*/'
     \ . ' oneline'
     \ . ' keepend'
-    \ . ' contains=markdownLineStart,@Spell'
+    \ . ' contains=@Spell'
     \ . ' concealends'
 
 " TODO: improve performance{{{
@@ -260,7 +256,7 @@ exe 'syn region markdownListItemItalic'
     \ . ' oneline'
     \ . ' keepend'
     \ . ' contained'
-    \ . ' contains=markdownLineStart,@Spell'
+    \ . ' contains=@Spell'
     \ . ' concealends'
 
 exe 'syn region markdownBlockquoteItalic'
@@ -270,10 +266,9 @@ exe 'syn region markdownBlockquoteItalic'
     \ . ' oneline'
     \ . ' keepend'
     \ . ' contained'
-    \ . ' contains=markdownLineStart'
     \ . ' concealends'
 " }}}1
-" Bold {{{1
+"    Bold {{{1
 
 exe 'syn region markdownBold'
     \ . ' matchgroup=markdownBoldDelimiter'
@@ -281,7 +276,7 @@ exe 'syn region markdownBold'
     \ . ' end=/\*\*/'
     \ . ' oneline'
     \ . ' keepend'
-    \ . ' contains=markdownLineStart,markdownItalic,@Spell'
+    \ . ' contains=markdownItalic,@Spell'
     \ . ' concealends'
 
 exe 'syn region markdownListItemBold'
@@ -291,7 +286,7 @@ exe 'syn region markdownListItemBold'
     \ . ' oneline'
     \ . ' keepend'
     \ . ' contained'
-    \ . ' contains=markdownLineStart,markdownItalic,@Spell'
+    \ . ' contains=markdownItalic,@Spell'
     \ . ' concealends'
 
 " `markdownBlockquoteBold` must be defined *after* `markdownItalic`
@@ -302,10 +297,9 @@ exe 'syn region markdownBlockquoteBold'
     \ . ' oneline'
     \ . ' keepend'
     \ . ' contained'
-    \ . ' contains=markdownLineStart'
     \ . ' concealends'
 " }}}1
-" Bold+Italic {{{1
+"    Bold+Italic {{{1
 
 exe 'syn region markdownBoldItalic'
     \ . ' matchgroup=markdownBoldItalicDelimiter'
@@ -313,7 +307,7 @@ exe 'syn region markdownBoldItalic'
     \ . ' end=/\*\*\*/'
     \ . ' oneline'
     \ . ' keepend'
-    \ . ' contains=markdownLineStart,@Spell'
+    \ . ' contains=@Spell'
     \ . ' concealends'
 
 exe 'syn region markdownListItemBoldItalic'
@@ -323,7 +317,7 @@ exe 'syn region markdownListItemBoldItalic'
     \ . ' oneline'
     \ . ' keepend'
     \ . ' contained'
-    \ . ' contains=markdownLineStart,@Spell'
+    \ . ' contains=@Spell'
     \ . ' concealends'
 
 exe 'syn region markdownBlockquoteBoldItalic'
@@ -333,30 +327,43 @@ exe 'syn region markdownBlockquoteBoldItalic'
     \ . ' oneline'
     \ . ' keepend'
     \ . ' contained'
-    \ . ' contains=markdownLineStart,@Spell'
+    \ . ' contains=@Spell'
     \ . ' concealends'
 " }}}1
 
-" Header {{{1
+" Codespan {{{1
 
-exe 'syn region markdownHeader'
-    \ . ' matchgroup=Delimiter'
-    \ . ' start=/^#\{1,6}#\@!/'
-    \ . ' end=/$/'
+" Why `oneline`?{{{
+"
+" Without it, if you insert a backtick, all the following text is highlighted.
+" Even on the next lines.
+" It can continue on a whole screen, until you insert the closing backtick.
+" This is distracting.
+"}}}
+exe 'syn region markdownCodeSpan'
+    \ . ' matchgroup=markdownCodeDelimiter'
+    \ . ' start=/`/'
+    \ . ' end=/`/'
+    \ . ' keepend'
+    \ . ' containedin=markdownBold'
+    \ . ' concealends'
+    \ . ' oneline'
+
+exe 'syn region markdownCodeSpan'
+    \ . ' matchgroup=markdownCodeDelimiter'
+    \ . ' start=/`` \=/'
+    \ . ' end=/ \=``/'
+    \ . ' keepend'
+    \ . ' containedin=markdownBold'
+    \ . ' concealends'
+    \ . ' oneline'
+
+exe 'syn region markdownCodeSpan'
+    \ . ' matchgroup=markdownCodeDelimiter'
+    \ . ' start=/^\s*````*.*$/'
+    \ . ' end=/^\s*````*\ze\s*$/'
     \ . ' keepend'
     \ . ' oneline'
-    \ . ' contains=@markdownInline,markdownAutomaticLink'
-    \ . ' contained'
-
-exe 'syn match markdownHeader'
-    \ . ' /^.\+\n=\+$/'
-    \ . ' contained'
-    \ . ' contains=@markdownInline,markdownHeadingRule,markdownAutomaticLink'
-
-exe 'syn match markdownHeader'
-    \ . ' /^.\+\n-\+$/'
-    \ . ' contained'
-    \ . ' contains=@markdownInline,markdownHeadingRule,markdownAutomaticLink'
 " }}}1
 
 " Output {{{1
@@ -456,7 +463,6 @@ exe 'syn region markdownListItem'
     \ . ' start=/ \{,3\}\%([-*+•]\|\d\+\.\)\s\+\S/'
     \ . ' end=/^\s*\n\%( \{,3}\S\)\@=/'
     \ . ' keepend'
-    \ . ' contained'
     \ . ' contains=@markdownListItemElements'
 
 exe 'syn region markdownListItemCodeSpan'
@@ -465,13 +471,12 @@ exe 'syn region markdownListItemCodeSpan'
     \ . ' end=/`/'
     \ . ' keepend'
     \ . ' contained'
-    \ . ' contains=markdownLineStart'
     \ . ' concealends'
 
 " A horizontal rule must contain at least 3 asterisks or hyphens.
 " They may be separated by whitespace.
-syn match markdownRule '^\* *\* *\*[ *]*$' contained
-syn match markdownRule '^- *- *-[ -]*$' contained
+syn match markdownRule '^\* *\* *\*[ *]*$'
+syn match markdownRule '^- *- *-[ -]*$'
 
 syn match markdownLineBreak ' \{2,\}$'
 
@@ -531,7 +536,7 @@ exe 'syn region markdownLinkText'
     \ . ' end=/\]\%( \=[[(]\)\@=/'
     \ . ' nextgroup=markdownLink,markdownId'
     \ . ' skipwhite'
-    \ . ' contains=@markdownInline,markdownLineStart'
+    \ . ' contains=@markdownInline'
     \ . ' concealends'
     \ . ' keepend'
 
@@ -555,41 +560,6 @@ exe 'syn region markdownAutomaticLink'
     \ . ' matchgroup=markdownUrlDelimiter'
     \ . ' start=/<\%(\w\+:\|[[:alnum:]_+-]\+@\)\@=/'
     \ . ' end=/>/'
-    \ . ' keepend'
-    \ . ' oneline'
-
-" Why `oneline`?{{{
-"
-" Without it, if you insert a backtick, all the following text is highlighted.
-" Even on the next lines.
-" It can continue on a whole screen, until you insert the closing backtick.
-" This is distracting.
-"}}}
-
-exe 'syn region markdownCodeSpan'
-    \ . ' matchgroup=markdownCodeDelimiter'
-    \ . ' start=/`/'
-    \ . ' end=/`/'
-    \ . ' keepend'
-    \ . ' contains=markdownLineStart'
-    \ . ' containedin=markdownBold'
-    \ . ' concealends'
-    \ . ' oneline'
-
-exe 'syn region markdownCodeSpan'
-    \ . ' matchgroup=markdownCodeDelimiter'
-    \ . ' start=/`` \=/'
-    \ . ' end=/ \=``/'
-    \ . ' keepend'
-    \ . ' contains=markdownLineStart'
-    \ . ' containedin=markdownBold'
-    \ . ' concealends'
-    \ . ' oneline'
-
-exe 'syn region markdownCodeSpan'
-    \ . ' matchgroup=markdownCodeDelimiter'
-    \ . ' start=/^\s*````*.*$/'
-    \ . ' end=/^\s*````*\ze\s*$/'
     \ . ' keepend'
     \ . ' oneline'
 
@@ -621,17 +591,14 @@ exe 'syn cluster markdownElements contains='
 "}}}
 exe 'syn match markdownBlockquote'
     \ . ' /^ \{,3}>\+\%(\s.*\|$\)/'
-    \ . ' contained'
     \ . ' contains=@markdownElements,markdownBlockquoteLeadingChar'
     \ . ' keepend'
-    \ . ' nextgroup=@markdownBlock'
 
 exe 'syn match markdownListItemBlockquote'
     \ . ' /^ \{4}>\+\%(\s.*\|$\)/'
     \ . ' contained'
     \ . ' contains=@markdownElements,markdownListItemBlockquoteLeadingChar'
     \ . ' keepend'
-    \ . ' nextgroup=@markdownBlock'
 
 exe 'syn match markdownBlockquoteLeadingChar'
     \ . ' /\%(^ \{,3}\)\@3<=>\+\s\=/'
@@ -649,7 +616,6 @@ exe 'syn region markdownBlockquoteCodeSpan'
     \ . ' end=/`/'
     \ . ' keepend'
     \ . ' contained'
-    \ . ' contains=markdownLineStart'
     \ . ' concealends'
 
 syn match markdownFootnote '\[^[^\]]\+\]'
