@@ -87,6 +87,8 @@ exe 'syn cluster markdownBlock contains='
     \ . 'markdownCodeBlock,'
     \ . 'markdownRule'
 
+syn match markdownLineStart '^[<@]\@!' nextgroup=@markdownBlock
+
 exe 'syn cluster markdownInline contains='
     \ . 'markdownLineBreak,'
     \ . 'markdownLinkText,'
@@ -237,7 +239,7 @@ exe 'syn region markdownItalic'
     \ . ' end=/\*/'
     \ . ' oneline'
     \ . ' keepend'
-    \ . ' contains=@Spell'
+    \ . ' contains=markdownLineStart,@Spell'
     \ . ' concealends'
 
 " TODO: improve performance{{{
@@ -258,7 +260,7 @@ exe 'syn region markdownListItemItalic'
     \ . ' oneline'
     \ . ' keepend'
     \ . ' contained'
-    \ . ' contains=@Spell'
+    \ . ' contains=markdownLineStart,@Spell'
     \ . ' concealends'
 
 exe 'syn region markdownBlockquoteItalic'
@@ -268,6 +270,7 @@ exe 'syn region markdownBlockquoteItalic'
     \ . ' oneline'
     \ . ' keepend'
     \ . ' contained'
+    \ . ' contains=markdownLineStart'
     \ . ' concealends'
 " }}}1
 " Bold {{{1
@@ -278,7 +281,7 @@ exe 'syn region markdownBold'
     \ . ' end=/\*\*/'
     \ . ' oneline'
     \ . ' keepend'
-    \ . ' contains=markdownItalic,@Spell'
+    \ . ' contains=markdownLineStart,markdownItalic,@Spell'
     \ . ' concealends'
 
 exe 'syn region markdownListItemBold'
@@ -288,7 +291,7 @@ exe 'syn region markdownListItemBold'
     \ . ' oneline'
     \ . ' keepend'
     \ . ' contained'
-    \ . ' contains=markdownItalic,@Spell'
+    \ . ' contains=markdownLineStart,markdownItalic,@Spell'
     \ . ' concealends'
 
 " `markdownBlockquoteBold` must be defined *after* `markdownItalic`
@@ -299,6 +302,7 @@ exe 'syn region markdownBlockquoteBold'
     \ . ' oneline'
     \ . ' keepend'
     \ . ' contained'
+    \ . ' contains=markdownLineStart'
     \ . ' concealends'
 " }}}1
 " Bold+Italic {{{1
@@ -309,7 +313,7 @@ exe 'syn region markdownBoldItalic'
     \ . ' end=/\*\*\*/'
     \ . ' oneline'
     \ . ' keepend'
-    \ . ' contains=@Spell'
+    \ . ' contains=markdownLineStart,@Spell'
     \ . ' concealends'
 
 exe 'syn region markdownListItemBoldItalic'
@@ -319,7 +323,7 @@ exe 'syn region markdownListItemBoldItalic'
     \ . ' oneline'
     \ . ' keepend'
     \ . ' contained'
-    \ . ' contains=@Spell'
+    \ . ' contains=markdownLineStart,@Spell'
     \ . ' concealends'
 
 exe 'syn region markdownBlockquoteBoldItalic'
@@ -329,7 +333,7 @@ exe 'syn region markdownBlockquoteBoldItalic'
     \ . ' oneline'
     \ . ' keepend'
     \ . ' contained'
-    \ . ' contains=@Spell'
+    \ . ' contains=markdownLineStart,@Spell'
     \ . ' concealends'
 " }}}1
 
@@ -355,42 +359,24 @@ exe 'syn match markdownHeader'
     \ . ' contains=@markdownInline,markdownHeadingRule,markdownAutomaticLink'
 " }}}1
 
-" Codespan {{{1
+" Output {{{1
 
-" Why `oneline`?{{{
-"
-" Without it, if you insert a backtick, all the following text is highlighted.
-" Even on the next lines.
-" It can continue on a whole screen, until you insert the closing backtick.
-" This is distracting.
-"}}}
-exe 'syn region markdownCodeSpan'
-    \ . ' matchgroup=markdownCodeDelimiter'
-    \ . ' start=/`/'
-    \ . ' end=/`/'
-    \ . ' keepend'
-    \ . ' containedin=markdownBold'
-    \ . ' concealends'
-    \ . ' oneline'
+" vaguely inspired from `helpHeader`
+exe 'syn match markdownOutput'
+    \ . ' /^.*\~$/'
+    \ . ' contained'
+    \ . ' containedin=markdownCodeBlock'
+    \ . ' nextgroup=markdownIgnore'
 
-exe 'syn region markdownCodeSpan'
-    \ . ' matchgroup=markdownCodeDelimiter'
-    \ . ' start=/`` \=/'
-    \ . ' end=/ \=``/'
-    \ . ' keepend'
-    \ . ' containedin=markdownBold'
-    \ . ' concealends'
-    \ . ' oneline'
-
-exe 'syn region markdownCodeSpan'
-    \ . ' matchgroup=markdownCodeDelimiter'
-    \ . ' start=/^\s*````*.*$/'
-    \ . ' end=/^\s*````*\ze\s*$/'
-    \ . ' keepend'
-    \ . ' oneline'
+exe 'syn match markdownIgnore'
+    \ . ' /.$/'
+    \ . ' contained'
+    \ . ' containedin=markdownOutput'
+    \ . ' conceal'
 " }}}1
 
 " HideAnswer {{{1
+
 " Is there a more conventional way of hiding text in markdown?{{{
 "
 " Yes.
@@ -424,13 +410,6 @@ exe 'syn region markdownCodeSpan'
 "    - use `<details>`
 "    - use `↣ ↢`
 "}}}
-
-exe 'syn match markdownHideAnswer'
-    \ . ' /↣.\{-}↢/'
-    \ . ' conceal'
-    \ . ' cchar=?'
-    \ . ' containedin=markdownCodeBlock'
-
 exe 'syn region markdownHideAnswer'
     \ . ' start=/^↣/'
     \ . ' end=/^↢.*/'
@@ -439,29 +418,18 @@ exe 'syn region markdownHideAnswer'
     \ . ' containedin=markdownCodeBlock'
     \ . ' keepend'
 
+exe 'syn match markdownHideAnswer'
+    \ . ' /↣.\{-}↢/'
+    \ . ' conceal'
+    \ . ' cchar=?'
+    \ . ' containedin=markdownCodeBlock'
+" }}}1
+
 " TODO: How to include italics inside a hidden answer?{{{
-"
 " We could add `contains=markdownItalic`.
 " But the text in italics would not be concealed...
 " We probably have the same issue with other styles (bold, ...).
 "}}}
-" }}}1
-
-" Output {{{1
-
-" vaguely inspired from `helpHeader`
-exe 'syn match markdownOutput'
-    \ . ' /^.*\~$/'
-    \ . ' contained'
-    \ . ' containedin=markdownCodeBlock'
-    \ . ' nextgroup=markdownIgnore'
-
-exe 'syn match markdownIgnore'
-    \ . ' /.$/'
-    \ . ' contained'
-    \ . ' containedin=markdownOutput'
-    \ . ' conceal'
-" }}}1
 
 " Why ` \{,3}` in the `start` pattern?{{{
 "
@@ -497,6 +465,7 @@ exe 'syn region markdownListItemCodeSpan'
     \ . ' end=/`/'
     \ . ' keepend'
     \ . ' contained'
+    \ . ' contains=markdownLineStart'
     \ . ' concealends'
 
 " A horizontal rule must contain at least 3 asterisks or hyphens.
@@ -562,7 +531,7 @@ exe 'syn region markdownLinkText'
     \ . ' end=/\]\%( \=[[(]\)\@=/'
     \ . ' nextgroup=markdownLink,markdownId'
     \ . ' skipwhite'
-    \ . ' contains=@markdownInline'
+    \ . ' contains=@markdownInline,markdownLineStart'
     \ . ' concealends'
     \ . ' keepend'
 
@@ -586,6 +555,41 @@ exe 'syn region markdownAutomaticLink'
     \ . ' matchgroup=markdownUrlDelimiter'
     \ . ' start=/<\%(\w\+:\|[[:alnum:]_+-]\+@\)\@=/'
     \ . ' end=/>/'
+    \ . ' keepend'
+    \ . ' oneline'
+
+" Why `oneline`?{{{
+"
+" Without it, if you insert a backtick, all the following text is highlighted.
+" Even on the next lines.
+" It can continue on a whole screen, until you insert the closing backtick.
+" This is distracting.
+"}}}
+
+exe 'syn region markdownCodeSpan'
+    \ . ' matchgroup=markdownCodeDelimiter'
+    \ . ' start=/`/'
+    \ . ' end=/`/'
+    \ . ' keepend'
+    \ . ' contains=markdownLineStart'
+    \ . ' containedin=markdownBold'
+    \ . ' concealends'
+    \ . ' oneline'
+
+exe 'syn region markdownCodeSpan'
+    \ . ' matchgroup=markdownCodeDelimiter'
+    \ . ' start=/`` \=/'
+    \ . ' end=/ \=``/'
+    \ . ' keepend'
+    \ . ' contains=markdownLineStart'
+    \ . ' containedin=markdownBold'
+    \ . ' concealends'
+    \ . ' oneline'
+
+exe 'syn region markdownCodeSpan'
+    \ . ' matchgroup=markdownCodeDelimiter'
+    \ . ' start=/^\s*````*.*$/'
+    \ . ' end=/^\s*````*\ze\s*$/'
     \ . ' keepend'
     \ . ' oneline'
 
@@ -645,6 +649,7 @@ exe 'syn region markdownBlockquoteCodeSpan'
     \ . ' end=/`/'
     \ . ' keepend'
     \ . ' contained'
+    \ . ' contains=markdownLineStart'
     \ . ' concealends'
 
 syn match markdownFootnote '\[^[^\]]\+\]'
