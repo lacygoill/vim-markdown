@@ -372,6 +372,14 @@ exe 'syn match markdownListItemBlockquoteLeadingChar'
     \ . ' conceal'
 " }}}1
 
+" Horizontal rule {{{1
+
+" A horizontal rule must contain at least 3 asterisks or hyphens.
+" They may be separated by whitespace.
+syn match markdownRule '^\* *\* *\*[ *]*$'
+syn match markdownRule '^- *- *-[ -]*$'
+" }}}1
+
 " List Item {{{1
 
 exe 'syn cluster markdownListItemElements contains='
@@ -545,11 +553,6 @@ exe 'syn match markdownHideAnswer'
 "}}}
 " }}}1
 
-" A horizontal rule must contain at least 3 asterisks or hyphens.
-" They may be separated by whitespace.
-syn match markdownRule '^\* *\* *\*[ *]*$'
-syn match markdownRule '^- *- *-[ -]*$'
-
 exe 'syn region markdownIdDeclaration'
     \ . ' matchgroup=markdownLinkDelimiter'
     \ . ' start=/^ \{,3\}!\=\[/'
@@ -646,13 +649,11 @@ syn region markdownKey matchgroup=Special start=/<kbd>/ end=/<\/kbd>/ concealend
 syn match markdownCommentTitle /^ \{,2}\u\w*\(\s\+\u\w*\)*:/ contains=markdownTodo
 "                                 ├───┘
 "                                 └ Why?
-" Because:{{{
-"
-" We don't want `markdownCommentTitle` to match in  a code block, nor in an item
-" list.
+" We don't want `markdownCommentTitle` to match in a code block, nor in an item list.{{{
 " It would break the highlighting of the text which follows on the line.
 " So, we can't allow more than 2 leading spaces.
 "}}}
+
 exe 'syn match markdownTodo  /\CTO'.'DO\|FIX'.'ME/ contained'
 
 " FIXME: This diagram, written in a code block, is highlighted as a table:{{{
