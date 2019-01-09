@@ -80,8 +80,7 @@ endif
 syn sync minlines=50
 syn case ignore
 
-exe 'syn cluster markdownInline contains='
-    \ . 'markdownLineBreak,'
+exe 'syn cluster markdownSpanElements contains='
     \ . 'markdownLinkText,'
     \ . 'markdownItalic,'
     \ . 'markdownBold,'
@@ -89,87 +88,9 @@ exe 'syn cluster markdownInline contains='
     \ . 'markdownEscape,'
     \ . 'markdownError'
 
-syn match markdownHeadingRule '^[=-]\+$' contained
-
-" Why `contains=@Spell`?{{{
-"
-" When we enable 'spell', errors aren't highlighted inside a code block.
-" So we add the @Spell cluster.
-" See `:h spell-syntax`
-"}}}
-exe 'syn region markdownCodeBlock'
-    \ . ' start=/^    \|^\t/'
-    \ . ' end=/$/'
-    \ . ' contains=@Spell'
-    \ . ' keepend'
-
-exe 'syn region markdownListItemCodeBlock'
-    \ . ' start=/^        \|^\t\t/'
-    \ . ' end=/$/'
-    \ . ' contained'
-    \ . ' contains=@Spell'
-    \ . ' keepend'
-
-" Why did you add `•` in the collection `[-*+•]`?{{{
-"
-" It makes the bullets prettier, because they're highlighted.
-" When we indent  a list with 4 spaces or  more, it prevents `markdownCodeBlock`
-" to match, which in turn allows `markdownCodeSpan` to match.
-"}}}
-" TODO: We should remove `•`, and instead use `-` to format our lists.{{{
-"
-" `•` is not recognized as the beginning of a list item by the markdown spec.
-"
-" Also, this would give us the benefit of having our bulleted list recognized by
-" a markdown viewer/parser.
-"
-"     syn match markdownListItemMarkerPretty "\%(\t\| \{,4\}\)\@4<=[-*+]\%(\s\+\S\)\@=" contained containedin=markdownListItem conceal cchar=•
-"
-" Also, when  we would read  a markdown file written  by someone else,  we would
-" automatically see `•` instead of `-`.
-" No need of reformatting.
-"
-" If we do this, we would need to conceal `-`, and replace it with `•`.
-" And we would need to make `hl-Conceal` less visible:
-"
-"     hi! link Conceal Repeat
-"                      │
-"                      └ HG used by markdownListItem
-"
-" And  we  would  need  to  refactor   `coc`  so  that  it  temporarily  resets
-" `hl-Conceal` with its old attributes (more visible):
-"
-"     Conceal        xxx ctermfg=237 ctermbg=254 guifg=#4B4B4B guibg=#E9E9E9
-"
-" And we would need to refactor `vim-bullet-list`.
-" And we would need to replace `•` with `-` everywhere:
-"
-"     noa vim /•/gj ~/.vim/**/*.{vim,md} ~/.vim/**/*.snippets ~/.vim/template/** ~/.vim/vimrc ~/Dropbox/wiki/**/*.md ~/.zsh/** ~/.config/** ~/.zshrc ~/.zshenv ~/.Xresources ~/.tmux.conf ... | cw
-"
-" Also,  should we  add the  same  kind of  conceal  in all  filetypes, but  for
-" comments only?
-"}}}
-" Don't remove `keepend`!{{{
-"
-" Without, if  you forget to  write the closing backtick  of an italic  word, it
-" could go on beyond the end of `markdownListItem`, which would cause the latter
-" to be extended.
-"
-" In reality, it depends on whether you define `markdownItalic` with `oneline`.
-" But the point is, we want a list to stop where we expect it to.
-" We don't want a buggy contained item to make a list continue way beyond its end.
-"}}}
-
-exe 'syn cluster markdownListItemElements contains='
-    \ . 'markdownListItemItalic,'
-    \ . 'markdownListItemBold,'
-    \ . 'markdownListItemBoldItalic,'
-    \ . 'markdownListItemCodeSpan,'
-    \ . 'markdownListItemCodeBlock,'
-    \ . 'markdownListItemBlockquote,'
-    \ . 'markdownListItemOutput'
-
 " Header {{{1
+
+syn match markdownHeadingRule '^[=-]\+$' contained
 
 exe 'syn region markdownHeader'
     \ . ' matchgroup=Delimiter'
@@ -177,15 +98,15 @@ exe 'syn region markdownHeader'
     \ . ' end=/$/'
     \ . ' keepend'
     \ . ' oneline'
-    \ . ' contains=@markdownInline,markdownAutomaticLink'
+    \ . ' contains=@markdownSpanElements,markdownAutomaticLink'
 
 exe 'syn match markdownHeader'
     \ . ' /^.\+\n=\+$/'
-    \ . ' contains=@markdownInline,markdownHeadingRule,markdownAutomaticLink'
+    \ . ' contains=@markdownSpanElements,markdownHeadingRule,markdownAutomaticLink'
 
 exe 'syn match markdownHeader'
     \ . ' /^.\+\n-\+$/'
-    \ . ' contains=@markdownInline,markdownHeadingRule,markdownAutomaticLink'
+    \ . ' contains=@markdownSpanElements,markdownHeadingRule,markdownAutomaticLink'
 " }}}1
 
 " Don't change the order of `Italic`, `Bold` and `Bold+Italic`!{{{
@@ -363,6 +284,181 @@ exe 'syn region markdownCodeSpan'
     \ . ' end=/^\s*````*\ze\s*$/'
     \ . ' keepend'
     \ . ' oneline'
+
+exe 'syn region markdownBlockquoteCodeSpan'
+    \ . ' matchgroup=markdownCodeDelimiter'
+    \ . ' start=/`/'
+    \ . ' end=/`/'
+    \ . ' keepend'
+    \ . ' contained'
+    \ . ' concealends'
+
+exe 'syn region markdownListItemCodeSpan'
+    \ . ' matchgroup=markdownCodeDelimiter'
+    \ . ' start=/`/'
+    \ . ' end=/`/'
+    \ . ' keepend'
+    \ . ' contained'
+    \ . ' concealends'
+" }}}1
+
+" Codeblock {{{1
+
+" Why `contains=@Spell`?{{{
+"
+" When we enable 'spell', errors aren't highlighted inside a code block.
+" So we add the @Spell cluster.
+" See `:h spell-syntax`
+"}}}
+exe 'syn region markdownCodeBlock'
+    \ . ' start=/^    \|^\t/'
+    \ . ' end=/$/'
+    \ . ' contains=@Spell'
+    \ . ' keepend'
+
+exe 'syn region markdownListItemCodeBlock'
+    \ . ' start=/^        \|^\t\t/'
+    \ . ' end=/$/'
+    \ . ' contained'
+    \ . ' contains=@Spell'
+    \ . ' keepend'
+" }}}1
+
+" Blockquote {{{1
+
+exe 'syn cluster markdownBlockquoteSpanElements contains='
+    \ . 'markdownBlockquoteItalic,'
+    \ . 'markdownBlockquoteBold,'
+    \ . 'markdownBlockquoteBoldItalic,'
+    \ . 'markdownBlockquoteCodeSpan'
+
+" Why is `keepend` important here?{{{
+"
+" Suppose you emphasize some text in bold, while quoting a sentence.
+" But you forget to add `**` at the end of the emphasized text.
+" The `markdownBold` region will go on until the end of the quoted sentence.
+"
+" This is expected, and *not* avoidable.
+"
+" But, it will also consume the  end of `markdownBlockquote`, which will have to
+" be extended, as well as `markdownBold`.
+" As a  result, after your quoted  sentence, the following text  will be wrongly
+" highlighted by the stack of items `markdownBold markdownBlockquote`.
+" IOW, the text will be in bold, even *after* you've finished writing your quote.
+"
+" This is UNexpected, but *avoidable*.
+" `keepend`  prevents a  possible broken  contained region  from being  extended
+" outside the initial containing region.
+"}}}
+exe 'syn match markdownBlockquote'
+    \ . ' /^ \{,3}>\+\%(\s.*\|$\)/'
+    \ . ' contains=@markdownBlockquoteSpanElements,markdownBlockquoteLeadingChar'
+    \ . ' keepend'
+
+exe 'syn match markdownBlockquoteLeadingChar'
+    \ . ' /\%(^ \{,3}\)\@3<=>\+\s\=/'
+    \ . ' contained'
+    \ . ' conceal'
+
+exe 'syn match markdownListItemBlockquote'
+    \ . ' /^ \{4}>\+\%(\s.*\|$\)/'
+    \ . ' contained'
+    \ . ' contains=@markdownBlockquoteSpanElements,markdownListItemBlockquoteLeadingChar'
+    \ . ' keepend'
+
+exe 'syn match markdownListItemBlockquoteLeadingChar'
+    \ . ' /\%(^ \{4}\)\@4<=>\+\s\=/'
+    \ . ' contained'
+    \ . ' conceal'
+" }}}1
+
+" List Item {{{1
+
+exe 'syn cluster markdownListItemElements contains='
+    \ . 'markdownListItemItalic,'
+    \ . 'markdownListItemBold,'
+    \ . 'markdownListItemBoldItalic,'
+    \ . 'markdownListItemCodeSpan,'
+    \ . 'markdownListItemCodeBlock,'
+    \ . 'markdownListItemBlockquote,'
+    \ . 'markdownListItemOutput'
+
+" Why did you add `•` in the collection `[-*+•]`?{{{
+"
+" It makes the bullets prettier, because they're highlighted.
+" When we indent  a list with 4 spaces or  more, it prevents `markdownCodeBlock`
+" to match, which in turn allows `markdownCodeSpan` to match.
+"}}}
+" TODO: We should remove `•`, and instead use `-` to format our lists.{{{
+"
+" `•` is not recognized as the beginning of a list item by the markdown spec.
+"
+" Also, this would give us the benefit of having our bulleted list recognized by
+" a markdown viewer/parser.
+"
+"     syn match markdownListItemMarkerPretty "\%(\t\| \{,4\}\)\@4<=[-*+]\%(\s\+\S\)\@=" contained containedin=markdownListItem conceal cchar=•
+"
+" Also, when  we would read  a markdown file written  by someone else,  we would
+" automatically see `•` instead of `-`.
+" No need of reformatting.
+"
+" If we do this, we would need to conceal `-`, and replace it with `•`.
+" And we would need to make `hl-Conceal` less visible:
+"
+"     hi! link Conceal Repeat
+"                      │
+"                      └ HG used by markdownListItem
+"
+" And  we  would  need  to  refactor   `coc`  so  that  it  temporarily  resets
+" `hl-Conceal` with its old attributes (more visible):
+"
+"     Conceal        xxx ctermfg=237 ctermbg=254 guifg=#4B4B4B guibg=#E9E9E9
+"
+" And we would need to refactor `vim-bullet-list`.
+" And we would need to replace `•` with `-` everywhere:
+"
+"     noa vim /•/gj ~/.vim/**/*.{vim,md} ~/.vim/**/*.snippets ~/.vim/template/** ~/.vim/vimrc ~/Dropbox/wiki/**/*.md ~/.zsh/** ~/.config/** ~/.zshrc ~/.zshenv ~/.Xresources ~/.tmux.conf ... | cw
+"
+" Also,  should we  add the  same  kind of  conceal  in all  filetypes, but  for
+" comments only?
+"}}}
+" Don't remove `keepend`!{{{
+"
+" Without, if  you forget to  write the closing backtick  of an italic  word, it
+" could go on beyond the end of `markdownListItem`, which would cause the latter
+" to be extended.
+"
+" In reality, it depends on whether you define `markdownItalic` with `oneline`.
+" But the point is, we want a list to stop where we expect it to.
+" We don't want a buggy contained item to make a list continue way beyond its end.
+"}}}
+
+" Why ` \{,3}` in the `start` pattern?{{{
+"
+" From: https://daringfireball.net/projects/markdown/syntax#list
+"
+" > List markers typically start  at the left margin, but may  be indented by up
+" > to three spaces.
+" }}}
+" Why ` \{,3}` in the `end` pattern?{{{
+"
+" If  there are  4  spaces between  the  beginning  of the  line  and the  first
+" non-whitespace, then we've found the first  line of a new paragraph inside the
+" current list item.
+"
+" If there are 5,6,7 spaces, I guess it's the same thing.
+"
+" If there are  8 spaces, we've found  the first line of a  codeblock inside the
+" current list item.
+"
+" In any case, more than 4 spaces means that we're still in the current list item.
+" So, we need 3 spaces or less to end the latter.
+"}}}
+exe 'syn region markdownListItem'
+    \ . ' start=/^ \{,3\}\%([-*+•]\|\d\+\.\)\s\+\S/'
+    \ . ' end=/^\s*\n\%( \{,3}\S\)\@=/'
+    \ . ' keepend'
+    \ . ' contains=@markdownListItemElements'
 " }}}1
 
 " Output {{{1
@@ -441,55 +537,18 @@ exe 'syn match markdownHideAnswer'
     \ . ' conceal'
     \ . ' cchar=?'
     \ . ' containedin=markdownCodeBlock'
-" }}}1
 
 " TODO: How to include italics inside a hidden answer?{{{
 " We could add `contains=markdownItalic`.
 " But the text in italics would not be concealed...
 " We probably have the same issue with other styles (bold, ...).
 "}}}
-
-" Why ` \{,3}` in the `start` pattern?{{{
-"
-" From: https://daringfireball.net/projects/markdown/syntax#list
-"
-" > List markers typically start  at the left margin, but may  be indented by up
-" > to three spaces.
-" }}}
-" Why ` \{,3}` in the `end` pattern?{{{
-"
-" If  there are  4  spaces between  the  beginning  of the  line  and the  first
-" non-whitespace, then we've found the first  line of a new paragraph inside the
-" current list item.
-"
-" If there are 5,6,7 spaces, I guess it's the same thing.
-"
-" If there are  8 spaces, we've found  the first line of a  codeblock inside the
-" current list item.
-"
-" In any case, more than 4 spaces means that we're still in the current list item.
-" So, we need 3 spaces or less to end the latter.
-"}}}
-exe 'syn region markdownListItem'
-    \ . ' start=/ \{,3\}\%([-*+•]\|\d\+\.\)\s\+\S/'
-    \ . ' end=/^\s*\n\%( \{,3}\S\)\@=/'
-    \ . ' keepend'
-    \ . ' contains=@markdownListItemElements'
-
-exe 'syn region markdownListItemCodeSpan'
-    \ . ' matchgroup=markdownCodeDelimiter'
-    \ . ' start=/`/'
-    \ . ' end=/`/'
-    \ . ' keepend'
-    \ . ' contained'
-    \ . ' concealends'
+" }}}1
 
 " A horizontal rule must contain at least 3 asterisks or hyphens.
 " They may be separated by whitespace.
 syn match markdownRule '^\* *\* *\*[ *]*$'
 syn match markdownRule '^- *- *-[ -]*$'
-
-syn match markdownLineBreak ' \{2,\}$'
 
 exe 'syn region markdownIdDeclaration'
     \ . ' matchgroup=markdownLinkDelimiter'
@@ -547,7 +606,7 @@ exe 'syn region markdownLinkText'
     \ . ' end=/\]\%( \=[[(]\)\@=/'
     \ . ' nextgroup=markdownLink,markdownId'
     \ . ' skipwhite'
-    \ . ' contains=@markdownInline'
+    \ . ' contains=@markdownSpanElements'
     \ . ' concealends'
     \ . ' keepend'
 
@@ -573,61 +632,6 @@ exe 'syn region markdownAutomaticLink'
     \ . ' end=/>/'
     \ . ' keepend'
     \ . ' oneline'
-
-exe 'syn cluster markdownElements contains='
-    \ . 'markdownBlockquoteItalic,'
-    \ . 'markdownBlockquoteBold,'
-    \ . 'markdownBlockquoteBoldItalic,'
-    \ . 'markdownBlockquoteCodeSpan,'
-    \ . 'markdownCodeSpan,'
-    \ . 'markdownItalic'
-
-" Why is `keepend` important here?{{{
-"
-" Suppose you emphasize some text in bold, while quoting a sentence.
-" But you forget to add `**` at the end of the emphasized text.
-" The `markdownBold` region will go on until the end of the quoted sentence.
-"
-" This is expected, and *not* avoidable.
-"
-" But, it will also consume the  end of `markdownBlockquote`, which will have to
-" be extended, as well as `markdownBold`.
-" As a  result, after your quoted  sentence, the following text  will be wrongly
-" highlighted by the stack of items `markdownBold markdownBlockquote`.
-" IOW, the text will be in bold, even *after* you've finished writing your quote.
-"
-" This is UNexpected, but *avoidable*.
-" `keepend`  prevents a  possible broken  contained region  from being  extended
-" outside the initial containing region.
-"}}}
-exe 'syn match markdownBlockquote'
-    \ . ' /^ \{,3}>\+\%(\s.*\|$\)/'
-    \ . ' contains=@markdownElements,markdownBlockquoteLeadingChar'
-    \ . ' keepend'
-
-exe 'syn match markdownListItemBlockquote'
-    \ . ' /^ \{4}>\+\%(\s.*\|$\)/'
-    \ . ' contained'
-    \ . ' contains=@markdownElements,markdownListItemBlockquoteLeadingChar'
-    \ . ' keepend'
-
-exe 'syn match markdownBlockquoteLeadingChar'
-    \ . ' /\%(^ \{,3}\)\@3<=>\+\s\=/'
-    \ . ' contained'
-    \ . ' conceal'
-
-exe 'syn match markdownListItemBlockquoteLeadingChar'
-    \ . ' /\%(^ \{4}\)\@4<=>\+\s\=/'
-    \ . ' contained'
-    \ . ' conceal'
-
-exe 'syn region markdownBlockquoteCodeSpan'
-    \ . ' matchgroup=markdownCodeDelimiter'
-    \ . ' start=/`/'
-    \ . ' end=/`/'
-    \ . ' keepend'
-    \ . ' contained'
-    \ . ' concealends'
 
 syn match markdownFootnote '\[^[^\]]\+\]'
 syn match markdownFootnoteDefinition '^\[^[^\]]\+\]:'
