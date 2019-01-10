@@ -44,7 +44,13 @@ fu! markdown#define_include_clusters() abort "{{{2
         " It means  that the item will  only match if it's  contained in another
         " one, which has the argument `contains=@markdownEmbedhtml`.
         "}}}
-        exe 'syn include @markdownEmbed'.ft.' syntax/'.ft.'.vim'
+        " Why `:silent!`?{{{
+        "
+        " Necessary if you write something like this in `ftplugin/markdown.vim`:
+        "
+        "     :let b:markdown_embed = ['js=javascript']
+        "}}}
+        sil! exe 'syn include @markdownEmbed'.ft.' syntax/'.ft.'.vim'
 
         " We need to remove `b:current_syntax` to be sure the next syntax plugin
         " can be sourced, even if it has a guard.
