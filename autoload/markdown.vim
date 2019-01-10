@@ -1,19 +1,30 @@
 " Interface {{{1
 fu! markdown#highlight_embedded_languages() abort "{{{2
-    return
     " What's the purpose of this `for` loop?{{{
     "
     " Iterate over the  languages mentioned in `b:markdown_embed`,  and for each
     " of them, include the corresponding syntax plugin.
     "}}}
     let done_include = {}
-    let filetypes = get(b:, 'markdown_embed', [])
-    for delim in filetypes
-        " If by accident, we wrote the  same embedded language several times, we
-        " want to include the corresponding syntax plugin only once.
+    let delims = get(b:, 'markdown_embed', [])
+    for delim in delims
+        " If by accident, we manually  assign a value to `b:markdown_embed`, and
+        " we write duplicate values, we want to include the corresponding syntax
+        " plugin only once.
         if has_key(done_include, delim)
             continue
         endif
+        " We can't blindly rely on the delim:{{{
+        "
+        "     " ✔
+        "     ```python
+        "     " here, we indeed want the python syntax plugin
+        "
+        "     " ✘
+        "     ```js
+        "     " there's no js syntax plugin
+        "     " we want the javascript syntax plugin
+        "}}}
         let ft = s:get_filetype(delim)
         if empty(ft) | continue | endif
 
@@ -51,8 +62,8 @@ fu! markdown#highlight_embedded_languages() abort "{{{2
         "}}}
         exe 'syn region markdownEmbed'.ft
         \ . ' matchgroup=markdownCodeDelimiter'
-        \ . ' start="^\s*````*\s*'.delim.'\S\@!.*$"'
-        \ . ' end="^\s*````*\ze\s*$"'
+        \ . ' start=/^\s*````*\s*'.delim.'\S\@!.*$/'
+        \ . ' end=/^\s*````*\ze\s*$/'
         \ . ' keepend'
         \ . ' concealends'
         \ . ' contains=@markdownEmbed'.ft
