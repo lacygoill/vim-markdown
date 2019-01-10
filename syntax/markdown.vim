@@ -681,7 +681,6 @@ syn match markdownTable /^    [│─┌└├].*/
 
 syn match markdownOption +`\@1<='.\{-}'`\@=+ containedin=markdownCodeSpan
 
-call markdown#define_include_clusters()
 call markdown#highlight_embedded_languages()
 
 " HG {{{1
