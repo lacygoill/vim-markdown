@@ -260,6 +260,8 @@ exe 'syn region markdownBlockquoteBoldItalic'
 " It can continue on a whole screen, until you insert the closing backtick.
 " This is distracting.
 "}}}
+" If you change the name of `markdownCodeDelimiter`, update
+" `./autoload/markdown.vim`
 exe 'syn region markdownCodeSpan'
     \ . ' matchgroup=markdownCodeDelimiter'
     \ . ' start=/`/'
@@ -613,6 +615,8 @@ exe 'syn region markdownLinkText'
     \ . ' concealends'
     \ . ' keepend'
 
+" If  you  change the  name  the  items  beginning with  `markdownLink`,  update
+" `s:is_real_link()` in `./autoload/markdown.vim`.
 exe 'syn region markdownLink'
     \ . ' matchgroup=markdownLinkDelimiter'
     \ . ' start=/(/'
