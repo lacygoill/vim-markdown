@@ -427,7 +427,7 @@ exe 'syn cluster markdownListItemElements contains='
 " And we would need to refactor `vim-bullet-list`.
 " And we would need to replace `•` with `-` everywhere:
 "
-"     noa vim /•/gj ~/.vim/**/*.{vim,md} ~/.vim/**/*.snippets ~/.vim/template/** ~/.vim/vimrc ~/Dropbox/wiki/**/*.md ~/.zsh/** ~/.config/** ~/.zshrc ~/.zshenv ~/.Xresources ~/.tmux.conf ... | cw
+"     noa vim /•/gj ~/.vim/**/*.{vim,md} ~/.vim/**/*.snippets ~/.vim/template/** ~/.vim/vimrc ~/wiki/**/*.md ~/.zsh/** ~/.config/** ~/.zshrc ~/.zshenv ~/.Xresources ~/.tmux.conf ... | cw
 "
 " Also,  should we  add the  same  kind of  conceal  in all  filetypes, but  for
 " comments only?
@@ -524,8 +524,8 @@ exe 'syn match markdownListItemIgnore'
 " It's too cumbersome to hide inline answers.
 " Have a look at the answers we hide in:
 "
-"     ~/Dropbox/wiki/vim/command.md
-"     ~/Dropbox/wiki/vim/exception.md
+"     ~/wiki/vim/command.md
+"     ~/wiki/vim/exception.md
 "
 " So, for the moment, we keep our  ad-hoc system to hide inline answers.
 "
