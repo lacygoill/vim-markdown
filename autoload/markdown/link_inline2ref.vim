@@ -134,11 +134,12 @@ fu! s:put_links(links, last_id_old, last_id_lnum) abort "{{{2
 endfu
 
 fu! s:renumber_links(last_id) abort "{{{2
-    " search for [some text][some number]
-    " if the number is not `i`:
+    " Iterate over the ids of the links.
+    " Search for `[some text][some id]`.
+    " If the id is not `i`:
     "
     "    - replace it with `i`
-    "    - search for `^[this number]:` after `# Reference` and replace it with `i`
+    "    - search for `^[this id]:` after `# Reference` and replace it with `i`
     "
     " Finally, sort the links in `# Reference`.
 
