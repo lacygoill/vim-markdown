@@ -1,5 +1,5 @@
 " Interface {{{1
-fu! markdown#link_inline_to_ref#main() abort "{{{2
+fu! markdown#link_inline2ref#main() abort "{{{2
     let view = winsaveview()
     let &l:fen = 0
     " We're going to inspect the syntax highlighting under the cursor.

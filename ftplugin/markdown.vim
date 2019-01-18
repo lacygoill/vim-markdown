@@ -135,7 +135,7 @@ cnorea  <buffer><expr>  foldsortbysize  getcmdtype() is# ':' && getcmdpos() ==# 
 "
 "  Make it local to markdown
 "}}}
-com! -buffer -bar -range=% LinkInline2Ref  call markdown#link_inline_to_ref#main()
+com! -buffer -bar -range=% LinkInline2Ref  call markdown#link_inline2ref#main()
 
 com! -buffer -bar Preview call markdown#preview#main()
 
