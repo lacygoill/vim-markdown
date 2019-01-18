@@ -15,17 +15,16 @@ fu! markdown#link_inline2ref#main() abort "{{{2
 
     " If there're already reference links in the buffer, get the numerical id of
     " the biggest one; we need it to correctly number the new links we may find.
-    "
-    " TODO:  if we  add a  new link  before  the first  one, our  links will  be
-    " numbered in a non-increasing way.
-    " Find a way to re-number all the links at the end of the function.
-    let [last_id_new, last_line] = s:get_last_id()
+    let [last_id_new, last_lnum] = s:get_last_id()
     let last_id_old = last_id_new
 
     call cursor(1,1)
     let [links, last_id_new] = s:collect_links(last_id_new)
 
-    call s:put_links(links, last_id_old, last_line)
+    call s:put_links(links, last_id_old, last_lnum)
+
+    " TODO: if we've just added a new  link before the first one, our links will
+    " be numbered in a non-increasing way; find a way to re-number all the links.
 
     let &l:fen = 1
     call winrestview(view)
@@ -56,9 +55,9 @@ fu! s:get_last_id() abort "{{{2
         " Why assigning `0` instead of `line('$')`?{{{
         "
         " The last  line address may change  between now and the  moment when we
-        " need `last_line`.
+        " need `last_lnum`.
         "}}}
-        let last_line = 0
+        let last_lnum = 0
         let ref_links = filter(getline(1, '$'), {i,v -> v =~# '^[\d\+\]:'})
         if !empty(ref_links)
             let last_id_new = max(map(ref_links, {i,v -> matchstr(v, '^\[\zs\d\+')}))
@@ -72,10 +71,10 @@ fu! s:get_last_id() abort "{{{2
     else
         call search('\%$')
         call search('^\[\d\+\]:', 'bW')
-        let last_line = line('.')
+        let last_lnum = line('.')
         let last_id_new = matchstr(getline('.'), '^\[\zs\d\+\ze\]:')
     endif
-    return [last_id_new, last_line]
+    return [last_id_new, last_lnum]
 endfu
 
 fu! s:collect_links(last_id_new) abort "{{{2
@@ -109,7 +108,7 @@ fu! s:collect_links(last_id_new) abort "{{{2
     return [links, last_id_new]
 endfu
 
-fu! s:put_links(links, last_id_old, last_line) abort "{{{2
+fu! s:put_links(links, last_id_old, last_lnum) abort "{{{2
     let links = a:links
     " Put the links at the bottom of the buffer.
     if !empty(links)
@@ -117,7 +116,7 @@ fu! s:put_links(links, last_id_old, last_line) abort "{{{2
             call append('$', ['##', '# Reference', ''])
         endif
         call map(links, {i,v -> '['.(i+1 + a:last_id_old).']: '.v})
-        call append(a:last_line ? a:last_line : line('$'), links)
+        call append(a:last_lnum ? a:last_lnum : line('$'), links)
     endif
 endfu
 " }}}1
