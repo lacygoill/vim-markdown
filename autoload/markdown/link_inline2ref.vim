@@ -25,10 +25,12 @@ fu! markdown#link_inline2ref#main() abort "{{{2
 
     " TODO: if we've just added a new  link before the first one, our links will
     " be numbered in a non-increasing way; find a way to re-number all the links.
+    call s:renumber(last_id_new)
 
     let &l:fen = 1
     call winrestview(view)
 endfu
+
 " }}}1
 " Core {{{1
 fu! s:find_multi_line_links() abort "{{{2
@@ -118,6 +120,17 @@ fu! s:put_links(links, last_id_old, last_lnum) abort "{{{2
         call map(links, {i,v -> '['.(i+1 + a:last_id_old).']: '.v})
         call append(a:last_lnum ? a:last_lnum : line('$'), links)
     endif
+endfu
+fu! s:renumber(last_id_new) abort "{{{2
+    for i in range(1, last_id_new)
+        " search for [some text][some number]
+        " if the number is not `i`:
+        "
+        "    - replace it with `i`
+        "    - search for `^[this number]:` after `# Reference` and replace it with `i`
+        "
+        " Finally, sort the links in `# Reference`.
+    endfor
 endfu
 " }}}1
 " Util {{{1
