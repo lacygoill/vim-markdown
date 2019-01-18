@@ -1,3 +1,9 @@
+" Init
+
+" `:LinkInline2Ref` won't work as expected if the buffer contains more than `s:GUARD` links.
+" This guard is useful to avoid being stuck in an infinite loop.
+let s:GUARD = 100
+
 " Interface {{{1
 fu! markdown#link_inline2ref#main() abort "{{{2
     let view = winsaveview()
@@ -37,7 +43,7 @@ fu! s:find_multi_line_links() abort "{{{2
     call cursor(1,1)
     let g = 0
     let pat = '\[[^]]\{-}\n\_.\{-}\](.*)'
-    while search(pat) && g <= 100
+    while search(pat) && g <= s:GUARD
         if s:is_a_real_link()
             exe 'lvim /'.pat.'/gj %'
             call setloclist(0, [], 'a', {'title': 'some links span multiple lines; make them mono-line'})
@@ -88,7 +94,7 @@ fu! s:collect_links(last_id_new) abort "{{{2
     "
     "     [description](url)
     let pat = '\[.\{-}\]\zs(.\{-})'
-    while search(pat, 'W') && g <= 100
+    while search(pat, 'W') && g <= s:GUARD
         if !s:is_a_real_link()
             continue
         endif
