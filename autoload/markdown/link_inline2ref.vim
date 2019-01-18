@@ -128,7 +128,7 @@ fu! s:put_links(links, last_id_old, last_lnum) abort "{{{2
     endif
 endfu
 fu! s:renumber(last_id_new) abort "{{{2
-    for i in range(1, last_id_new)
+    for i in range(1, a:last_id_new)
         " search for [some text][some number]
         " if the number is not `i`:
         "
