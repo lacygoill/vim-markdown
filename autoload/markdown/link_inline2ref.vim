@@ -3,6 +3,7 @@
 " `:LinkInline2Ref` won't work as expected if the buffer contains more than `s:GUARD` links.
 " This guard is useful to avoid being stuck in an infinite loop.
 let s:GUARD = 1000
+let s:LINK_IN_REFERENCE = '^\[\d\+\]:'
 
 " Interface {{{1
 fu! markdown#link_inline2ref#main() abort "{{{2
@@ -19,9 +20,12 @@ fu! markdown#link_inline2ref#main() abort "{{{2
         return
     endif
 
+    let ref_links = s:get_ref_links()
+    call s:make_sure_reference_section_exists(ref_links)
+
     " If there're already reference links in the buffer, get the numerical id of
     " the biggest one; we need it to correctly number the new links we may find.
-    let [last_id, last_id_lnum] = s:get_last_id()
+    let [last_id, last_id_lnum] = s:get_last_id(ref_links)
     let last_id_old = last_id
 
     call cursor(1,1)
@@ -36,7 +40,6 @@ fu! markdown#link_inline2ref#main() abort "{{{2
     let &l:fen = 1
     call winrestview(view)
 endfu
-
 " }}}1
 " Core {{{1
 fu! s:find_multi_line_links() abort "{{{2
@@ -55,33 +58,34 @@ fu! s:find_multi_line_links() abort "{{{2
     return 0
 endfu
 
-fu! s:get_last_id() abort "{{{2
+fu! s:make_sure_reference_section_exists(ref_links) abort "{{{2
+    if !search('^# Reference') && !empty(a:ref_links)
+        call append('$', ['##', '# Reference', ''])
+        " Move the existing reference links  which were not in a `Reference`
+        " section, inside the latter.
+        exe 'keepj keepp g/'.s:LINK_IN_REFERENCE.'/m$'
+    endif
+endfu
+
+fu! s:get_last_id(ref_links) abort "{{{2
     if !search('^# Reference')
-        " Why don't you put the `# Reference` line now?{{{
-        "
-        " There's no guarantee that we'll find any link in the buffer.
-        "}}}
         " Why assigning `0` instead of `line('$')`?{{{
         "
-        " The last  line address may change  between now and the  moment when we
-        " need `last_id_lnum`.
+        " The last  line address may change  between now and the  moment we need
+        " `last_id_lnum`.
         "}}}
         let last_id_lnum = 0
-        let ref_links = filter(getline(1, '$'), {i,v -> v =~# '^[\d\+\]:'})
-        if !empty(ref_links)
-            let last_id = max(map(ref_links, {i,v -> matchstr(v, '^\[\zs\d\+')}))
-            call append('$', ['##', '# Reference', ''])
-            " Move the existing reference links  which were not in a `Reference`
-            " section, inside the latter.
-            keepj keepp g/^\[\d\+\]:/m$
-        else
+        if empty(a:ref_links)
             let last_id = 0
+        else
+            let last_id = max(map(copy(a:ref_links), {i,v -> matchstr(v, '^\[\zs\d\+')}))
         endif
     else
         call search('\%$')
-        call search('^\[\d\+\]:', 'bW')
+        call search(s:LINK_IN_REFERENCE, 'bW')
         let last_id_lnum = line('.')
-        let last_id = matchstr(getline('.'), '^\[\zs\d\+\ze\]:')
+        let last_id = matchstr(getline('.'), s:LINK_IN_REFERENCE)
+        let last_id = substitute(last_id, '^\[\|\]:', '', 'g')
     endif
     return [last_id, last_id_lnum]
 endfu
@@ -142,6 +146,10 @@ fu! s:renumber(last_id) abort "{{{2
 endfu
 " }}}1
 " Util {{{1
+fu! s:get_ref_links() abort "{{{2
+    return filter(getline(1, '$'), {i,v -> v =~# s:LINK_IN_REFERENCE})
+endfu
+
 fu! s:is_a_real_link() abort "{{{2
     return !empty(filter(reverse(map(synstack(line('.'), col('.')),
         \ {i,v -> synIDattr(v, 'name')})),
