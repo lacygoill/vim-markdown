@@ -14,8 +14,11 @@ fu! markdown#link_inline_to_ref#main() abort "{{{2
     endif
 
     " If there're already reference links in the buffer, get the numerical id of
-    " the biggest one.
-    " We need it to correctly number the new links we may find.
+    " the biggest one; we need it to correctly number the new links we may find.
+    "
+    " TODO:  if we  add a  new link  before  the first  one, our  links will  be
+    " numbered in a non-increasing way.
+    " Find a way to re-number all the links at the end of the function.
     let [last_id_new, last_line] = s:get_last_id()
     let last_id_old = last_id_new
 
