@@ -184,7 +184,7 @@ fu! s:renumber_links(last_id) abort "{{{2
         endif
     endfor
     " remove the temporarily added `C-a` characters
-    keepj keepp %s/^\[\zs\%x01\(\d\+\)\ze\]:/\1/e
+    keepj keepp %s/^\[\zs\%x01\ze\d\+\]://e
 
     " sort the links in `# Reference`
     let range = search('^# Reference$').','.line('$')
