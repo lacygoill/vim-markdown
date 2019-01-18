@@ -33,9 +33,9 @@ fu! markdown#link_inline2ref#main() abort "{{{2
 
     call s:put_links(links, last_id_old, last_id_lnum)
 
-    " TODO: if we've just added a new  link before the first one, our links will
-    " be numbered in a non-increasing way; find a way to re-number all the links.
-    call s:renumber(last_id)
+    " if we've  just added a new  link before the  first one, our links  will be
+    " numbered in a non-increasing way; re-number all the links
+    call s:renumber_links(last_id)
 
     let &l:fen = 1
     call winrestview(view)
@@ -59,7 +59,7 @@ fu! s:find_multi_line_links() abort "{{{2
 endfu
 
 fu! s:make_sure_reference_section_exists(ref_links) abort "{{{2
-    if !search('^# Reference') && !empty(a:ref_links)
+    if !search('^# Reference$') && !empty(a:ref_links)
         call append('$', ['##', '# Reference', ''])
         " Move the existing reference links  which were not in a `Reference`
         " section, inside the latter.
@@ -68,7 +68,7 @@ fu! s:make_sure_reference_section_exists(ref_links) abort "{{{2
 endfu
 
 fu! s:get_last_id(ref_links) abort "{{{2
-    if !search('^# Reference')
+    if !search('^# Reference$')
         " Why assigning `0` instead of `line('$')`?{{{
         "
         " The last  line address may change  between now and the  moment we need
@@ -125,7 +125,7 @@ fu! s:put_links(links, last_id_old, last_id_lnum) abort "{{{2
     let links = a:links
     " Put the links at the bottom of the buffer.
     if !empty(links)
-        if !search('^# Reference')
+        if !search('^# Reference$')
             call append('$', ['##', '# Reference', ''])
         endif
         call map(links, {i,v -> '['.(i+1 + a:last_id_old).']: '.v})
@@ -133,16 +133,61 @@ fu! s:put_links(links, last_id_old, last_id_lnum) abort "{{{2
     endif
 endfu
 
-fu! s:renumber(last_id) abort "{{{2
+fu! s:renumber_links(last_id) abort "{{{2
+    " search for [some text][some number]
+    " if the number is not `i`:
+    "
+    "    - replace it with `i`
+    "    - search for `^[this number]:` after `# Reference` and replace it with `i`
+    "
+    " Finally, sort the links in `# Reference`.
+
+    call cursor(1, 1)
+    let pat1 = '\[[^]]*\]\[\d\+\]'
     for i in range(1, a:last_id)
-        " search for [some text][some number]
-        " if the number is not `i`:
-        "
-        "    - replace it with `i`
-        "    - search for `^[this number]:` after `# Reference` and replace it with `i`
-        "
-        " Finally, sort the links in `# Reference`.
+        call search(pat1, 'W')
+        let pos = getcurpos()
+        if s:is_a_real_link()
+            let line = getline('.')
+            let pat2 = '\%'.col('.').'c\&'.'\[[^]]*\]\[\zs\d\+\ze\]'
+            let id = matchstr(line, pat2)
+            if id != i
+                " replace `id` with `i`
+                let new_line = substitute(line, pat2, i, '')
+                call setline('.', new_line)
+
+                " search for `^[id]:` after `# Reference`
+                call search('\%$')
+                call search('^\['.id.'\]:', 'bW')
+                " again replace the id with `i`
+                let line = getline('.')
+                " Why the `C-a` character?{{{
+                "
+                " Suppose our buffer  contains two links; the first  one has the
+                " id `2`, while the second one has the id `1`.
+                "
+                " During the first iteration of this loop, our function replaces
+                " the id `2` with `1` in the link, and in the reference section.
+                " But now, we have two `[1]:` inside our reference section.
+                " So, in the  next iteration, when we'll search  `^[1]:`, we may
+                " find the wrong one.
+                "
+                " We  need   a  way   to  temporarily  distinguish   between  an
+                " UNprocessed id, and a processed one.
+                " That's what `C-a` is for.
+                "}}}
+                let new_line = substitute(line, '^\[\zs\d\+\ze\]:', "\<c-a>".i, '')
+                call setline('.', new_line)
+                call setpos('.', pos)
+            endif
+        endif
     endfor
+    " remove the temporarily added `C-a` characters
+    keepj keepp %s/^\[\zs\%x01\(\d\+\)\ze\]:/\1/e
+
+    " sort the links in `# Reference`
+    let range = search('^# Reference$').','.line('$')
+    exe range.'sort n'
 endfu
 " }}}1
 " Util {{{1
