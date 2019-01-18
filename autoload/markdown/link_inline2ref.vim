@@ -2,7 +2,7 @@
 
 " `:LinkInline2Ref` won't work as expected if the buffer contains more than `s:GUARD` links.
 " This guard is useful to avoid being stuck in an infinite loop.
-let s:GUARD = 100
+let s:GUARD = 1000
 
 " Interface {{{1
 fu! markdown#link_inline2ref#main() abort "{{{2
@@ -21,17 +21,17 @@ fu! markdown#link_inline2ref#main() abort "{{{2
 
     " If there're already reference links in the buffer, get the numerical id of
     " the biggest one; we need it to correctly number the new links we may find.
-    let [last_id_new, last_lnum] = s:get_last_id()
-    let last_id_old = last_id_new
+    let [last_id, last_id_lnum] = s:get_last_id()
+    let last_id_old = last_id
 
     call cursor(1,1)
-    let [links, last_id_new] = s:collect_links(last_id_new)
+    let [links, last_id] = s:collect_links(last_id)
 
-    call s:put_links(links, last_id_old, last_lnum)
+    call s:put_links(links, last_id_old, last_id_lnum)
 
     " TODO: if we've just added a new  link before the first one, our links will
     " be numbered in a non-increasing way; find a way to re-number all the links.
-    call s:renumber(last_id_new)
+    call s:renumber(last_id)
 
     let &l:fen = 1
     call winrestview(view)
@@ -42,11 +42,12 @@ endfu
 fu! s:find_multi_line_links() abort "{{{2
     call cursor(1,1)
     let g = 0
-    let pat = '\[[^]]\{-}\n\_.\{-}\](.*)'
+    let pat = '\[[^]]*\n\_.\{-}\](.*)'
     while search(pat) && g <= s:GUARD
         if s:is_a_real_link()
             exe 'lvim /'.pat.'/gj %'
-            call setloclist(0, [], 'a', {'title': 'some links span multiple lines; make them mono-line'})
+            call setloclist(0, [], 'a',
+                \ {'title': 'some descriptions of links span multiple lines; make them mono-line'})
             return 1
         endif
         let g += 1
@@ -63,30 +64,30 @@ fu! s:get_last_id() abort "{{{2
         " Why assigning `0` instead of `line('$')`?{{{
         "
         " The last  line address may change  between now and the  moment when we
-        " need `last_lnum`.
+        " need `last_id_lnum`.
         "}}}
-        let last_lnum = 0
+        let last_id_lnum = 0
         let ref_links = filter(getline(1, '$'), {i,v -> v =~# '^[\d\+\]:'})
         if !empty(ref_links)
-            let last_id_new = max(map(ref_links, {i,v -> matchstr(v, '^\[\zs\d\+')}))
+            let last_id = max(map(ref_links, {i,v -> matchstr(v, '^\[\zs\d\+')}))
             call append('$', ['##', '# Reference', ''])
             " Move the existing reference links  which were not in a `Reference`
             " section, inside the latter.
             keepj keepp g/^\[\d\+\]:/m$
         else
-            let last_id_new = 0
+            let last_id = 0
         endif
     else
         call search('\%$')
         call search('^\[\d\+\]:', 'bW')
-        let last_lnum = line('.')
-        let last_id_new = matchstr(getline('.'), '^\[\zs\d\+\ze\]:')
+        let last_id_lnum = line('.')
+        let last_id = matchstr(getline('.'), '^\[\zs\d\+\ze\]:')
     endif
-    return [last_id_new, last_lnum]
+    return [last_id, last_id_lnum]
 endfu
 
-fu! s:collect_links(last_id_new) abort "{{{2
-    let last_id_new = a:last_id_new
+fu! s:collect_links(last_id) abort "{{{2
+    let last_id = a:last_id
 
     let g = 0
     let links = []
@@ -105,18 +106,18 @@ fu! s:collect_links(last_id_new) abort "{{{2
         let link = substitute(link, '\s', '', 'g')
 
         let links += [link]
-        let new_line = substitute(line, '('.link.')', '['.(last_id_new+1).']', '')
+        let new_line = substitute(line, '('.link.')', '['.(last_id+1).']', '')
 
         " put the new link
         call setline('.', new_line)
 
-        let last_id_new += 1
+        let last_id += 1
         let g += 1
     endwhile
-    return [links, last_id_new]
+    return [links, last_id]
 endfu
 
-fu! s:put_links(links, last_id_old, last_lnum) abort "{{{2
+fu! s:put_links(links, last_id_old, last_id_lnum) abort "{{{2
     let links = a:links
     " Put the links at the bottom of the buffer.
     if !empty(links)
@@ -124,11 +125,12 @@ fu! s:put_links(links, last_id_old, last_lnum) abort "{{{2
             call append('$', ['##', '# Reference', ''])
         endif
         call map(links, {i,v -> '['.(i+1 + a:last_id_old).']: '.v})
-        call append(a:last_lnum ? a:last_lnum : line('$'), links)
+        call append(a:last_id_lnum ? a:last_id_lnum : line('$'), links)
     endif
 endfu
-fu! s:renumber(last_id_new) abort "{{{2
-    for i in range(1, a:last_id_new)
+
+fu! s:renumber(last_id) abort "{{{2
+    for i in range(1, a:last_id)
         " search for [some text][some number]
         " if the number is not `i`:
         "
