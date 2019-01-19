@@ -539,6 +539,7 @@ exe 'syn region markdownHideAnswer'
     \ . ' end=/^↢.*/'
     \ . ' conceal'
     \ . ' cchar=?'
+    \ . ' contains=markdownOutput'
     \ . ' containedin=markdownCodeBlock'
     \ . ' keepend'
 
