@@ -679,11 +679,7 @@ exe 'syn match markdownTodo  /\CTO'.'DO\|FIX'.'ME/ contained'
 "}}}
 syn match markdownTable /^    [│─┌└├].*/
 
-syn match markdownOption /`\@1<='.\{-}'`\@=/ containedin=markdownCodeSpan
-exe 'syn match markdownOption'
-    \ . ' /`\@1<=''.\{-}''`\@=/'
-    \ . ' contained'
-    \ . ' containedin=markdownListItemCodeSpan'
+syn match markdownOption /`\@1<='.\{-}'`\@=/ contained containedin=markdownCodeSpan,markdownListItemCodeSpan
 
 call markdown#highlight_embedded_languages()
 
