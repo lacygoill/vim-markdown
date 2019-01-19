@@ -1,0 +1,79 @@
+PUNCTUATION                                               *markdown-punctuation*
+==============================================================================
+
+“fanboys” is a mnemonic tool to remember the list of coordinating conjunction:
+
+ - for
+ - and
+ - nor
+ - but
+ - or
+ - yet
+ - so
+
+When two independent clauses, in a  compound sentence, are joined with a fanboy,
+the latter should be preceded by a comma:
+>
+    She wanted to study, but she was so tired.
+                       ^
+
+If the subject is not at the  beginning of the sentence, a comma should separate
+the introductory  words (which  could be a  clause, a phrase,  or just  a single
+word) from the subject:
+>
+    Before returning to work, I made sure to check my email.
+                            ^
+
+If you list more than 3 words or phrases  in a row, and the last two of them are
+separated by “and”, put a comma even before “and”:
+>
+    My favorite foods are cookies, potatoes, and bread.
+                                       ^
+
+Coordinate adjectives are  two or more adjectives  coming in a row,  in front of
+the same noun, all modifying the latter; they should be separated by commas:
+>
+    Wanda is a kind, beautiful woman.
+                   ^
+
+
+Don't put a  comma between two consecutive adjectives, if  the first one doesn't
+modify the noun, but the second adjective: >
+
+    I built a red brick wall.
+                 ^
+Here, you shouldn't put a comma  between the adjectives, because “red” qualifies
+“brick”, not “wall”; “red” specifies the kind  of brick, and “brick” the kind of
+wall.
+In case of a doubt, try to add “and” between the two adjectives; if the sentence
+doesn't make sense, don't add a comma.
+
+
+If a sentence contains extra information, which is not necessary for the sentence
+to maintain its meaning, this extra information should be surrounded by commas:
+>
+    Maria, who studied hard, will pass.
+         ^                 ^
+    Shelley, my neighbor, is nice.
+           ^            ^
+    All students who study hard will pass.
+                ^              ^
+
+In the last example, you can't surround the clause “who study hard” with commas,
+because without it, the meaning of the sentence changes.
+
+
+An interruptor is a word which interrupts the flow in a sentence.
+An interruptor should be surrounded by commas:
+>
+    It is necessary, however, to study.
+                   ^        ^
+
+
+If you're speaking  to a person directly,  using their name, the  latter must be
+separated from the rest of the sentence by a comma:
+>
+    Please pass me that book, Sam.
+
+
+Watch this: https://www.youtube.com/watch?v=yL3Ubl7f-X0

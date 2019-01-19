@@ -119,6 +119,12 @@ endif
 
 " Commands {{{1
 
+com! -bar -complete=custom,markdown#check#punctuation_complete -nargs=1 -range=%
+    \ CheckPunctuation  echo markdown#check#punctuation(<q-args>, <line1>, <line2>)
+    "                   │{{{
+    "                   └ useful to erase the command from the command-line after its execution
+    "}}}
+
 com! -bar -buffer -range=%  FoldSortBySize  exe fold#md#sort#by_size(<line1>,<line2>)
 
 cnorea  <buffer><expr>  foldsortbysize  getcmdtype() is# ':' && getcmdpos() ==# 15
