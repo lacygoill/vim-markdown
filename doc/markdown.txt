@@ -1,6 +1,10 @@
 PUNCTUATION                                               *markdown-punctuation*
 ==============================================================================
 
+
+< comma >_____________________________________________________________________~
+                                                                *markdown-comma*
+
 “fanboys” is a mnemonic tool to remember the list of coordinating conjunction:
 
  - for
@@ -28,7 +32,7 @@ If you list more than 3 words or phrases  in a row, and the last two of them are
 separated by “and”, put a comma even before “and”:
 >
     My favorite foods are cookies, potatoes, and bread.
-                                       ^
+                                           ^
 
 Coordinate adjectives are  two or more adjectives  coming in a row,  in front of
 the same noun, all modifying the latter; they should be separated by commas:
@@ -54,8 +58,10 @@ to maintain its meaning, this extra information should be surrounded by commas:
 >
     Maria, who studied hard, will pass.
          ^                 ^
+
     Shelley, my neighbor, is nice.
            ^            ^
+
     All students who study hard will pass.
                 ^              ^
 
@@ -74,6 +80,66 @@ If you're speaking  to a person directly,  using their name, the  latter must be
 separated from the rest of the sentence by a comma:
 >
     Please pass me that book, Sam.
+                            ^
+
+In a date, the day of the week and the day of the month must be followed by a comma:
+>
+    My birthday is on Tuesday, June 22, 1980
+                             ^        ^
+
+In an address, the address must be  separated from the rest of the sentence, and
+the city from the state:
+>
+    She lives at 123 HappyLane, in Houston, Texas.
+                              ^           ^
 
 
-Watch this: https://www.youtube.com/watch?v=yL3Ubl7f-X0
+< semicolon >_________________________________________________________________~
+                                                            *markdown-semicolon*
+
+A clause is a complete sentence, with a subject and a word.
+Two  independent clauses  can be  joined together  with a  semicolon, to  form a
+compound sentence:
+>
+    He is very friendly; he always says "hello".
+                       ^
+
+    Some people write with a word processor; others write with a pen or pencil.
+                                           ^
+
+Use  a  semicolon  between  two   independent  clauses  that  are  connected  by
+conjunctive adverbs or transitional phrases:
+>
+    However  they  choose  to  write,  people are  allowed  to  make  their  own
+    decisions; as a result, many people swear by their writing methods.
+             ^
+
+Use a semicolon (as a “super-comma”) between items in a list or series if any of
+the items contain commas:
+>
+    She has lived in Walnut, California; Spokane, Washington; and Portland, Oregon.
+                                       ^                    ^
+
+    There  are basically  two ways  to write:  with a  pen or  pencil, which  is
+    inexpensive and easily accessible; or by computer and printer, which is more
+    expensive but quick and neat.    ^
+
+                                                      v
+    I like cows: they give us milk,  which tastes good; they give us beef, which
+    also tastes  good; and  they give us  leather, which is  used for  shoes and
+    coats.           ^
+
+
+Use a semicolon between independent clauses joined by a coordinating conjunction
+if the clauses are already punctuated with commas or if the clauses are lengthy:
+>
+                                                                           v
+    Some people  write with  a word processor,  tablet, or a  even a  phone; but
+    others, for different reasons, choose to write with a pen or pencil.
+
+
+For more information, see:
+
+https://www.youtube.com/watch?v=yL3Ubl7f-X0
+https://theoatmeal.com/comics/semicolon
+https://web.archive.org/web/20190114150440/https://writing.wisc.edu/Handbook/Semicolons.html
