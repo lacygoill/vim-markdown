@@ -495,6 +495,7 @@ let b:undo_ftplugin = get(b:, 'undo_ftplugin', '')
     \ | exe 'nunmap <buffer> gl'
     \
     \ | exe 'cuna <buffer> foldsortbysize'
+    \ | delc CheckPunctuation
     \ | delc FoldSortBySize
     \ | delc LinkInline2Ref
     \ | delc Preview
