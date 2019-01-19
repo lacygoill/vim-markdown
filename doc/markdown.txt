@@ -92,7 +92,7 @@ the city from the state:
 >
     She lives at 123 HappyLane, in Houston, Texas.
                               ^           ^
-
+<
 
 < semicolon >_________________________________________________________________~
                                                             *markdown-semicolon*
@@ -101,6 +101,9 @@ A clause is a complete sentence, with a subject and a word.
 Two  independent clauses  can be  joined together  with a  semicolon, to  form a
 compound sentence:
 >
+    The cow is brown; it is also old.
+                    ^
+
     He is very friendly; he always says "hello".
                        ^
 
@@ -110,6 +113,9 @@ compound sentence:
 Use  a  semicolon  between  two   independent  clauses  that  are  connected  by
 conjunctive adverbs or transitional phrases:
 >
+    I like cows; however, I hate the way they smell. 
+               ^
+
     However  they  choose  to  write,  people are  allowed  to  make  their  own
     decisions; as a result, many people swear by their writing methods.
              ^
