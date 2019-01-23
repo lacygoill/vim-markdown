@@ -622,24 +622,30 @@ syn match markdownCommentTitle /^ \{,2}\u\w*\(\s\+\u\w*\)*:/ contains=markdownTo
 
 exe 'syn match markdownTodo  /\CTO'.'DO\|FIX'.'ME/ contained'
 
-" FIXME: This diagram, written in a code block, is highlighted as a table:{{{
+" If you change this regex, test the new syntax highlighting against this text:{{{
 "
+"     ┌ foo
+"     ├────┐
 "     rbbb rrr bbbr
 "     │  │
 "     │  └ blue
 "     └ red
 "
-" Maybe it's an argument in favor of using 8 spaces to indent code blocks.
-" This would leave us indentations of 3 spaces up to 7 spaces for other usage...
+"     ┌─────┬─────┬─────┐
+"     │ foo │ bar │ baz │
+"     ├─────┼─────┼─────┤
+"     │ foo │ bar │ baz │
+"     ├─────┼─────┼─────┤
+"     │ foo │ bar │ baz │
+"     └─────┴─────┴─────┘
 "
-" Alternative:
-" Use a literal tab character to indent a table.
-" We  could distinguish  code from  a  table by  looking  at whether  a line  is
-" indented with spaces or tabs.
-" We would need to tweak `:RemoveTabs` so that it doesn't remove a tab character
-" at the beginning of a line when it's followed by a table.
+"     A + B + C
+"     │   │   │
+"     │   │   └ end
+"     │   └ middle
+"     └ beginning
 "}}}
-syn match markdownTable /^    [│─┌└├].*/
+syn match markdownTable /^    \%([┌└]─\|│.*[^ \t│].*│\|├─.*┤\).*/
 
 syn match markdownOption /`\@1<='[a-z]\{2,}'`\@=/ contained containedin=markdownCodeSpan,markdownListItemCodeSpan
 
