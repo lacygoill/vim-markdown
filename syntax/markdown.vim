@@ -54,11 +54,11 @@ endif
 "
 " And it uses some of the html HGs and syntax groups:
 "
-"    • syntax group: htmlSpecialChar
-"    • syntax cluster: @htmlTop
-"    • HG: htmlItalic
-"    • HG: htmlBold
-"    • HG: htmlBoldItalic
+"    - syntax group: htmlSpecialChar
+"    - syntax cluster: @htmlTop
+"    - HG: htmlItalic
+"    - HG: htmlBold
+"    - HG: htmlBoldItalic
 "
 " But I don't source it, because it  adds a lot of syntax groups, which probably
 " has an impact on performance.
@@ -147,9 +147,9 @@ exe 'syn match markdownHeader'
 "
 " Do the same for:
 "
-"    • `markdownListItemItalic`
-"    • `markdownListItemBold`
-"    • `markdownListItemBoldItalic`
+"    - `markdownListItemItalic`
+"    - `markdownListItemBold`
+"    - `markdownListItemBoldItalic`
 "}}}
 exe 'syn region markdownItalic'
     \ . ' matchgroup=markdownItalicDelimiter'
@@ -393,45 +393,6 @@ exe 'syn cluster markdownListItemElements contains='
     \ . 'markdownListItemBlockquote,'
     \ . 'markdownListItemOutput'
 
-" Why did you add `•` in the collection `[-*+•]`?{{{
-"
-" It makes the bullets prettier, because they're highlighted.
-" When we indent  a list with 4 spaces or  more, it prevents `markdownCodeBlock`
-" to match, which in turn allows `markdownCodeSpan` to match.
-"}}}
-" TODO: We should remove `•`, and instead use `-` to format our lists.{{{
-"
-" `•` is not recognized as the beginning of a list item by the markdown spec.
-"
-" Also, this would give us the benefit of having our bulleted list recognized by
-" a markdown viewer/parser.
-"
-"     syn match markdownListItemMarkerPretty "\%(\t\| \{,4\}\)\@4<=[-*+]\%(\s\+\S\)\@=" contained containedin=markdownListItem conceal cchar=•
-"
-" Also, when  we would read  a markdown file written  by someone else,  we would
-" automatically see `•` instead of `-`.
-" No need of reformatting.
-"
-" If we do this, we would need to conceal `-`, and replace it with `•`.
-" And we would need to make `hl-Conceal` less visible:
-"
-"     hi! link Conceal Repeat
-"                      │
-"                      └ HG used by markdownListItem
-"
-" And  we  would  need  to  refactor   `coc`  so  that  it  temporarily  resets
-" `hl-Conceal` with its old attributes (more visible):
-"
-"     Conceal        xxx ctermfg=237 ctermbg=254 guifg=#4B4B4B guibg=#E9E9E9
-"
-" And we would need to refactor `vim-bullet-list`.
-" And we would need to replace `•` with `-` everywhere:
-"
-"     noa vim /•/gj ~/.vim/**/*.{vim,md} ~/.vim/**/*.snippets ~/.vim/template/** ~/.vim/vimrc ~/wiki/**/*.md ~/.zsh/** ~/.config/** ~/.zshrc ~/.zshenv ~/.Xresources ~/.tmux.conf ... | cw
-"
-" Also,  should we  add the  same  kind of  conceal  in all  filetypes, but  for
-" comments only?
-"}}}
 " Don't remove `keepend`!{{{
 "
 " Without, if  you forget to  write the closing backtick  of an italic  word, it
@@ -465,7 +426,7 @@ exe 'syn cluster markdownListItemElements contains='
 " So, we need 3 spaces or less to end the latter.
 "}}}
 exe 'syn region markdownListItem'
-    \ . ' start=/^ \{,3\}\%([-*+•]\|\d\+\.\)\s\+\S/'
+    \ . ' start=/^ \{,3\}\%([-*+]\|\d\+\.\)\s\+\S/'
     \ . ' end=/^\s*\n\%( \{,3}\S\)\@=/'
     \ . ' keepend'
     \ . ' contains=@markdownListItemElements'

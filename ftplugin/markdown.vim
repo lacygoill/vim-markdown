@@ -192,33 +192,33 @@ setl cms=>\ %s
 "        │ useful for bullet-list.
 "        │
 "        │┌ Blank (Space, Tab or EOL) required after the comment leader.
-"        ││ So here, '• hello' would be recognized as a comment, but not '•hello'.
+"        ││ So here, '- hello' would be recognized as a comment, but not '-hello'.
 "        ││
 "        ││┌ Nested comment.
 "        │││ Nesting with mixed parts is allowed.
-"        │││ Ex: if 'comments' is "n:•,n:-", a line starting with "• -" is a comment.
+"        │││ Ex: if 'comments' is "n:*,n:-", a line starting with "* -" is a comment.
 "        │││                                                       └─┤
 "        │││                                                         └ mixed
 "        │││}}}
-setl com=fbn:•,fbn:-,fb:*,fb:+
+setl com=fbn:-,fb:*,fb:+
 
 " What's the purpose of 'com'? {{{
 "
 " 'comments' contains a list of strings which can start a commented line.
 " Vim needs to know what the comment leader is in various occasions:
 "
-"         • if 'fo' contains the flag `r`, and we open a new line, hitting CR
+"         - if 'fo' contains the flag `r`, and we open a new line, hitting CR
 "           from insert mode, Vim needs to know what to prepend at the
 "           beginning
 "
 "           same thing if 'fo' contains the flag `o`, and we open a new line,
 "           hitting o O from normal mode
 "
-"         • if 'fo' contains the flag `c`, Vim automatically wraps a long
+"         - if 'fo' contains the flag `c`, Vim automatically wraps a long
 "           commented line; when it breaks the current line, and open a new
 "           one, it must know what to prepend at the beginning
 "
-"         • when we format a comment with the `gw` operator, Vim needs to know
+"         - when we format a comment with the `gw` operator, Vim needs to know
 "           what the comment leader is, to be able to remove / add it when it
 "           joins / splits lines
 
@@ -245,27 +245,27 @@ setl com=fbn:•,fbn:-,fb:*,fb:+
 
 " Here's a long line:
 "
-"         • some very long comment some very long comment some very long comment some very long comment
+"         - some very long comment some very long comment some very long comment some very long comment
 
 " If we type this line in a markdown buffer, or if it has already been typed and
 " we press `gwip`:
 "
 " Without the `f` flag and with `&l:tw = 80`, we get:
 "
-"         • some very long comment some very long comment some very long comment some
-"         • very long comment
+"         - some very long comment some very long comment some very long comment some
+"         - very long comment
 "
 " With the `f` flag and `&l:tw = 80`, we get:
 "
-"         • some very long comment some very long comment some very long comment some
+"         - some very long comment some very long comment some very long comment some
 "           very long comment
 "
 " This shows  why `f` is important  for a comment  leader used as a  bullet list
 " marker. The meaning  of a  comment leader  depends on  the context  where it's
 " used. It means that all the text between it and the next comment leader:
 "
-"       • is commented in a regular paragraph
-"       • belongs to a same item in a bullet list
+"       - is commented in a regular paragraph
+"       - belongs to a same item in a bullet list
 "
 " So, you can break/join the lines of a regular paragraph, however you like,
 " without changing its meaning. But you can't do the same for a bullet list.
@@ -278,19 +278,19 @@ setl com=fbn:•,fbn:-,fb:*,fb:+
 " It's useful  to let Vim know  that 2 comment leaders  can be nested. Otherwise
 " `gw` won't set the proper indentation level for all the lines.
 " MWE:
-"     • - some very long comment some very long comment some very long comment some very long comment
+"     * - some very long comment some very long comment some very long comment some very long comment
 "
 " Without `n`:
 "
 "       ┌─ interpreted as a part of the comment
 "       │
-"     • - some very long comment some very long comment some very long comment some
+"     * - some very long comment some very long comment some very long comment some
 "       very long comment
 "
 " With `n`:
 "       ┌─ recognized as a (nested) comment leader
 "       │
-"     • - some very long comment some very long comment some very long comment
+"     * - some very long comment some very long comment some very long comment
 "         some very long comment
 "
 " }}}
@@ -304,19 +304,19 @@ compiler pandoc
 "
 " When we load a markdown buffer, the window-local options:
 "
-"       • foldmethod
-"       • foldexpr
-"       • foldtext
+"       - foldmethod
+"       - foldexpr
+"       - foldtext
 "
 " … are set properly.
 "
 " But after that, if we display it again in another window, using any motion
 " which doesn't read a buffer:
 "
-"       • 'A
-"       • :b42
-"       • gf
-"       • C-o
+"       - 'A
+"       - :b42
+"       - gf
+"       - C-o
 "       …
 "
 " … they aren't set anymore.
@@ -338,24 +338,24 @@ compiler pandoc
 " Once a buffer is loaded in a window, we have no guarantee that its window-local
 " options will be applied:
 "
-"        • in other windows
-"        • in its initial window, if in the meantime we loaded another buffer
+"        - in other windows
+"        - in its initial window, if in the meantime we loaded another buffer
 "          whose window-local options were in conflict
 "}}}
 " Are there other solutions?{{{
 "
 " Yes:
 "
-"    • :e                     re-fire `FileType`
-"    • :let &ft=&ft           "
-"    • :doautocmd FileType    "
+"    - :e                     re-fire `FileType`
+"    - :let &ft=&ft           "
+"    - :doautocmd FileType    "
 "}}}
 " Why `BufWinEnter` instead of `WinEnter`?{{{
 "
 " We can't use `WinEnter` for 2 reasons:
 "
-"     • too frequent
-"     • not fired when we load a buffer (:e /path/to/file)
+"     - too frequent
+"     - not fired when we load a buffer (:e /path/to/file)
 "}}}
 augroup my_markdown
     " Why `au! * <buffer>` instead of simply `au!`?{{{
