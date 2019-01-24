@@ -4,10 +4,6 @@ endif
 
 " TODO: integrate most of the comments from this file in our notes
 
-" TODO: support a url inside a quote (do the same for comments in other filetypes)
-" Also, should we change the color of a codespan, and use sth less visible?
-" Maybe `Constant`.
-
 " TODO: look for this pattern:
 "
 "     \%( \\{\| \*\)
@@ -624,26 +620,26 @@ exe 'syn match markdownTodo  /\CTO'.'DO\|FIX'.'ME/ contained'
 
 " If you change this regex, test the new syntax highlighting against this text:{{{
 "
-"     ┌ foo
-"     ├────┐
-"     rbbb rrr bbbr
-"     │  │
-"     │  └ blue
-"     └ red
+"    ┌ foo
+"    ├────┐
+"    rbbb rrr bbbr
+"    │  │
+"    │  └ blue
+"    └ red
 "
-"     ┌─────┬─────┬─────┐
-"     │ foo │ bar │ baz │
-"     ├─────┼─────┼─────┤
-"     │ foo │ bar │ baz │
-"     ├─────┼─────┼─────┤
-"     │ foo │ bar │ baz │
-"     └─────┴─────┴─────┘
+"    ┌─────┬─────┬─────┐
+"    │ foo │ bar │ baz │
+"    ├─────┼─────┼─────┤
+"    │ foo │ bar │ baz │
+"    ├─────┼─────┼─────┤
+"    │ foo │ bar │ baz │
+"    └─────┴─────┴─────┘
 "
-"     A + B + C
-"     │   │   │
-"     │   │   └ end
-"     │   └ middle
-"     └ beginning
+"    A + B + C
+"    │   │   │
+"    │   │   └ end
+"    │   └ middle
+"    └ beginning
 "}}}
 syn match markdownTable /^    \%([┌└]─\|│.*[^ \t│].*│\|├─.*┤\).*/
 
