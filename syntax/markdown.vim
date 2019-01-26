@@ -320,6 +320,13 @@ exe 'syn region markdownListItemCodeBlock'
     \ . ' contained'
     \ . ' contains=@Spell'
     \ . ' keepend'
+
+exe 'syn region markdownCodeBlock'
+    \ . ' matchgroup=markdownCodeDelimiter'
+    \ . ' start=/^\s*```.*$/'
+    \ . ' end=/^\s*```\ze\s*$/'
+    \ . ' keepend'
+    \ . ' concealends'
 " }}}1
 
 " Blockquote {{{1
