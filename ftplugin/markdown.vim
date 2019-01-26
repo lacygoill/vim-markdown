@@ -125,6 +125,12 @@ com! -bar -complete=custom,markdown#check#punctuation_complete -nargs=1 -range=%
     "                   └ useful to erase the command from the command-line after its execution
     "}}}
 
+com! -buffer -bar FixWrongHeaders call markdown#fix_wrong_headers()
+
+cnorea  <buffer><expr>  FixWrongHeaders  getcmdtype() is# ':' && getcmdpos() ==# 16
+\                                        ?    'FixWrongHeaders'
+\                                        :    'FixWrongHeaders'
+
 com! -bar -buffer -range=%  FoldSortBySize  exe fold#md#sort#by_size(<line1>,<line2>)
 
 cnorea  <buffer><expr>  foldsortbysize  getcmdtype() is# ':' && getcmdpos() ==# 15
@@ -496,6 +502,7 @@ let b:undo_ftplugin = get(b:, 'undo_ftplugin', '')
     \
     \ | exe 'cuna <buffer> foldsortbysize'
     \ | delc CheckPunctuation
+    \ | delc FixWrongHeaders
     \ | delc FoldSortBySize
     \ | delc LinkInline2Ref
     \ | delc Preview

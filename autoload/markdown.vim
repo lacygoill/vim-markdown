@@ -70,6 +70,36 @@ fu! markdown#highlight_embedded_languages() abort "{{{2
         let done_include[delim] = 1
     endfor
 endfu
+
+fu! markdown#fix_wrong_headers() abort "{{{2
+    " Make sure syntax highlighting is enabled.{{{
+    "
+    " This function is called by `:FixWrongHeaders`.
+    " If we invoke the latter via `:argdo`:
+    "
+    "     argdo FixWrongHeaders
+    "
+    " The syntax highlighting will be disabled.
+    " See `:h :bufdo`.
+    "}}}
+    let &ei = ''
+    do Syntax
+
+    let view = winsaveview()
+    call cursor(1, 1)
+    let g = 0
+    while search('^#', 'W') && g < 1000
+        let item = get(map(synstack(line('.'), col('.')), {i,v -> synIDattr(v, 'name')}), -1, '')
+        if item isnot# 'Delimiter'
+            let line = getline('.')
+            let new_line = ' ' . line
+            call setline('.', new_line)
+        endif
+        let g += 1
+    endwhile
+    call winrestview(view)
+endfu
+
 " }}}1
 " Utilities {{{1
 fu! s:get_filetype(ft) abort "{{{2

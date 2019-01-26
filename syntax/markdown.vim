@@ -4,40 +4,6 @@ endif
 
 " TODO: integrate most of the comments from this file in our notes
 
-" TODO: create a custom command which “fixes” the formatting of foreign markdown pages.{{{
-"
-" Some wiki pages on github use triple backticks to mark a codeblock.
-"
-" Example:
-"
-"     https://github.com/junegunn/fzf/wiki/Examples-(completion)
-"
-" It's not visible  on github; you have to  clone the wiki and read  the page in
-" Vim to see the triple backticks at the bottom of the page:
-"
-"     $ git clone https://github.com/junegunn/fzf.wiki.git
-"
-" You could add this rule, to properly highlight such a codeblock:
-"
-"     exe 'syn region markdownCodeBlock'
-"         \ . ' matchgroup=markdownCodeDelimiter'
-"         \ . ' start=/^\s*```.*$/'
-"         \ . ' end=/^\s*```\ze\s*$/'
-"         \ . ' keepend'
-"         \ . ' concealends'
-"
-" But I  think it would be  best to install  a custom command which  removes the
-" triple backticks and indent the code.
-" Besides, the command should look for `/^#`, and whenever it finds a match,
-" it should look at the stack of syntax items in that position; it should be:
-"
-"     Delimiter markdownHeader
-"
-" If it's not, we're probably on a comment inside a fenced codeblock.
-" Our folding expression is fooled by such a comment, and thinks it's a header.
-" Our command should fix this by adding a space in front of the comment leader (#).
-"}}}
-
 " TODO: look for this pattern:
 "
 "     \%( \\{\| \*\)
@@ -355,6 +321,37 @@ exe 'syn region markdownListItemCodeBlock'
     \ . ' contains=@Spell'
     \ . ' keepend'
 
+" Some wiki pages on github use triple backticks to mark a codeblock.{{{
+"
+" Example:
+"
+"     https://github.com/junegunn/fzf/wiki/Examples-(completion)
+"
+" It's not visible  on github; you have to  clone the wiki and read  the page in
+" Vim to see the triple backticks at the bottom of the page:
+"
+"     $ git clone https://github.com/junegunn/fzf.wiki.git
+"}}}
+" Can't I just use a custom command which would convert a triple-backtick codeblock with an indented one?{{{
+"
+" Yes, but suppose the codeblock contains some shell code with a comment.
+" Your folding expression will  be fooled by its comment leader,  if it's at the
+" beginning of the line; it will think that it's the start of a header.
+"
+" By  highlighting the  codeblock  properly,  we can  make  our fold  expression
+" inspect the syntax item wherever a `#` is found at the beginning of a line.
+" Or,  we  can install  a  custom  command which  looks  for  `^#`, and  if  the
+" highlighting is not  `markdownHeader`, adds an extra space in  front of `#` to
+" fix the folding.
+"
+" Besides, this rule is cheap; it takes a very short time to be processed.
+"}}}
+exe 'syn region markdownCodeBlock'
+    \ . ' matchgroup=markdownCodeDelimiter'
+    \ . ' start=/^\s*```.*$/'
+    \ . ' end=/^\s*```\ze\s*$/'
+    \ . ' keepend'
+    \ . ' concealends'
 " }}}1
 
 " Blockquote {{{1
