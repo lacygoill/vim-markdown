@@ -435,6 +435,10 @@ endif
 " spl "{{{2
 
 setl spl=en
+
+" wrap "{{{2
+
+setl wrap
 " }}}1
 " Variables {{{1
 " cr_command {{{2
@@ -488,7 +492,7 @@ let b:did_ftplugin = 1
 let b:undo_ftplugin = get(b:, 'undo_ftplugin', '')
     \ . (empty(get(b:, 'undo_ftplugin', '')) ? '' : '|')
     \ . "
-    \   setl ai< cms< cocu< cole< com< fde< fdm< fdt< flp< fml< spl< tw<
+    \   setl ai< cms< cocu< cole< com< fde< fdm< fdt< flp< fml< spl< tw< wrap<
     \ | set efm< fp< kp< mp<
     \ | unlet! b:cr_command b:exchange_indent b:sandwich_recipes b:markdown_embed
     \ | exe 'au! my_markdown * <buffer>'
