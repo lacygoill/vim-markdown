@@ -4,6 +4,40 @@ endif
 
 " TODO: integrate most of the comments from this file in our notes
 
+" TODO: create a custom command which “fixes” the formatting of foreign markdown pages.{{{
+"
+" Some wiki pages on github use triple backticks to mark a codeblock.
+"
+" Example:
+"
+"     https://github.com/junegunn/fzf/wiki/Examples-(completion)
+"
+" It's not visible  on github; you have to  clone the wiki and read  the page in
+" Vim to see the triple backticks at the bottom of the page:
+"
+"     $ git clone https://github.com/junegunn/fzf.wiki.git
+"
+" You could add this rule, to properly highlight such a codeblock:
+"
+"     exe 'syn region markdownCodeBlock'
+"         \ . ' matchgroup=markdownCodeDelimiter'
+"         \ . ' start=/^\s*```.*$/'
+"         \ . ' end=/^\s*```\ze\s*$/'
+"         \ . ' keepend'
+"         \ . ' concealends'
+"
+" But I  think it would be  best to install  a custom command which  removes the
+" triple backticks and indent the code.
+" Besides, the command should look for `/^#`, and whenever it finds a match,
+" it should look at the stack of syntax items in that position; it should be:
+"
+"     Delimiter markdownHeader
+"
+" If it's not, we're probably on a comment inside a fenced codeblock.
+" Our folding expression is fooled by such a comment, and thinks it's a header.
+" Our command should fix this by adding a space in front of the comment leader (#).
+"}}}
+
 " TODO: look for this pattern:
 "
 "     \%( \\{\| \*\)
@@ -321,12 +355,6 @@ exe 'syn region markdownListItemCodeBlock'
     \ . ' contains=@Spell'
     \ . ' keepend'
 
-exe 'syn region markdownCodeBlock'
-    \ . ' matchgroup=markdownCodeDelimiter'
-    \ . ' start=/^\s*```.*$/'
-    \ . ' end=/^\s*```\ze\s*$/'
-    \ . ' keepend'
-    \ . ' concealends'
 " }}}1
 
 " Blockquote {{{1
