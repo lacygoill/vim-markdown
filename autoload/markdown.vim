@@ -89,7 +89,11 @@ fu! markdown#fix_wrong_headers() abort "{{{2
     let g = 0
     while search('^#', 'W') && g < 1000
         let item = get(map(synstack(line('.'), col('.')), {i,v -> synIDattr(v, 'name')}), -1, '')
-        if item isnot# 'Delimiter'
+        " Why `''` in addition to `Delimiter`?{{{
+        "
+        " Just in case there's still no syntax highlighting.
+        "}}}
+        if index(['', 'Delimiter'], item) == -1
             let line = getline('.')
             let new_line = ' ' . line
             call setline('.', new_line)
