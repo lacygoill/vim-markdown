@@ -438,6 +438,7 @@ setl spl=en
 
 " wrap "{{{2
 
+" It's nice to have when we're reading the wiki of a github project.
 setl wrap
 " }}}1
 " Variables {{{1
