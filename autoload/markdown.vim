@@ -82,8 +82,7 @@ fu! markdown#fix_wrong_headers() abort "{{{2
     " The syntax highlighting will be disabled.
     " See `:h :bufdo`.
     "}}}
-    let &ei = ''
-    do Syntax
+    let &ei = '' | do Syntax
 
     let view = winsaveview()
     call cursor(1, 1)

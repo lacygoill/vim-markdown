@@ -9,6 +9,11 @@ let s:LINK_IN_REFERENCE = '^\[\d\+\]:'
 fu! markdown#link_inline2ref#main() abort "{{{2
     let view = winsaveview()
     let &l:fen = 0
+
+    " Make sure syntax highlighting is enabled.
+    " `:argdo`, `:bufdo`, ... could disable it.
+    let &ei = '' | do Syntax
+
     " We're going to inspect the syntax highlighting under the cursor.
     " Sometimes, it's wrong.
     " We must be sure it's correct.
