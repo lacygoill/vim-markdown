@@ -132,8 +132,11 @@ fu! s:put_links(links, last_id_old, last_id_lnum) abort "{{{2
     if !empty(links)
         if !search('^# Reference$')
             call append('$', ['', '##', '# Reference', ''])
-            "                 ├┘
-            "                 └ necessary if the last line of the buffer is a list item
+            "                 ├┘{{{
+            "                 └ necessary if the last line of the buffer is a list item;
+            "                   otherwise the reference section would be wrongly highlighted
+            "                   as a list
+            "}}}
         endif
         call map(links, {i,v -> '['.(i+1 + a:last_id_old).']: '.v})
         call append(a:last_id_lnum ? a:last_id_lnum : line('$'), links)
