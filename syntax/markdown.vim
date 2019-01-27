@@ -261,33 +261,17 @@ exe 'syn region markdownBlockquoteBoldItalic'
 " `./autoload/markdown.vim`
 exe 'syn region markdownCodeSpan'
     \ . ' matchgroup=markdownCodeDelimiter'
-    \ . ' start=/`/'
-    \ . ' end=/`/'
+    \ . ' start=/\z(`\+\)/'
+    \ . ' end=/\z1/'
     \ . ' keepend'
     \ . ' containedin=markdownBold'
     \ . ' concealends'
-    \ . ' oneline'
-
-exe 'syn region markdownCodeSpan'
-    \ . ' matchgroup=markdownCodeDelimiter'
-    \ . ' start=/`` \=/'
-    \ . ' end=/ \=``/'
-    \ . ' keepend'
-    \ . ' containedin=markdownBold'
-    \ . ' concealends'
-    \ . ' oneline'
-
-exe 'syn region markdownCodeSpan'
-    \ . ' matchgroup=markdownCodeDelimiter'
-    \ . ' start=/^\s*````*.*$/'
-    \ . ' end=/^\s*````*\ze\s*$/'
-    \ . ' keepend'
     \ . ' oneline'
 
 exe 'syn region markdownBlockquoteCodeSpan'
     \ . ' matchgroup=markdownCodeDelimiter'
-    \ . ' start=/`/'
-    \ . ' end=/`/'
+    \ . ' start=/\z(`\+\)/'
+    \ . ' end=/\z1/'
     \ . ' keepend'
     \ . ' contained'
     \ . ' concealends'
@@ -322,7 +306,7 @@ exe 'syn region markdownListItemCodeBlock'
     \ . ' contains=@Spell'
     \ . ' keepend'
 
-" Some wiki pages on github use triple backticks to mark a codeblock.{{{
+" Some wiki pages on github use fenced codeblocks.{{{
 "
 " Example:
 "
@@ -333,7 +317,7 @@ exe 'syn region markdownListItemCodeBlock'
 "
 "     $ git clone https://github.com/junegunn/fzf.wiki.git
 "}}}
-" Can't I just use a custom command which would convert a triple-backtick codeblock with an indented one?{{{
+" Can't I just use a custom command which would convert a fenced codeblock with an indented one?{{{
 "
 " Yes, but suppose the codeblock contains some shell code with a comment.
 " Your folding expression will  be fooled by its comment leader,  if it's at the
@@ -347,9 +331,9 @@ exe 'syn region markdownListItemCodeBlock'
 "
 " Besides, this rule is cheap; it takes a very short time to be processed.
 "}}}
-exe 'syn region markdownCodeBlock'
+exe 'syn region markdownFencedCodeBlock'
     \ . ' matchgroup=markdownCodeDelimiter'
-    \ . ' start=/^\s*```.*$/'
+    \ . ' start=/^\s*```\s*$/'
     \ . ' end=/^\s*```\ze\s*$/'
     \ . ' keepend'
     \ . ' concealends'
@@ -456,8 +440,8 @@ exe 'syn cluster markdownListItemElements contains='
 "}}}
 " Why `\|\n\%(\s*```\s*$\)\@=` in the `end` pattern?{{{
 "
-" Sometimes, in  a wiki page on  github, a triple-backtick codeblock  is written
-" right after a list item, without any empty line in-between:
+" Sometimes, in a wiki page on github, a fenced codeblock is written right after
+" a list item, without any empty line in-between:
 "
 "     https://github.com/ranger/ranger/wiki/Image-Previews
 "
@@ -688,7 +672,7 @@ syn match markdownTable /^    \%([┌└]─\|│.*[^ \t│].*│\|├─.*┤\)
 
 syn match markdownOption /`\@1<='[a-z]\{2,}'`\@=/ contained containedin=markdownCodeSpan,markdownListItemCodeSpan
 
-call markdown#highlight_embedded_languages()
+" call markdown#highlight_embedded_languages()
 
 " HG {{{1
 
