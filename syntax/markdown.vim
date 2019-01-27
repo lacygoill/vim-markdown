@@ -346,7 +346,7 @@ syn region markdownListItemCodeBlock
 "}}}
 syn region markdownFencedCodeBlock
     \ matchgroup=markdownCodeDelimiter
-    \ start=/^```\s*$/
+    \ start=/^```\S*\s*$/
     \ end=/^```\ze\s*$/
     \ keepend
     \ concealends
