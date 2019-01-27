@@ -411,6 +411,7 @@ syn match markdownRule '^- *- *-[ -]*$'
 " List Item {{{1
 
 syn cluster markdownListItemElements contains=
+    \markdownLinkText,
     \markdownListItemItalic,
     \markdownListItemBold,
     \markdownListItemBoldItalic,
