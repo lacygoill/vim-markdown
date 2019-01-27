@@ -331,6 +331,19 @@ syn region markdownListItemCodeBlock
 "
 " Besides, this rule is cheap; it takes a very short time to be processed.
 "}}}
+" Why `\S*` in the start pattern?{{{
+"
+" Some wiki page may contain an embedded codeblock with a language for which Vim
+" has no syntax plugin, like `fish` for example.
+" When that happens, the ending ```` ``` ```` will be wrongly interpreted as the
+" beginning of a fenced codeblock.
+"
+" See this page for an example:
+" https://github.com/junegunn/fzf/wiki/Examples-(fish)
+"
+" By  adding `\S*`,  we make  sure that  an unrecognized  embedded codeblock  is
+" highlighted like a regular fenced codeblock, which fixes this issue.
+"}}}
 syn region markdownFencedCodeBlock
     \ matchgroup=markdownCodeDelimiter
     \ start=/^```\s*$/
