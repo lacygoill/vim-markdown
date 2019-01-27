@@ -71,20 +71,59 @@ fu! markdown#highlight_embedded_languages() abort "{{{2
     endfor
 endfu
 
-fu! markdown#fix_wrong_headers() abort "{{{2
+fu! markdown#fix_formatting() abort "{{{2
+    let view = winsaveview()
+
+    " A page may have an embedded codeblock which is not properly ended with ```` ``` ````.{{{
+    "
+    " As an example, look at the very bottom of this page:
+    "
+    "     https://github.com/junegunn/fzf/wiki/Examples
+    "
+    " In  this case,  the highlighting  of the  reference links  we're going  to
+    " create may be wrong.
+    " And the rest of the function  relies on the syntax highlighting, which may
+    " have additional unexpected side effects.
+    "}}}
+    if get(map(synstack('$', 1), {i,v -> synIDattr(v, 'name')}), 0, '') =~# '^markdownEmbed'
+        call append('$', ['```', ''])
+    endif
+
+    " Why?{{{
+    "
+    " If a link contains a closing parenthesis, it breaks the highlighting.
+    " The latter (and the conceal) stops too early.
+    "
+    " Besides, on some markdown pages like this one:
+    "
+    "     https://github.com/junegunn/fzf/wiki/Examples
+    "
+    " Some links are invisible.
+    "
+    "     ![](https://github.com/piotryordanov/fzf-mpd/raw/master/demo.gif)
+    "       ^
+    "       ✘
+    " This is because there's no description of the link.
+    "
+    " We can fix all of these issues by converting inline links to reference links.
+    "}}}
+    LinkInline2Ref
+
+    " If our file  contains an embedded codeblock, and the  latter contains some
+    " comments beginning with `#`, they may be wrongly interpreted as headers.
+    " Fix this by adding a space in front of them.
     " Make sure syntax highlighting is enabled.{{{
     "
-    " This function is called by `:FixWrongHeaders`.
+    " This function is called by `:Fix`.
     " If we invoke the latter via `:argdo`:
     "
-    "     argdo FixWrongHeaders
+    "     argdo Fix
     "
     " The syntax highlighting will be disabled.
     " See `:h :bufdo`.
     "}}}
     let &ei = '' | do Syntax
 
-    let view = winsaveview()
     call cursor(1, 1)
     let g = 0
     while search('^#', 'W') && g < 1000

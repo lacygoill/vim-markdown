@@ -587,22 +587,6 @@ syn region markdownLinkRefTitle
     \ keepend
     \ contained
 
-" FIXME: If a link contains a closing parenthesis, it breaks the highlighting.
-" The latter (and the conceal) stops too early.
-
-" FIXME: On some markdown pages like this one:
-"
-"     https://github.com/junegunn/fzf/wiki/Examples
-"
-" Some links are invisible.
-"
-"     ![](https://github.com/piotryordanov/fzf-mpd/raw/master/demo.gif)
-"       ^
-"       ✘
-" This is because there's no description of the link.
-" Maybe we should  supercharge our `:FixWrongHeaders` command, to  look for such
-" links and give them a default description.
-
 " Break down the `start` pattern:{{{
 "
 "          ┌ optional subpattern
