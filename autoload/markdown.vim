@@ -111,7 +111,7 @@ fu! s:get_filetype(ft) abort "{{{2
         return ft
     else
         let ft = matchstr(get(filter(split(execute('autocmd filetypedetect'), '\n'),
-            \ {i,v -> v =~ '\*\.'.ft.'\>'}), 0, ''), 'setf\%[iletype]\s*\zs\S*')
+            \ {i,v -> v =~# '\m\C\*\.'.ft.'\>'}), 0, ''), '\m\Csetf\%[iletype]\s*\zs\S*')
         if filereadable($VIMRUNTIME.'/syntax/'.ft.'.vim')
             return ft
         endif

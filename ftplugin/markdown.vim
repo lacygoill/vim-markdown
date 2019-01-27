@@ -466,7 +466,7 @@ let b:exchange_indent = ''
 if search('^```\S\+', 'n')
     let b:markdown_embed = map(uniq(sort(filter(getline(1, '$'),
         \ {i,v -> v =~# '^```\S\+'}))),
-        \ {i,v -> matchstr(v, '```\zs.*')})
+        \ {i,v -> matchstr(v, '```\zs[a-z]\+')})
 endif
 
 " sandwich_recipes {{{2

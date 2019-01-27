@@ -672,7 +672,7 @@ syn match markdownTable /^    \%([┌└]─\|│.*[^ \t│].*│\|├─.*┤\)
 
 syn match markdownOption /`\@1<='[a-z]\{2,}'`\@=/ contained containedin=markdownCodeSpan,markdownListItemCodeSpan
 
-" call markdown#highlight_embedded_languages()
+call markdown#highlight_embedded_languages()
 
 " HG {{{1
 
