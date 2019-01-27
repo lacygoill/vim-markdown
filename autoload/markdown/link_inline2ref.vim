@@ -9,9 +9,9 @@ let s:LINK_IN_REFERENCE = '^\[\d\+\]:'
 fu! markdown#link_inline2ref#main() abort "{{{2
     let view = winsaveview()
     let fen_save = &l:fen
-    let &l:fen = 0
 
     try
+        let &l:fen = 0
         " Make sure syntax highlighting is enabled.
         " `:argdo`, `:bufdo`, ... could disable it.
         let &ei = '' | do Syntax
