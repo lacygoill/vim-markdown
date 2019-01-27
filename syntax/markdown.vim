@@ -76,34 +76,34 @@ endif
 syn sync minlines=50
 syn case ignore
 
-exe 'syn cluster markdownSpanElements contains='
-    \ . 'markdownLinkText,'
-    \ . 'markdownItalic,'
-    \ . 'markdownBold,'
-    \ . 'markdownCodeSpan,'
-    \ . 'markdownEscape,'
-    \ . 'markdownError'
+syn cluster markdownSpanElements contains=
+    \ markdownLinkText,
+    \ markdownItalic,
+    \ markdownBold,
+    \ markdownCodeSpan,
+    \ markdownEscape,
+    \ markdownError
 
 " Header {{{1
 
 syn match markdownHeadingRule '^[=-]\+$' contained
 
 " If you change the name of `Delimiter`, update `markdown#fix_wrong_headers()`.
-exe 'syn region markdownHeader'
-    \ . ' matchgroup=Delimiter'
-    \ . ' start=/^#\{1,6}#\@!/'
-    \ . ' end=/$/'
-    \ . ' keepend'
-    \ . ' oneline'
-    \ . ' contains=@markdownSpanElements,markdownAutomaticLink'
+syn region markdownHeader
+    \ matchgroup=Delimiter
+    \ start=/^#\{1,6}#\@!/
+    \ end=/$/
+    \ keepend
+    \ oneline
+    \ contains=@markdownSpanElements,markdownAutomaticLink
 
-exe 'syn match markdownHeader'
-    \ . ' /^.\+\n=\+$/'
-    \ . ' contains=@markdownSpanElements,markdownHeadingRule,markdownAutomaticLink'
+syn match markdownHeader
+    \ /^.\+\n=\+$/
+    \ contains=@markdownSpanElements,markdownHeadingRule,markdownAutomaticLink
 
-exe 'syn match markdownHeader'
-    \ . ' /^.\+\n-\+$/'
-    \ . ' contains=@markdownSpanElements,markdownHeadingRule,markdownAutomaticLink'
+syn match markdownHeader
+    \ /^.\+\n-\+$/
+    \ contains=@markdownSpanElements,markdownHeadingRule,markdownAutomaticLink
 " }}}1
 
 " Don't change the order of `Italic`, `Bold` and `Bold+Italic`!{{{
@@ -148,14 +148,14 @@ exe 'syn match markdownHeader'
 "    - `markdownListItemBold`
 "    - `markdownListItemBoldItalic`
 "}}}
-exe 'syn region markdownItalic'
-    \ . ' matchgroup=markdownItalicDelimiter'
-    \ . ' start=/\*/'
-    \ . ' end=/\*/'
-    \ . ' oneline'
-    \ . ' keepend'
-    \ . ' contains=@Spell'
-    \ . ' concealends'
+syn region markdownItalic
+    \ matchgroup=markdownItalicDelimiter
+    \ start=/\*/
+    \ end=/\*/
+    \ oneline
+    \ keepend
+    \ contains=@Spell
+    \ concealends
 
 " TODO: improve performance{{{
 "
@@ -166,86 +166,86 @@ exe 'syn region markdownItalic'
 " Shouldn't we use `_` instead of `*` to  avoid a conflict with `*` when used as
 " an item leader.
 "}}}
-exe 'syn region markdownListItemItalic'
-    \ . ' matchgroup=markdownItalicDelimiter'
-    \ . ' start=/\*/'
-    \ . ' end=/\*/'
-    \ . ' oneline'
-    \ . ' keepend'
-    \ . ' contained'
-    \ . ' contains=@Spell'
-    \ . ' concealends'
+syn region markdownListItemItalic
+    \ matchgroup=markdownItalicDelimiter
+    \ start=/\*/
+    \ end=/\*/
+    \ oneline
+    \ keepend
+    \ contained
+    \ contains=@Spell
+    \ concealends
 
-exe 'syn region markdownBlockquoteItalic'
-    \ . ' matchgroup=markdownCodeDelimiter'
-    \ . ' start=/\*/'
-    \ . ' end=/\*/'
-    \ . ' oneline'
-    \ . ' keepend'
-    \ . ' contained'
-    \ . ' concealends'
+syn region markdownBlockquoteItalic
+    \ matchgroup=markdownCodeDelimiter
+    \ start=/\*/
+    \ end=/\*/
+    \ oneline
+    \ keepend
+    \ contained
+    \ concealends
 " }}}1
 "    Bold {{{1
 
-exe 'syn region markdownBold'
-    \ . ' matchgroup=markdownBoldDelimiter'
-    \ . ' start=/\*\*/'
-    \ . ' end=/\*\*/'
-    \ . ' oneline'
-    \ . ' keepend'
-    \ . ' contains=markdownItalic,@Spell'
-    \ . ' concealends'
+syn region markdownBold
+    \ matchgroup=markdownBoldDelimiter
+    \ start=/\*\*/
+    \ end=/\*\*/
+    \ oneline
+    \ keepend
+    \ contains=markdownItalic,@Spell
+    \ concealends
 
-exe 'syn region markdownListItemBold'
-    \ . ' matchgroup=markdownBoldDelimiter'
-    \ . ' start=/\*\*/'
-    \ . ' end=/\*\*/'
-    \ . ' oneline'
-    \ . ' keepend'
-    \ . ' contained'
-    \ . ' contains=markdownItalic,@Spell'
-    \ . ' concealends'
+syn region markdownListItemBold
+    \ matchgroup=markdownBoldDelimiter
+    \ start=/\*\*/
+    \ end=/\*\*/
+    \ oneline
+    \ keepend
+    \ contained
+    \ contains=markdownItalic,@Spell
+    \ concealends
 
 " `markdownBlockquoteBold` must be defined *after* `markdownItalic`
-exe 'syn region markdownBlockquoteBold'
-    \ . ' matchgroup=markdownBoldDelimiter'
-    \ . ' start=/\*\*/'
-    \ . ' end=/\*\*/'
-    \ . ' oneline'
-    \ . ' keepend'
-    \ . ' contained'
-    \ . ' concealends'
+syn region markdownBlockquoteBold
+    \ matchgroup=markdownBoldDelimiter
+    \ start=/\*\*/
+    \ end=/\*\*/
+    \ oneline
+    \ keepend
+    \ contained
+    \ concealends
 " }}}1
 "    Bold+Italic {{{1
 
-exe 'syn region markdownBoldItalic'
-    \ . ' matchgroup=markdownBoldItalicDelimiter'
-    \ . ' start=/\*\*\*/'
-    \ . ' end=/\*\*\*/'
-    \ . ' oneline'
-    \ . ' keepend'
-    \ . ' contains=@Spell'
-    \ . ' concealends'
+syn region markdownBoldItalic
+    \ matchgroup=markdownBoldItalicDelimiter
+    \ start=/\*\*\*/
+    \ end=/\*\*\*/
+    \ oneline
+    \ keepend
+    \ contains=@Spell
+    \ concealends
 
-exe 'syn region markdownListItemBoldItalic'
-    \ . ' matchgroup=markdownBoldItalicDelimiter'
-    \ . ' start=/\*\*\*/'
-    \ . ' end=/\*\*\*/'
-    \ . ' oneline'
-    \ . ' keepend'
-    \ . ' contained'
-    \ . ' contains=@Spell'
-    \ . ' concealends'
+syn region markdownListItemBoldItalic
+    \ matchgroup=markdownBoldItalicDelimiter
+    \ start=/\*\*\*/
+    \ end=/\*\*\*/
+    \ oneline
+    \ keepend
+    \ contained
+    \ contains=@Spell
+    \ concealends
 
-exe 'syn region markdownBlockquoteBoldItalic'
-    \ . ' matchgroup=markdownBoldItalicDelimiter'
-    \ . ' start=/\*\*\*/'
-    \ . ' end=/\*\*\*/'
-    \ . ' oneline'
-    \ . ' keepend'
-    \ . ' contained'
-    \ . ' contains=@Spell'
-    \ . ' concealends'
+syn region markdownBlockquoteBoldItalic
+    \ matchgroup=markdownBoldItalicDelimiter
+    \ start=/\*\*\*/
+    \ end=/\*\*\*/
+    \ oneline
+    \ keepend
+    \ contained
+    \ contains=@Spell
+    \ concealends
 " }}}1
 
 " Codespan {{{1
@@ -259,30 +259,30 @@ exe 'syn region markdownBlockquoteBoldItalic'
 "}}}
 " If you change the name of `markdownCodeDelimiter`, update
 " `./autoload/markdown.vim`
-exe 'syn region markdownCodeSpan'
-    \ . ' matchgroup=markdownCodeDelimiter'
-    \ . ' start=/\z(`\+\)/'
-    \ . ' end=/\z1/'
-    \ . ' keepend'
-    \ . ' containedin=markdownBold'
-    \ . ' concealends'
-    \ . ' oneline'
+syn region markdownCodeSpan
+    \ matchgroup=markdownCodeDelimiter
+    \ start=/\z(`\+\)/
+    \ end=/\z1/
+    \ keepend
+    \ containedin=markdownBold
+    \ concealends
+    \ oneline
 
-exe 'syn region markdownBlockquoteCodeSpan'
-    \ . ' matchgroup=markdownCodeDelimiter'
-    \ . ' start=/\z(`\+\)/'
-    \ . ' end=/\z1/'
-    \ . ' keepend'
-    \ . ' contained'
-    \ . ' concealends'
+syn region markdownBlockquoteCodeSpan
+    \ matchgroup=markdownCodeDelimiter
+    \ start=/\z(`\+\)/
+    \ end=/\z1/
+    \ keepend
+    \ contained
+    \ concealends
 
-exe 'syn region markdownListItemCodeSpan'
-    \ . ' matchgroup=markdownCodeDelimiter'
-    \ . ' start=/\z(`\+\)/'
-    \ . ' end=/\z1/'
-    \ . ' keepend'
-    \ . ' contained'
-    \ . ' concealends'
+syn region markdownListItemCodeSpan
+    \ matchgroup=markdownCodeDelimiter
+    \ start=/\z(`\+\)/
+    \ end=/\z1/
+    \ keepend
+    \ contained
+    \ concealends
 " }}}1
 
 " Codeblock {{{1
@@ -293,18 +293,18 @@ exe 'syn region markdownListItemCodeSpan'
 " So we add the @Spell cluster.
 " See `:h spell-syntax`
 "}}}
-exe 'syn region markdownCodeBlock'
-    \ . ' start=/^    \|^\t/'
-    \ . ' end=/$/'
-    \ . ' contains=@Spell'
-    \ . ' keepend'
+syn region markdownCodeBlock
+    \ start=/^    \|^\t/
+    \ end=/$/
+    \ contains=@Spell
+    \ keepend
 
-exe 'syn region markdownListItemCodeBlock'
-    \ . ' start=/^        \|^\t\t/'
-    \ . ' end=/$/'
-    \ . ' contained'
-    \ . ' contains=@Spell'
-    \ . ' keepend'
+syn region markdownListItemCodeBlock
+    \ start=/^        \|^\t\t/
+    \ end=/$/
+    \ contained
+    \ contains=@Spell
+    \ keepend
 
 " Some wiki pages on github use fenced codeblocks.{{{
 "
@@ -331,21 +331,21 @@ exe 'syn region markdownListItemCodeBlock'
 "
 " Besides, this rule is cheap; it takes a very short time to be processed.
 "}}}
-exe 'syn region markdownFencedCodeBlock'
-    \ . ' matchgroup=markdownCodeDelimiter'
-    \ . ' start=/^\s*```\s*$/'
-    \ . ' end=/^\s*```\ze\s*$/'
-    \ . ' keepend'
-    \ . ' concealends'
+syn region markdownFencedCodeBlock
+    \ matchgroup=markdownCodeDelimiter
+    \ start=/^\s*```\s*$/
+    \ end=/^\s*```\ze\s*$/
+    \ keepend
+    \ concealends
 " }}}1
 
 " Blockquote {{{1
 
-exe 'syn cluster markdownBlockquoteSpanElements contains='
-    \ . 'markdownBlockquoteItalic,'
-    \ . 'markdownBlockquoteBold,'
-    \ . 'markdownBlockquoteBoldItalic,'
-    \ . 'markdownBlockquoteCodeSpan'
+syn cluster markdownBlockquoteSpanElements contains=
+    \ markdownBlockquoteItalic,
+    \ markdownBlockquoteBold,
+    \ markdownBlockquoteBoldItalic,
+    \ markdownBlockquoteCodeSpan
 
 " Why is `keepend` important here?{{{
 "
@@ -365,26 +365,26 @@ exe 'syn cluster markdownBlockquoteSpanElements contains='
 " `keepend`  prevents a  possible broken  contained region  from being  extended
 " outside the initial containing region.
 "}}}
-exe 'syn match markdownBlockquote'
-    \ . ' /^ \{,3}>\+\%(\s.*\|$\)/'
-    \ . ' contains=@markdownBlockquoteSpanElements,markdownBlockquoteLeadingChar'
-    \ . ' keepend'
+syn match markdownBlockquote
+    \ /^ \{,3}>\+\%(\s.*\|$\)/
+    \ contains=@markdownBlockquoteSpanElements,markdownBlockquoteLeadingChar
+    \ keepend
 
-exe 'syn match markdownBlockquoteLeadingChar'
-    \ . ' /\%(^ \{,3}\)\@3<=>\+\s\=/'
-    \ . ' contained'
-    \ . ' conceal'
+syn match markdownBlockquoteLeadingChar
+    \ /\%(^ \{,3}\)\@3<=>\+\s\=/
+    \ contained
+    \ conceal
 
-exe 'syn match markdownListItemBlockquote'
-    \ . ' /^ \{4}>\+\%(\s.*\|$\)/'
-    \ . ' contained'
-    \ . ' contains=@markdownBlockquoteSpanElements,markdownListItemBlockquoteLeadingChar'
-    \ . ' keepend'
+syn match markdownListItemBlockquote
+    \ /^ \{4}>\+\%(\s.*\|$\)/
+    \ contained
+    \ contains=@markdownBlockquoteSpanElements,markdownListItemBlockquoteLeadingChar
+    \ keepend
 
-exe 'syn match markdownListItemBlockquoteLeadingChar'
-    \ . ' /\%(^ \{4}\)\@4<=>\+\s\=/'
-    \ . ' contained'
-    \ . ' conceal'
+syn match markdownListItemBlockquoteLeadingChar
+    \ /\%(^ \{4}\)\@4<=>\+\s\=/
+    \ contained
+    \ conceal
 " }}}1
 
 " Horizontal rule {{{1
@@ -397,14 +397,14 @@ syn match markdownRule '^- *- *-[ -]*$'
 
 " List Item {{{1
 
-exe 'syn cluster markdownListItemElements contains='
-    \ . 'markdownListItemItalic,'
-    \ . 'markdownListItemBold,'
-    \ . 'markdownListItemBoldItalic,'
-    \ . 'markdownListItemCodeSpan,'
-    \ . 'markdownListItemCodeBlock,'
-    \ . 'markdownListItemBlockquote,'
-    \ . 'markdownListItemOutput'
+syn cluster markdownListItemElements contains=
+    \ markdownListItemItalic,
+    \ markdownListItemBold,
+    \ markdownListItemBoldItalic,
+    \ markdownListItemCodeSpan,
+    \ markdownListItemCodeBlock,
+    \ markdownListItemBlockquote,
+    \ markdownListItemOutput
 
 " Don't remove `keepend`!{{{
 "
@@ -448,39 +448,39 @@ exe 'syn cluster markdownListItemElements contains='
 " When that  happens, the codeblock is  wrongly highlighted as a  list item.  It
 " can mess up the highlighting of the rest of the buffer.
 "}}}
-exe 'syn region markdownListItem'
-    \ . ' start=/^ \{,3\}\%([-*+]\|\d\+\.\)\s\+\S/'
-    \ . ' end=/^\s*\n\%( \{,3}\S\)\@=\|\n\%(\s*```\s*$\)\@=/'
-    \ . ' keepend'
-    \ . ' contains=@markdownListItemElements'
+syn region markdownListItem
+    \ start=/^ \{,3\}\%([-*+]\|\d\+\.\)\s\+\S/
+    \ end=/^\s*\n\%( \{,3}\S\)\@=\|\n\%(\s*```\s*$\)\@=/
+    \ keepend
+    \ contains=@markdownListItemElements
 " }}}1
 
 " Output {{{1
 
 " vaguely inspired from `helpHeader`
-exe 'syn match markdownOutput'
-    \ . ' /^.*\~$/'
-    \ . ' contained'
-    \ . ' containedin=markdownCodeBlock'
-    \ . ' nextgroup=markdownIgnore'
+syn match markdownOutput
+    \ /^.*\~$/
+    \ contained
+    \ containedin=markdownCodeBlock
+    \ nextgroup=markdownIgnore
 
-exe 'syn match markdownIgnore'
-    \ . ' /.$/'
-    \ . ' contained'
-    \ . ' containedin=markdownOutput'
-    \ . ' conceal'
+syn match markdownIgnore
+    \ /.$/
+    \ contained
+    \ containedin=markdownOutput
+    \ conceal
 
-exe 'syn match markdownListItemOutput'
-    \ . ' /^.*\~$/'
-    \ . ' contained'
-    \ . ' containedin=markdownListItemCodeBlock'
-    \ . ' nextgroup=markdownListItemIgnore'
+syn match markdownListItemOutput
+    \ /^.*\~$/
+    \ contained
+    \ containedin=markdownListItemCodeBlock
+    \ nextgroup=markdownListItemIgnore
 
-exe 'syn match markdownListItemIgnore'
-    \ . ' /.$/'
-    \ . ' contained'
-    \ . ' containedin=markdownListItemOutput'
-    \ . ' conceal'
+syn match markdownListItemIgnore
+    \ /.$/
+    \ contained
+    \ containedin=markdownListItemOutput
+    \ conceal
 " }}}1
 
 " HideAnswer {{{1
@@ -518,20 +518,20 @@ exe 'syn match markdownListItemIgnore'
 "    - use `<details>`
 "    - use `↣ ↢`
 "}}}
-exe 'syn region markdownHideAnswer'
-    \ . ' start=/^↣/'
-    \ . ' end=/^↢.*/'
-    \ . ' conceal'
-    \ . ' cchar=?'
-    \ . ' contains=markdownOutput,markdownCodeSpan'
-    \ . ' containedin=markdownCodeBlock'
-    \ . ' keepend'
+syn region markdownHideAnswer
+    \ start=/^↣/
+    \ end=/^↢.*/
+    \ conceal
+    \ cchar=?
+    \ contains=markdownOutput,markdownCodeSpan
+    \ containedin=markdownCodeBlock
+    \ keepend
 
-exe 'syn match markdownHideAnswer'
-    \ . ' /↣.\{-}↢/'
-    \ . ' conceal'
-    \ . ' cchar=?'
-    \ . ' containedin=markdownCodeBlock'
+syn match markdownHideAnswer
+    \ /↣.\{-}↢/
+    \ conceal
+    \ cchar=?
+    \ containedin=markdownCodeBlock
 
 " TODO: How to include italics inside a hidden answer?{{{
 " We could add `contains=markdownItalic`.
@@ -540,38 +540,38 @@ exe 'syn match markdownHideAnswer'
 "}}}
 " }}}1
 
-exe 'syn region markdownIdDeclaration'
-    \ . ' matchgroup=markdownLinkDelimiter'
-    \ . ' start=/^ \{,3\}!\=\[/'
-    \ . ' end=/\]:/'
-    \ . ' oneline'
-    \ . ' keepend'
-    \ . ' nextgroup=markdownUrl'
-    \ . ' skipwhite'
+syn region markdownIdDeclaration
+    \ matchgroup=markdownLinkDelimiter
+    \ start=/^ \{,3\}!\=\[/
+    \ end=/\]:/
+    \ oneline
+    \ keepend
+    \ nextgroup=markdownUrl
+    \ skipwhite
 
-exe 'syn match markdownUrl /\S\+/'
-    \ . ' nextgroup=markdownLinkRefTitle'
-    \ . ' skipwhite'
-    \ . ' contained'
+syn match markdownUrl /\S\+/
+    \ nextgroup=markdownLinkRefTitle
+    \ skipwhite
+    \ contained
 
-exe 'syn region markdownUrl'
-    \ . ' matchgroup=markdownUrlDelimiter'
-    \ . ' start=/</'
-    \ . ' end=/>/'
-    \ . ' oneline'
-    \ . ' keepend'
-    \ . ' nextgroup=markdownLinkRefTitle'
-    \ . ' skipwhite'
-    \ . ' contained'
+syn region markdownUrl
+    \ matchgroup=markdownUrlDelimiter
+    \ start=/</
+    \ end=/>/
+    \ oneline
+    \ keepend
+    \ nextgroup=markdownLinkRefTitle
+    \ skipwhite
+    \ contained
 
 " in  addition to double  quotes, the official  spec supports single  quotes and
 " parentheses too
-exe 'syn region markdownLinkRefTitle'
-    \ . ' matchgroup=markdownUrlTitleDelimiter'
-    \ . ' start=/"/'
-    \ . ' end=/"/'
-    \ . ' keepend'
-    \ . ' contained'
+syn region markdownLinkRefTitle
+    \ matchgroup=markdownUrlTitleDelimiter
+    \ start=/"/
+    \ end=/"/
+    \ keepend
+    \ contained
 
 " Break down the `start` pattern:{{{
 "
@@ -602,28 +602,28 @@ exe 'syn region markdownLinkText'
 
 " If  you  change the  name  the  items  beginning with  `markdownLink`,  update
 " `s:is_real_link()` in `./autoload/markdown/link_inline_to_ref.vim`.
-exe 'syn region markdownLink'
-    \ . ' matchgroup=markdownLinkDelimiter'
-    \ . ' start=/(/'
-    \ . ' end=/)/'
-    \ . ' contains=markdownUrl'
-    \ . ' keepend'
-    \ . ' contained'
-    \ . ' conceal'
+syn region markdownLink
+    \ matchgroup=markdownLinkDelimiter
+    \ start=/(/
+    \ end=/)/
+    \ contains=markdownUrl
+    \ keepend
+    \ contained
+    \ conceal
 
-exe 'syn region markdownId'
-    \ . ' matchgroup=markdownIdDelimiter'
-    \ . ' start=/\[/'
-    \ . ' end=/\]/'
-    \ . ' keepend'
-    \ . ' contained'
+syn region markdownId
+    \ matchgroup=markdownIdDelimiter
+    \ start=/\[/
+    \ end=/\]/
+    \ keepend
+    \ contained
 
-exe 'syn region markdownAutomaticLink'
-    \ . ' matchgroup=markdownUrlDelimiter'
-    \ . ' start=/<\%(\w\+:\|[[:alnum:]_+-]\+@\)\@=/'
-    \ . ' end=/>/'
-    \ . ' keepend'
-    \ . ' oneline'
+syn region markdownAutomaticLink
+    \ matchgroup=markdownUrlDelimiter
+    \ start=/<\%(\w\+:\|[[:alnum:]_+-]\+@\)\@=/
+    \ end=/>/
+    \ keepend
+    \ oneline
 
 syn match markdownFootnote '\[^[^\]]\+\]'
 syn match markdownFootnoteDefinition '^\[^[^\]]\+\]:'
