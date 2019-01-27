@@ -77,11 +77,12 @@ syn sync minlines=50
 syn case ignore
 
 syn cluster markdownSpanElements contains=
-    \ markdownItalic,
-    \ markdownBold,
-    \ markdownCodeSpan,
-    \ markdownEscape,
-    \ markdownError
+    \markdownLinkText,
+    \markdownItalic,
+    \markdownBold,
+    \markdownCodeSpan,
+    \markdownEscape,
+    \markdownError
 
 " Header {{{1
 
@@ -354,10 +355,10 @@ syn region markdownFencedCodeBlock
 " Blockquote {{{1
 
 syn cluster markdownBlockquoteSpanElements contains=
-    \ markdownBlockquoteItalic,
-    \ markdownBlockquoteBold,
-    \ markdownBlockquoteBoldItalic,
-    \ markdownBlockquoteCodeSpan
+    \markdownBlockquoteItalic,
+    \markdownBlockquoteBold,
+    \markdownBlockquoteBoldItalic,
+    \markdownBlockquoteCodeSpan
 
 " Why is `keepend` important here?{{{
 "
@@ -410,13 +411,13 @@ syn match markdownRule '^- *- *-[ -]*$'
 " List Item {{{1
 
 syn cluster markdownListItemElements contains=
-    \ markdownListItemItalic,
-    \ markdownListItemBold,
-    \ markdownListItemBoldItalic,
-    \ markdownListItemCodeSpan,
-    \ markdownListItemCodeBlock,
-    \ markdownListItemBlockquote,
-    \ markdownListItemOutput
+    \markdownListItemItalic,
+    \markdownListItemBold,
+    \markdownListItemBoldItalic,
+    \markdownListItemCodeSpan,
+    \markdownListItemCodeBlock,
+    \markdownListItemBlockquote,
+    \markdownListItemOutput
 
 " Don't remove `keepend`!{{{
 "
