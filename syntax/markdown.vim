@@ -77,7 +77,6 @@ syn sync minlines=50
 syn case ignore
 
 syn cluster markdownSpanElements contains=
-    \ markdownLinkText,
     \ markdownItalic,
     \ markdownBold,
     \ markdownCodeSpan,
@@ -603,13 +602,21 @@ syn region markdownLinkRefTitle
 "     │  └ an opening square bracket
 "     └ an optional bang
 "}}}
+" Do *not* add `contains=markdownSpanElements`!{{{
+"
+" Suppose that you  read a file where  there's a link containing  only one word.
+" And the latter is emphasized in bold.
+"
+" While the text is concealed, you would not see the link.
+" You would just see a bold word.
+" The same issue exists with any style contained in `markdownSpanElements`.
+"}}}
 exe 'syn region markdownLinkText'
     \ . ' matchgroup=markdownLinkTextDelimiter'
     \ . ' start=/!\=\[\%(\_[^]]*] \=[[(]\)\@=/'
     \ . ' end=/\]\%( \=[[(]\)\@=/'
     \ . ' nextgroup=markdownLink,markdownId'
     \ . ' skipwhite'
-    \ . ' contains=@markdownSpanElements'
     \ . ' concealends'
     \ . ' keepend'
 
