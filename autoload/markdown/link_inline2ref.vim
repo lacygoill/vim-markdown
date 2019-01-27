@@ -8,42 +8,48 @@ let s:LINK_IN_REFERENCE = '^\[\d\+\]:'
 " Interface {{{1
 fu! markdown#link_inline2ref#main() abort "{{{2
     let view = winsaveview()
+    let fen_save = &l:fen
     let &l:fen = 0
 
-    " Make sure syntax highlighting is enabled.
-    " `:argdo`, `:bufdo`, ... could disable it.
-    let &ei = '' | do Syntax
+    try
+        " Make sure syntax highlighting is enabled.
+        " `:argdo`, `:bufdo`, ... could disable it.
+        let &ei = '' | do Syntax
 
-    " We're going to inspect the syntax highlighting under the cursor.
-    " Sometimes, it's wrong.
-    " We must be sure it's correct.
-    syn sync fromstart
+        " We're going to inspect the syntax highlighting under the cursor.
+        " Sometimes, it's wrong.
+        " We must be sure it's correct.
+        syn sync fromstart
 
-    " Make sure there's no link whose description span multiple lines.
-    " Those kind of links are too difficult to handle.
-    if s:find_multi_line_links()
-        return
-    endif
+        " Make sure there's no link whose description span multiple lines.
+        " Those kind of links are too difficult to handle.
+        if s:find_multi_line_links()
+            return
+        endif
 
-    let ref_links = s:get_ref_links()
-    call s:make_sure_reference_section_exists(ref_links)
+        let ref_links = s:get_ref_links()
+        call s:make_sure_reference_section_exists(ref_links)
 
-    " If there're already reference links in the buffer, get the numerical id of
-    " the biggest one; we need it to correctly number the new links we may find.
-    let [last_id, last_id_lnum] = s:get_last_id(ref_links)
-    let last_id_old = last_id
+        " If there're already reference links in the buffer, get the numerical id of
+        " the biggest one; we need it to correctly number the new links we may find.
+        let [last_id, last_id_lnum] = s:get_last_id(ref_links)
+        let last_id_old = last_id
 
-    call cursor(1,1)
-    let [links, last_id] = s:collect_links(last_id)
+        call cursor(1,1)
+        let [links, last_id] = s:collect_links(last_id)
+        if empty(links)
+            return
+        endif
 
-    call s:put_links(links, last_id_old, last_id_lnum)
+        call s:put_links(links, last_id_old, last_id_lnum)
 
-    " if we've  just added a new  link before the  first one, our links  will be
-    " numbered in a non-increasing way; re-number all the links
-    call s:renumber_links(last_id)
-
-    let &l:fen = 1
-    call winrestview(view)
+        " if we've  just added a new  link before the  first one, our links  will be
+        " numbered in a non-increasing way; re-number all the links
+        call s:renumber_links(last_id)
+    finally
+        let &l:fen = fen_save
+        call winrestview(view)
+    endtry
 endfu
 " }}}1
 " Core {{{1
