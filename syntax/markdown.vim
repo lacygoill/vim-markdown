@@ -157,6 +157,16 @@ syn region markdownItalic
     \ contains=@Spell
     \ concealends
 
+syn region markdownHeaderItalic
+    \ matchgroup=markdownItalicDelimiter
+    \ start=/\*/
+    \ end=/\*/
+    \ oneline
+    \ keepend
+    \ contains=@Spell
+    \ containedin=markdownHeader
+    \ concealends
+
 " TODO: improve performance{{{
 "
 " Sometimes, moving in a buffer is slow, when there are many lists.
@@ -196,6 +206,16 @@ syn region markdownBold
     \ contains=markdownItalic,@Spell
     \ concealends
 
+syn region markdownHeaderBold
+    \ matchgroup=markdownBoldDelimiter
+    \ start=/\*\*/
+    \ end=/\*\*/
+    \ oneline
+    \ keepend
+    \ contains=markdownItalic,@Spell
+    \ containedin=markdownHeader
+    \ concealends
+
 syn region markdownListItemBold
     \ matchgroup=markdownBoldDelimiter
     \ start=/\*\*/
@@ -224,6 +244,16 @@ syn region markdownBoldItalic
     \ end=/\*\*\*/
     \ oneline
     \ keepend
+    \ contains=@Spell
+    \ concealends
+
+syn region markdownHeaderBoldItalic
+    \ matchgroup=markdownBoldItalicDelimiter
+    \ start=/\*\*\*/
+    \ end=/\*\*\*/
+    \ oneline
+    \ keepend
+    \ containedin=markdownHeader
     \ contains=@Spell
     \ concealends
 
@@ -715,6 +745,9 @@ hi markdownBold       term=bold        cterm=bold        gui=bold
 hi markdownBoldItalic term=bold,italic cterm=bold,italic gui=bold,italic
 
 hi link markdownHeader                Title
+hi link markdownHeaderItalic          TitleItalic
+hi link markdownHeaderBold            TitleBold
+hi link markdownHeaderBoldItalic      TitleBoldItalic
 hi link markdownHeadingRule           markdownRule
 
 hi link markdownFootnote              Typedef
