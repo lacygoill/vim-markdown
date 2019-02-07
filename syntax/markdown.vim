@@ -164,6 +164,7 @@ syn region markdownHeaderItalic
     \ oneline
     \ keepend
     \ contains=@Spell
+    \ contained
     \ containedin=markdownHeader
     \ concealends
 
@@ -213,6 +214,7 @@ syn region markdownHeaderBold
     \ oneline
     \ keepend
     \ contains=markdownItalic,@Spell
+    \ contained
     \ containedin=markdownHeader
     \ concealends
 
@@ -253,6 +255,7 @@ syn region markdownHeaderBoldItalic
     \ end=/\*\*\*/
     \ oneline
     \ keepend
+    \ contained
     \ containedin=markdownHeader
     \ contains=@Spell
     \ concealends
