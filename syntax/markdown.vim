@@ -76,6 +76,9 @@ endif
 syn sync minlines=50
 syn case ignore
 
+" fix spelling errors for text outside any syntax item (`:h :syn-spell`)
+syn spell toplevel
+
 syn cluster markdownSpanElements contains=
     \markdownLinkText,
     \markdownItalic,
@@ -322,7 +325,7 @@ syn region markdownListItemCodeSpan
 
 " Why `contains=@Spell`?{{{
 "
-" When we enable 'spell', errors aren't highlighted inside a code block.
+" When we enable `'spell'`, errors aren't highlighted inside a code block.
 " So we add the @Spell cluster.
 " See `:h spell-syntax`
 "}}}
