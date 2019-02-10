@@ -507,6 +507,9 @@ syn region markdownListItem
 
 " Output {{{1
 
+" TODO: maybe we should add a `markdownOutputError` syntax group, using 2 tildes
+" at the end of the lines.
+
 " vaguely inspired from `helpHeader`
 syn match markdownOutput
     \ /^.*\~$/
