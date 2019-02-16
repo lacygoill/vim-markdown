@@ -106,6 +106,7 @@ endif
 "
 "     https://github.com/jalvesaq/Nvim-R
 "     https://github.com/gaalcaras/ncm-R
+"     https://github.com/SidOfc/mkdx
 "
 " You may need to read these 2 books:
 "
