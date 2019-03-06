@@ -10,9 +10,10 @@ fu! markdown#get_definition#main(...) abort
     exe 'sp ' . cwd . '/glossary.md'
     let lines = getline(1, '$')
     call map(lines, {i,v -> {'bufnr': bufnr('%'), 'lnum': i+1, 'text': v}})
-    let pat = '^#.*\V' . escape(word, '\')
+    let pat = '^#.*\c\V' . escape(word, '\')
     call filter(lines, {i,v -> v.text =~# pat})
     if empty(lines)
+        echom 'no definition'
         close
         return
     endif
@@ -21,7 +22,7 @@ fu! markdown#get_definition#main(...) abort
     lwindow
     if &ft is# 'qf'
         lfirst
-        norm! zv
+        norm! zMzvzz
     endif
 endfu
 
