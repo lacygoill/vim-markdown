@@ -125,6 +125,10 @@ fu! s:collect_links(last_id) abort "{{{2
 
         " put the new link
         call setline('.', new_line)
+        " There could be several links on the same line, and `setline()` doesn't
+        " reset the position of the cursor; so, the new cursor position could be
+        " *after* a second link, and in that case, we would miss it.
+        call cursor('.', 1)
 
         let last_id += 1
         let g += 1
