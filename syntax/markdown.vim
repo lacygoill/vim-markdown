@@ -576,7 +576,7 @@ syn region markdownHideAnswer
     \ end=/^↢.*/
     \ conceal
     \ cchar=?
-    \ contains=markdownOutput,markdownCodeSpan
+    \ contains=markdownOutput,markdownCodeSpan,markdownBold,markdownItalic,markdownBoldItalic
     \ containedin=markdownCodeBlock
     \ keepend
 
@@ -584,13 +584,8 @@ syn match markdownHideAnswer
     \ /↣.\{-}↢/
     \ conceal
     \ cchar=?
+    \ contains=markdownOutput,markdownCodeSpan,markdownBold,markdownItalic,markdownBoldItalic
     \ containedin=markdownCodeBlock
-
-" TODO: How to include italics inside a hidden answer?{{{
-" We could add `contains=markdownItalic`.
-" But the text in italics would not be concealed...
-" We probably have the same issue with other styles (bold, ...).
-"}}}
 " }}}1
 
 syn region markdownIdDeclaration
