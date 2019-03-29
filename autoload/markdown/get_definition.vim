@@ -5,7 +5,7 @@ fu! markdown#get_definition#main(...) abort
     else
         let word = expand('<cWORD>')
     endif
-    let word = substitute(word, '[“(]\|[”)].*', '', 'g')
+    let word = substitute(word, '[“(]\|[”)].*\|\.$', '', 'g')
     let fname = expand('%:p:t')
     if fname isnot# 'glossary.md'
         let cwd = getcwd()
