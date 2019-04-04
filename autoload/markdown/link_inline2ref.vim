@@ -2,7 +2,7 @@
 
 " `:LinkInline2Ref` won't work as expected if the buffer contains more than `s:GUARD` links.
 " This guard is useful to avoid being stuck in an infinite loop.
-let s:GUARD = 1000
+let s:GUARD = 100
 let s:LINK_IN_REFERENCE = '^\[\d\+\]:'
 
 " Interface {{{1

@@ -5,7 +5,7 @@ fu! markdown#get_definition#main(...) abort
     else
         let word = expand('<cWORD>')
     endif
-    let word = substitute(word, '[“(]\|[”)].*\|\.$', '', 'g')
+    let word = substitute(word, '[“(]\|[”)].*\|[.?s]\{,2}$', '', 'g')
     let fname = expand('%:p:t')
     if fname isnot# 'glossary.md'
         let cwd = getcwd()
@@ -16,7 +16,7 @@ fu! markdown#get_definition#main(...) abort
     let pat = '^#.*\c\V' . escape(word, '\')
     call filter(lines, {i,v -> v.text =~# pat})
     if empty(lines)
-        echom 'no definition for '.word
+        echom 'no definition for ' . word
         if fname isnot# 'glossary.md'
             close
         endif
