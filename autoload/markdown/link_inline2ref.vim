@@ -96,9 +96,13 @@ endfu
 
 fu! s:populate_reference_section(id2url) abort "{{{2
     call search(s:REF_SECTION_PAT)
-    call search('^\[\d\+]:')
+    if ! search('^\[\d\+]:')
+        norm! G
+    endif
     sil keepj keepp .,$g/^\[\d\+]:/d_
-    let lines = sort(values(map(copy(a:id2url), {k,v -> '[' . k . ']: ' . v})), 'n')
+    let lines = sort(values(map(copy(a:id2url),
+        \ {k,v -> '[' . k . ']: ' . v})),
+        \ {a,b -> matchstr(a, '\d\+') - matchstr(b, '\d\+')})
     call append('.', lines)
 endfu
 " }}}1
