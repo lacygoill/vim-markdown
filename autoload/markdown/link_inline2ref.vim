@@ -85,7 +85,10 @@ fu! s:create_reflinks() abort "{{{2
                 continue
             endif
             let url = s:get_url()
-            let new_line = substitute(line, '\%' . col . 'c(.\{-})', '[' . id . ']', '')
+            norm! %
+            let col_end = col('.')
+            norm! %
+            let new_line = substitute(line, '\%' . col . 'c(.*\%' . col_end . 'c)', '[' . id . ']', '')
             call setline('.', new_line)
             let id2url[id] = url
         endif
@@ -100,6 +103,12 @@ fu! s:populate_reference_section(id2url) abort "{{{2
         norm! G
     endif
     sil keepj keepp .,$g/^\[\d\+]:/d_
+    " Why don't you simply use `n` as the second argument of `sort()`, to get a numerical sort?{{{
+    "
+    " From `:h sort()`:
+    " > Implementation detail: This  uses the strtod() function  to parse numbers,
+    " > **Strings**, Lists, Dicts and Funcrefs **will be considered as being 0**.
+    "}}}
     let lines = sort(values(map(copy(a:id2url),
         \ {k,v -> '[' . k . ']: ' . v})),
         \ {a,b -> matchstr(a, '\d\+') - matchstr(b, '\d\+')})
