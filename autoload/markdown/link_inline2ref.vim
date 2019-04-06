@@ -99,7 +99,7 @@ fu! s:populate_reference_section(id2url) abort "{{{2
     call search('^\[\d\+]:')
     sil keepj keepp .,$g/^\[\d\+]:/d_
     let lines = sort(values(map(copy(a:id2url), {k,v -> '[' . k . ']: ' . v})), 'n')
-    call setline('.', lines)
+    call append('.', lines)
 endfu
 " }}}1
 " Util {{{1
