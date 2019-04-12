@@ -494,10 +494,9 @@ let b:did_ftplugin = 1
 " }}}1
 " Teardown {{{1
 
-let b:undo_ftplugin = get(b:, 'undo_ftplugin', '')
-    \ . (empty(get(b:, 'undo_ftplugin', '')) ? '' : '|')
+let b:undo_ftplugin = get(b:, 'undo_ftplugin', 'exe')
     \ . "
-    \   setl ai< cms< cocu< cole< com< fde< fdm< fdt< flp< fml< spl< tw< wrap<
+    \ | setl ai< cms< cocu< cole< com< fde< fdm< fdt< flp< fml< spl< tw< wrap<
     \ | set efm< fp< kp< mp<
     \ | unlet! b:cr_command b:exchange_indent b:sandwich_recipes b:markdown_embed
     \ | exe 'au! my_markdown * <buffer>'
