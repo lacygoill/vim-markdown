@@ -329,9 +329,21 @@ syn region markdownListItemCodeSpan
 " So we add the @Spell cluster.
 " See `:h spell-syntax`
 "}}}
-syn region markdownCodeBlock
-    \ start=/^    \|^\t/
-    \ end=/$/
+" Do *not* define a codeblock as a region!{{{
+"
+" Like this for example:
+"
+"     syn region markdownCodeBlock
+"         \ start=/^    \|^\t/
+"         \ end=/$/
+"         \ contains=@Spell
+"         \ keepend
+"
+" It would prevent a codeblock inside a hidden answer from being hidden when the
+" conceal is enabled.
+"}}}
+syn match markdownCodeBlock
+    \ /^\%(    \|^\t\).*$/
     \ contains=@Spell
     \ keepend
 
@@ -576,7 +588,7 @@ syn region markdownHideAnswer
     \ end=/^↢.*/
     \ conceal
     \ cchar=?
-    \ contains=markdownOutput,markdownCodeSpan,markdownBold,markdownItalic,markdownBoldItalic
+    \ contains=markdownCodeSpan,markdownBold,markdownItalic,markdownBoldItalic,markdownCodeBlock,markdownOutput,markdownPointer
     \ containedin=markdownCodeBlock
     \ keepend
 
@@ -584,7 +596,7 @@ syn match markdownHideAnswer
     \ /↣.\{-}↢/
     \ conceal
     \ cchar=?
-    \ contains=markdownOutput,markdownCodeSpan,markdownBold,markdownItalic,markdownBoldItalic
+    \ contains=markdownCodeSpan,markdownBold,markdownItalic,markdownBoldItalic,markdownCodeBlock,markdownOutput,markdownPointer
     \ containedin=markdownCodeBlock
 " }}}1
 
@@ -726,7 +738,7 @@ exe 'syn match markdownTodo  /\CTO'.'DO\|FIX'.'ME/ contained'
 "}}}
 syn match markdownTable /^    \%([┌└]─\|│.*[^ \t│].*│\|├─.*┤\).*/
 
-syn match markdownOption /`\@1<='[a-z]\{2,}'`\@=/ contained containedin=markdownCodeSpan,markdownListItemCodeSpan
+syn match markdownOption /`\@1<='[-a-z]\{2,}'`\@=/ contained containedin=markdownCodeSpan,markdownListItemCodeSpan
 
 call markdown#highlight_embedded_languages()
 
