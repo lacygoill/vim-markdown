@@ -21,6 +21,9 @@ endif
 " Update:
 " We need `containedin`,  for example, to allow `xCommentTitle`  to be contained
 " in `xComment`.
+"
+" Update: We don't use `markdownCommentTitle` anymore. I found it too annoying.
+"
 " TODO:
 "
 "     https://daringfireball.net/projects/markdown/syntax
@@ -703,14 +706,6 @@ syn match markdownPointer '^\s*\%([v^✘✔]\+\s*\)\+$'
 
 syn region markdownKey matchgroup=Special start=/<kbd>/ end=/<\/kbd>/ concealends
 
-syn match markdownCommentTitle /^ \{,2}\u\w*\(\s\+\u\w*\)*:/ contains=markdownTodo
-"                                 ├───┘
-"                                 └ Why?
-" We don't want `markdownCommentTitle` to match in a code block, nor in an item list.{{{
-" It would break the highlighting of the text which follows on the line.
-" So, we can't allow more than 2 leading spaces.
-"}}}
-
 exe 'syn match markdownTodo  /\CTO'.'DO\|FIX'.'ME/ contained'
 
 " If you change this regex, test the new syntax highlighting against this text:{{{
@@ -814,7 +809,6 @@ hi link markdownEscape                Special
 "}}}
 hi link markdownError                 Error
 
-hi link markdownCommentTitle          PreProc
 hi link markdownTodo                  Todo
 hi link markdownOutput                PreProc
 hi link markdownListItemOutput        markdownOutput
