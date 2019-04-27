@@ -3,7 +3,7 @@
 " `:LinkInline2Ref` won't work as expected if the buffer contains more than `s:GUARD` links.
 " This guard is useful to avoid being stuck in an infinite loop.
 let s:GUARD = 1000
-let s:REF_SECTION_PAT = '^# Reference$'
+let s:REF_SECTION = '# Reference'
 
 " Interface {{{1
 fu! markdown#link_inline2ref#main() abort "{{{2
@@ -98,7 +98,7 @@ fu! s:create_reflinks() abort "{{{2
 endfu
 
 fu! s:populate_reference_section(id2url) abort "{{{2
-    call search(s:REF_SECTION_PAT)
+    call search('^' . s:REF_SECTION . '$')
     if ! search('^\[\d\+]:')
         norm! G
     endif
@@ -113,6 +113,7 @@ fu! s:populate_reference_section(id2url) abort "{{{2
         \ {k,v -> '[' . k . ']: ' . v})),
         \ {a,b -> matchstr(a, '\d\+') - matchstr(b, '\d\+')})
     call append('.', lines)
+    sil exe 'keepj keepp %s/^' . s:REF_SECTION . '\n\n\zs\n//e'
 endfu
 " }}}1
 " Util {{{1
@@ -146,7 +147,7 @@ fu! s:get_url(...) abort "{{{2
 endfu
 
 fu! s:id_outside_reference_section() abort "{{{2
-    let ref_section_lnum = search(s:REF_SECTION_PAT, 'n')
+    let ref_section_lnum = search('^' . s:REF_SECTION . '$', 'n')
     if search('^\[\d\+]:', 'n', ref_section_lnum)
         sil exe 'lvim /^\[\d\+]:\%<' . ref_section_lnum . 'l/j %'
         echom "There're id declarations outside the Reference section"
@@ -162,9 +163,9 @@ fu! s:is_a_real_link() abort "{{{2
 endfu
 
 fu! s:make_sure_reference_section_exists() abort "{{{2
-    let ref_section_lnum = search(s:REF_SECTION_PAT, 'n')
+    let ref_section_lnum = search('^' . s:REF_SECTION . '$', 'n')
     if ! ref_section_lnum
-        call append('$', ['', '##', '# Reference', ''])
+        call append('$', ['', '##', s:REF_SECTION, ''])
         "                 ├┘{{{
         "                 └ necessary if the last line of the buffer is a list item;
         "                   otherwise the reference section would be wrongly highlighted
