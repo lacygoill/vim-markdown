@@ -2,6 +2,11 @@ if exists('b:current_syntax')
     finish
 endif
 
+" TODO: Read this:
+"
+"         https://github.com/russross/blackfriday/wiki/Extensions
+"         https://commonmark.org/
+
 " TODO: integrate most of the comments from this file in our notes
 
 " TODO: look for this pattern:
@@ -725,13 +730,23 @@ exe 'syn match markdownTodo  /\CTO'.'DO\|FIX'.'ME/ contained'
 "    │ foo │ bar │ baz │
 "    └─────┴─────┴─────┘
 "
+"    ┌───────────────────┬───────────────────────────────┐
+"    │                   │            login              │
+"    │                   ├──────────────────────┬────────┤
+"    │                   │          yes         │   no   │
+"    ├─────────────┬─────┼──────────────────────┼────────┤
+"    │ interactive │ yes │ bash_profile  bashrc │ bashrc │
+"    │             ├─────┼──────────────────────┼────────┤
+"    │             │ no  │ bash_profile         │   -    │
+"    └─────────────┴─────┴──────────────────────┴────────┘
+"
 "    A + B + C
 "    │   │   │
 "    │   │   └ end
 "    │   └ middle
 "    └ beginning
 "}}}
-syn match markdownTable /^    \%([┌└]─\|│.*[^ \t│].*│\|├─.*┤\).*/
+syn match markdownTable /^    \%([┌└]─\|│.*[^ \t│].*│\|├─.*┤\|│.*├\).*/
 
 syn match markdownOption /`\@1<='[-a-z]\{2,}'`\@=/ contained containedin=markdownCodeSpan,markdownListItemCodeSpan
 
