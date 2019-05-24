@@ -707,7 +707,7 @@ syn match markdownFootnoteDefinition '^\[^[^\]]\+\]:'
 syn match markdownEscape '\\[][\\`*_{}()<>#+.!-]'
 syn match markdownError '\w\@1<=_\w\@='
 
-syn match markdownPointer '^\s*\%([v^✘✔]\+\s*\)\+$'
+syn match markdownPointer '^\s\+\%([v^✘✔]\+\s*\)\+$'
 
 syn region markdownKey matchgroup=Special start=/<kbd>/ end=/<\/kbd>/ concealends
 

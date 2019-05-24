@@ -8,6 +8,9 @@ let s:REF_SECTION = '# Reference'
 " Interface {{{1
 fu! markdown#link_inline2ref#main() abort "{{{2
     let view = winsaveview()
+    if !exists('g:syntax')
+        syntax enable
+    endif
     let fen_save = &l:fen
 
     try
