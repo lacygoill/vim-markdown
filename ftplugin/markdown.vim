@@ -126,6 +126,8 @@ com! -bar -buffer -complete=custom,markdown#check#punctuation_complete -nargs=1 
     "                   └ useful to erase the command from the command-line after its execution
     "}}}
 
+com! -bar -buffer -complete=custom,markdown#commit_hash2link#completion -nargs=1 -range=% CommitHash2Link call markdown#commit_hash2link#main(<line1>,<line2>, <q-args>)
+
 " Warning: Don't call this command `:Fix`. It wouldn't work as expected with `:argdo`.
 com! -buffer -bar FixFormatting call markdown#fix_formatting()
 
@@ -512,6 +514,7 @@ let b:undo_ftplugin = get(b:, 'undo_ftplugin', 'exe')
     \
     \ | exe 'cuna <buffer> foldsortbysize'
     \ | delc CheckPunctuation
+    \ | delc CommitHash2Link
     \ | delc FixFormatting
     \ | delc FoldSortBySize
     \ | delc LinkInline2Ref

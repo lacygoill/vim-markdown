@@ -466,6 +466,26 @@ syn match markdownRule '^- *- *-[ -]*$'
 
 " List Item {{{1
 
+" Why do you include `UrlDelimiter` and `AutomaticLink`?{{{
+"
+" When  we `:Preview`  some  markdown file  which  contains several  consecutive
+" “automatic” links,  they're displayed one after  the other in the  browser, on
+" the same line.
+"
+" It's not readable; I would prefer each link to be on its own line.
+" Solution1: prepend `</br>` after each link:
+"
+"                              vvvvv
+"     <https://0x0.st/zam-.txt></br>
+"     <https://0x0.st/zami.txt>
+"
+" Solution2: press `m*ip` to convert the paragraph into a list.
+"
+" I prefer the second solution because it requires less work, and creates less noise.
+" However, I don't  like our links to  be highlighted as regular text  in a list
+" item; I prefer they keep their original highlighting.
+" For this to happen, we need to include `UrlDelimiter` and `AutomaticLink`.
+"}}}
 syn cluster markdownListItemElements contains=
     \markdownLinkText,
     \markdownListItemItalic,
@@ -474,7 +494,9 @@ syn cluster markdownListItemElements contains=
     \markdownListItemCodeSpan,
     \markdownListItemCodeBlock,
     \markdownListItemBlockquote,
-    \markdownListItemOutput
+    \markdownListItemOutput,
+    \markdownUrlDelimiter,
+    \markdownAutomaticLink
 
 " Don't remove `keepend`!{{{
 "
