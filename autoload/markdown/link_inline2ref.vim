@@ -8,7 +8,7 @@ let s:REF_SECTION = '# Reference'
 " Interface {{{1
 fu! markdown#link_inline2ref#main() abort "{{{2
     let view = winsaveview()
-    if !exists('g:syntax')
+    if !exists('g:syntax_on')
         syntax enable
     endif
     let fen_save = &l:fen
@@ -16,7 +16,7 @@ fu! markdown#link_inline2ref#main() abort "{{{2
     try
         let &l:fen = 0
         " Make sure syntax highlighting is enabled.
-        " `:argdo`, `:bufdo`, ... could disable it.
+        " `:argdo`, `:bufdo`, ... could disable it (e.g. `:argdo LinkInline2Ref`).
         let &ei = '' | do Syntax
 
         " We're going to inspect the syntax highlighting under the cursor.

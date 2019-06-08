@@ -86,11 +86,9 @@ endif
 "}}}
 
 " TODO:
-" read this:
-"         http://www.oliversherouse.com/2017/08/21/vim_zero.html
+" read this: http://www.oliversherouse.com/2017/08/21/vim_zero.html
 "
-" And this:
-"         https://www.romanzolotarev.com/jekyll/
+" And this: https://www.romanzolotarev.com/jekyll/
 "
 " Jekyll is a program which could convert our markdown notes into webpages.
 " We could read the latter in firefox.
@@ -98,20 +96,20 @@ endif
 " TODO:
 " Study this plugin.
 "
-"     https://github.com/vim-pandoc/vim-rmarkdown
-"     https://rmarkdown.rstudio.com/lesson-1.html
-"     https://rmarkdown.rstudio.com/authoring_pandoc_markdown.html#philosophy
+" https://github.com/vim-pandoc/vim-rmarkdown
+" https://rmarkdown.rstudio.com/lesson-1.html
+" https://rmarkdown.rstudio.com/authoring_pandoc_markdown.html#philosophy
 "
 " And maybe these ones:
 "
-"     https://github.com/jalvesaq/Nvim-R
-"     https://github.com/gaalcaras/ncm-R
-"     https://github.com/SidOfc/mkdx
+" https://github.com/jalvesaq/Nvim-R
+" https://github.com/gaalcaras/ncm-R
+" https://github.com/SidOfc/mkdx
 "
 " You may need to read these 2 books:
 "
-"     https://www.amazon.com/Dynamic-Documents-knitr-Second-Chapman/dp/1498716962/
-"     https://www.amazon.com/Data-Science-Transform-Visualize-Model/dp/1491910399/
+" https://www.amazon.com/Dynamic-Documents-knitr-Second-Chapman/dp/1498716962/
+" https://www.amazon.com/Data-Science-Transform-Visualize-Model/dp/1491910399/
 "
 " We've already downloaded them.
 "

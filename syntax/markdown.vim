@@ -4,8 +4,8 @@ endif
 
 " TODO: Read this:
 "
-"         https://github.com/russross/blackfriday/wiki/Extensions
-"         https://commonmark.org/
+"https://github.com/russross/blackfriday/wiki/Extensions
+"https://commonmark.org/
 
 " TODO: integrate most of the comments from this file in our notes
 
@@ -31,8 +31,8 @@ endif
 "
 " TODO:
 "
-"     https://daringfireball.net/projects/markdown/syntax
-"     https://daringfireball.net/projects/markdown/basics
+"https://daringfireball.net/projects/markdown/syntax
+"https://daringfireball.net/projects/markdown/basics
 "
 " `markdown` provides some  useful syntax which our syntax  plugin don't emulate
 " yet.
@@ -45,9 +45,10 @@ endif
 
 " TODO:
 " read and take inspiration from:
-"         https://github.com/vim-pandoc/vim-pandoc-syntax
-"         http://pandoc.org/MANUAL.html#pandocs-markdown
-"         https://github.com/junegunn/vim-journal/blob/master/syntax/journal.vim
+"
+" https://github.com/vim-pandoc/vim-pandoc-syntax
+" http://pandoc.org/MANUAL.html#pandocs-markdown
+" https://github.com/junegunn/vim-journal/blob/master/syntax/journal.vim
 
 " Should I source the html syntax plugin?{{{
 "
