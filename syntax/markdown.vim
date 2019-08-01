@@ -619,7 +619,7 @@ syn region markdownHideAnswer
     \ end=/^↢.*/
     \ conceal
     \ cchar=?
-    \ contains=markdownCodeSpan,markdownBold,markdownItalic,markdownBoldItalic,markdownCodeBlock,markdownOutput,markdownPointer
+    \ contains=markdownCodeSpan,markdownBold,markdownItalic,markdownBoldItalic,markdownCodeBlock,markdownOutput,markdownPointer,markdownBlockQuote
     \ containedin=markdownCodeBlock
     \ keepend
 
