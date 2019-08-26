@@ -486,6 +486,11 @@ let b:sandwich_recipes = deepcopy(get(g:, 'sandwich#recipes', get(g:, 'sandwich#
     \         "keepj keepp 'zs/^\\s*↢\\s*$/↢/e",
     \ ]}]
 
+" showbreak {{{2
+
+" Used in the autocmd `my_showbreak` in vimrc to (re)set `'showbreak'`.
+let b:showbreak = 0
+
 " did_ftplugin {{{2
 
 " We don't want other ftplugins to be sourced.
