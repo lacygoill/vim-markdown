@@ -161,8 +161,8 @@ endfu
 
 fu! s:is_a_real_link() abort "{{{2
     return !empty(filter(reverse(map(synstack(line('.'), col('.')),
-        \ {i,v -> synIDattr(v, 'name')})),
-        \ {i,v -> v =~# '^markdownLink'}))
+        \ {_,v -> synIDattr(v, 'name')})),
+        \ {_,v -> v =~# '^markdownLink'}))
 endfu
 
 fu! s:make_sure_reference_section_exists() abort "{{{2

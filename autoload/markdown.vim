@@ -85,7 +85,7 @@ fu! markdown#fix_formatting() abort "{{{2
     " And the rest of the function  relies on the syntax highlighting, which may
     " have additional unexpected side effects.
     "}}}
-    if get(map(synstack('$', 1), {i,v -> synIDattr(v, 'name')}), 0, '') =~# '^markdownEmbed'
+    if get(map(synstack('$', 1), {_,v -> synIDattr(v, 'name')}), 0, '') =~# '^markdownEmbed'
         call append('$', ['```', ''])
     endif
 
@@ -127,7 +127,7 @@ fu! markdown#fix_formatting() abort "{{{2
     call cursor(1, 1)
     let g = 0
     while search('^#', 'W') && g < 1000
-        let item = get(map(synstack(line('.'), col('.')), {i,v -> synIDattr(v, 'name')}), -1, '')
+        let item = get(map(synstack(line('.'), col('.')), {_,v -> synIDattr(v, 'name')}), -1, '')
         " Why `''` in addition to `Delimiter`?{{{
         "
         " Just in case there's still no syntax highlighting.
@@ -150,7 +150,7 @@ fu! s:get_filetype(ft) abort "{{{2
         return ft
     else
         let ft = matchstr(get(filter(split(execute('autocmd filetypedetect'), '\n'),
-            \ {i,v -> v =~# '\m\C\*\.'.ft.'\>'}), 0, ''), '\m\Csetf\%[iletype]\s*\zs\S*')
+            \ {_,v -> v =~# '\m\C\*\.'.ft.'\>'}), 0, ''), '\m\Csetf\%[iletype]\s*\zs\S*')
         if filereadable($VIMRUNTIME.'/syntax/'.ft.'.vim')
             return ft
         endif

@@ -14,7 +14,7 @@ fu! markdown#get_definition#main(...) abort
     let lines = getline(1, '$')
     call map(lines, {i,v -> {'bufnr': bufnr('%'), 'lnum': i+1, 'text': v}})
     let pat = '^#.*\c\V' . escape(word, '\')
-    call filter(lines, {i,v -> v.text =~# pat})
+    call filter(lines, {_,v -> v.text =~# pat})
     if empty(lines)
         echom 'no definition for ' . word
         if fname isnot# 'glossary.md'
