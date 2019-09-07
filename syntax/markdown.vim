@@ -7,6 +7,10 @@ endif
 "https://github.com/russross/blackfriday/wiki/Extensions
 "https://commonmark.org/
 
+" TODO: It would be nice if some styles could be applied on multi-line texts.
+" Like bold and italic; maybe codespan too.
+" Make sure the change doesn't have a too big impact on performance.
+
 " TODO: integrate most of the comments from this file in our notes
 
 " TODO: look for this pattern:

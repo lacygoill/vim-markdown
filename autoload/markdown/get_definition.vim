@@ -18,7 +18,7 @@ fu! markdown#get_definition#main(...) abort
     if empty(lines)
         echom 'no definition for ' . word
         if fname isnot# 'glossary.md'
-            close
+            q
         endif
         return
     else
