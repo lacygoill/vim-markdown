@@ -180,7 +180,7 @@ endfu
 fu! s:markdown_link_syntax_group_exists() abort "{{{2
     try
         sil syn list markdownLink
-    catch /^Vim\%((\a\+)\)\=:E28/
+    catch /^Vim\%((\a\+)\)\=:E28:/
         return 0
     endtry
     return 1
