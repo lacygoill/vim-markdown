@@ -10,7 +10,7 @@ let g:autoloaded_markdown#preview = 1
 "     $ cd instant-markdown-d
 "     $ npm install
 "}}}
-let s:web_server = $HOME.'/GitRepos/instant-markdown-d/instant-markdown-d'
+let s:web_server = $HOME.'/Vcs/instant-markdown-d/instant-markdown-d'
 if !executable(s:web_server)
     echom 'cannot find the web server:   '.s:web_server
 endif

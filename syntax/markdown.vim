@@ -501,7 +501,8 @@ syn cluster markdownListItemElements contains=
     \markdownListItemBlockquote,
     \markdownListItemOutput,
     \markdownUrlDelimiter,
-    \markdownAutomaticLink
+    \markdownAutomaticLink,
+    \@Spell
 
 " Don't remove `keepend`!{{{
 "
