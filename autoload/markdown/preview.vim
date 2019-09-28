@@ -82,23 +82,21 @@ endfu
 fu! s:start_daemon(initial_lines) abort "{{{1
     " The markdown preview server can be configured via several environment variables:{{{
     "
-    "   ┌─────────────────────────────────────────┬─────────────────────────────────────────────────────────────┐
-    "   │ INSTANT_MARKDOWN_OPEN_TO_THE_WORLD=1    │ By default, the server only listens on localhost.           │
-    "   │                                         │ To make the server available to others in your network,     │
-    "   │                                         │ set this environment variable to a non-empty value.         │
-    "   │                                         │ Only use this setting on trusted networks!                  │
-    "   ├─────────────────────────────────────────┼─────────────────────────────────────────────────────────────┤
-    "   │ INSTANT_MARKDOWN_ALLOW_UNSAFE_CONTENT=1 │ By default, scripts are blocked.                            │
-    "   │                                         │ Use this preference to allow scripts.                       │
-    "   ├─────────────────────────────────────────┼─────────────────────────────────────────────────────────────┤
-    "   │ INSTANT_MARKDOWN_BLOCK_EXTERNAL=1       │ By default, external resources such as images, stylesheets, │
-    "   │                                         │ frames and plugins are allowed.                             │
-    "   │                                         │ Use this setting to block such external content.            │
-    "   └─────────────────────────────────────────┴─────────────────────────────────────────────────────────────┘
-    " Source:
-    "     https://github.com/suan/instant-markdown-d#environment-variables
-    "
-"}}}
+    "    ┌─────────────────────────────────────────┬─────────────────────────────────────────────────────────────┐
+    "    │ INSTANT_MARKDOWN_OPEN_TO_THE_WORLD=1    │ By default, the server only listens on localhost.           │
+    "    │                                         │ To make the server available to others in your network,     │
+    "    │                                         │ set this environment variable to a non-empty value.         │
+    "    │                                         │ Only use this setting on trusted networks!                  │
+    "    ├─────────────────────────────────────────┼─────────────────────────────────────────────────────────────┤
+    "    │ INSTANT_MARKDOWN_ALLOW_UNSAFE_CONTENT=1 │ By default, scripts are blocked.                            │
+    "    │                                         │ Use this preference to allow scripts.                       │
+    "    ├─────────────────────────────────────────┼─────────────────────────────────────────────────────────────┤
+    "    │ INSTANT_MARKDOWN_BLOCK_EXTERNAL=1       │ By default, external resources such as images, stylesheets, │
+    "    │                                         │ frames and plugins are allowed.                             │
+    "    │                                         │ Use this setting to block such external content.            │
+    "    └─────────────────────────────────────────┴─────────────────────────────────────────────────────────────┘
+    " Source: https://github.com/suan/instant-markdown-d#environment-variables
+    "}}}
     " Is it necessary to set this variable?{{{
     "
     " For Vimium to be allowed to work, yes.

@@ -207,8 +207,8 @@ setl cms=>\ %s
 "        ││┌ Nested comment.
 "        │││ Nesting with mixed parts is allowed.
 "        │││ Ex: if 'comments' is "n:*,n:-", a line starting with "* -" is a comment.
-"        │││                                                       └─┤
-"        │││                                                         └ mixed
+"        │││                                                       ├─┘
+"        │││                                                       └ mixed
 "        │││}}}
 setl com=fbn:-,fb:*,fb:+
 
@@ -217,20 +217,20 @@ setl com=fbn:-,fb:*,fb:+
 " 'comments' contains a list of strings which can start a commented line.
 " Vim needs to know what the comment leader is in various occasions:
 "
-"         - if 'fo' contains the flag `r`, and we open a new line, hitting CR
-"           from insert mode, Vim needs to know what to prepend at the
-"           beginning
+"    - if 'fo' contains the flag `r`, and we open a new line, hitting CR
+"      from insert mode, Vim needs to know what to prepend at the
+"      beginning
 "
-"           same thing if 'fo' contains the flag `o`, and we open a new line,
-"           hitting o O from normal mode
+"      same thing if 'fo' contains the flag `o`, and we open a new line,
+"      hitting o O from normal mode
 "
-"         - if 'fo' contains the flag `c`, Vim automatically wraps a long
-"           commented line; when it breaks the current line, and open a new
-"           one, it must know what to prepend at the beginning
+"    - if 'fo' contains the flag `c`, Vim automatically wraps a long
+"      commented line; when it breaks the current line, and open a new
+"      one, it must know what to prepend at the beginning
 "
-"         - when we format a comment with the `gw` operator, Vim needs to know
-"           what the comment leader is, to be able to remove / add it when it
-"           joins / splits lines
+"    - when we format a comment with the `gw` operator, Vim needs to know
+"      what the comment leader is, to be able to remove / add it when it
+"      joins / splits lines
 
 " We aren't limited to single-line comments.
 " We can make Vim recognize multi-line ones too.
@@ -244,38 +244,38 @@ setl com=fbn:-,fb:*,fb:+
 " We often use it to infer what a comment looks like, because it's easier than
 " parsing 'com', but that's it.
 "
-"                            ┌ %s is replaced by "{{_{ and "}}_}  at the end of resp.
-"                            │ the starting line of the fold and the ending line of the fold
-"                 ┌──────────┤
+"                 ┌ %s is replaced by "{{_{ and "}}_}  at the end of resp.
+"                 │ the starting line of the fold and the ending line of the fold
+"                 ├──────────┐
 "         "%s  →  "{{_{  "}}_}
-"         └─┤
-"           └ template
+"         ├─┘
+"         └ template
 "}}}
 " What's the meaning of the 'f' flag? {{{
 
 " Here's a long line:
 "
-"         - some very long comment some very long comment some very long comment some very long comment
+"     - some very long comment some very long comment some very long comment some very long comment
 
 " If we type this line in a markdown buffer, or if it has already been typed and
 " we press `gwip`:
 "
 " Without the `f` flag and with `&l:tw = 80`, we get:
 "
-"         - some very long comment some very long comment some very long comment some
-"         - very long comment
+"     - some very long comment some very long comment some very long comment some
+"     - very long comment
 "
 " With the `f` flag and `&l:tw = 80`, we get:
 "
-"         - some very long comment some very long comment some very long comment some
-"           very long comment
+"     - some very long comment some very long comment some very long comment some
+"       very long comment
 "
 " This shows  why `f` is important  for a comment  leader used as a  bullet list
 " marker. The meaning  of a  comment leader  depends on  the context  where it's
 " used. It means that all the text between it and the next comment leader:
 "
-"       - is commented in a regular paragraph
-"       - belongs to a same item in a bullet list
+"    - is commented in a regular paragraph
+"    - belongs to a same item in a bullet list
 "
 " So, you can break/join the lines of a regular paragraph, however you like,
 " without changing its meaning. But you can't do the same for a bullet list.
@@ -292,13 +292,13 @@ setl com=fbn:-,fb:*,fb:+
 "
 " Without `n`:
 "
-"       ┌─ interpreted as a part of the comment
+"       ┌ interpreted as a part of the comment
 "       │
 "     * - some very long comment some very long comment some very long comment some
 "       very long comment
 "
 " With `n`:
-"       ┌─ recognized as a (nested) comment leader
+"       ┌ recognized as a (nested) comment leader
 "       │
 "     * - some very long comment some very long comment some very long comment
 "         some very long comment
@@ -310,116 +310,13 @@ setl com=fbn:-,fb:*,fb:+
 compiler pandoc
 
 " folding + conceal "{{{2
-" Why don't we set the folding options directly, instead of using an autocmd?{{{
-"
-" When we load a markdown buffer, the window-local options:
-"
-"       - foldmethod
-"       - foldexpr
-"       - foldtext
-"
-" … are set properly.
-"
-" But after that, if we display it again in another window, using any motion
-" which doesn't read a buffer:
-"
-"       - 'A
-"       - :b42
-"       - gf
-"       - C-o
-"       …
-"
-" … they aren't set anymore.
-"
-" Some of them ('A, gf, …) may read a buffer, but only if it doesn't already exist.
-" So, most of the time:
-"
-"        1. BufReadPost is NOT fired
-"        2. Filetype is NOT fired
-"        3. the ftplugins are NOT sourced
-"
-" Because of this, we may lose folding when we redisplay one of our markdown
-" notes in a window where it wasn't initially sourced.
-"
-" The pb doesn't occur if we split the window where a markdown buffer was
-" first displayed. Because the new window inherits the options of the original.
-"
-" This problem isn't specific to these 3 options, but to ALL window-local options.
-" Once a buffer is loaded in a window, we have no guarantee that its window-local
-" options will be applied:
-"
-"        - in other windows
-"        - in its initial window, if in the meantime we loaded another buffer
-"          whose window-local options were in conflict
-"}}}
-" Are there other solutions?{{{
-"
-" Yes:
-"
-"    - :e                     re-fire `FileType`
-"    - :let &ft=&ft           "
-"    - :doautocmd FileType    "
-"}}}
-" Why `BufWinEnter` instead of `WinEnter`?{{{
-"
-" We can't use `WinEnter` for 2 reasons:
-"
-"     - too frequent
-"     - not fired when we load a buffer (:e /path/to/file)
-"}}}
-augroup my_markdown
-    " Why `au! * <buffer>` instead of simply `au!`?{{{
-    "
-    " We can't remove all autocmds with `au!`.
-    " Suppose we load a markdown buffer A, whose number is 2:
-    "
-    "       it installs an autocmd for buffer 2 (<buffer=2>)
-    "
-    " Then, we load another one B, whose number is 4:
-    "
-    "       it removes the autocmd for buffer 2
-    "       it installs an autocmd for buffer 4 (<buffer=4>)
-    "
-    " Finally, we re-display A in a new window:
-    "
-    "       our window-local settings won't be applied, because there's no autocmd
-    "       for the pattern <buffer=2> anymore
-    "
-    " We must remove autocmds only for the current buffer.
-"}}}
-    " Usually, we don't need to pass a pattern to `au!`, what's different here?{{{
-    "
-    " Usually, we re-install as many autocmds as we've removed:
-    "
-    "       au!                               remove     for ALL buffers
-    "       au CursorHold * checktime         re-install for ALL buffers (*)
-    "
-    "       au!                               remove     for `some_file`
-    "       au BufEnter some_file some_cmd    re-install for `some_file`
-    "
-    " But not here:
-    "
-    "       au!                          remove          for ALL previous buffers, whose filetype was markdown
-    "       au BufWinEnter <buffer> …    re-install ONLY for CURRENT buffer
-"}}}
-    au! * <buffer>
-    " │ │ │
-    " │ │ └─ but ONLY the ones LOCAL to the CURRENT buffer
-    " │ └─ listening to any event
-    " └─ remove autocmds in the current augroup
 
-    " When we load A, this will only remove autocmds for the pattern `<buffer=2>`.
-    " When we load B, this will only remove autocmds for the pattern `<buffer=4>`.
-    " And every time, the next `:au` re-installs a single instance of the needed autocmd.
-
-    au BufWinEnter  <buffer>  setl fml=0
-                          \ | setl fdm=expr
-                          \ | setl fdt=fold#fdt#get()
-                          \ | setl fde=fold#md#fde#stacked()
-                           "                       │
-                           "                       └─ Alternative: 'nested()'
-    au BufWinEnter <buffer> setl cole=2 cocu=nc
-augroup END
+setl fml=0
+setl fdm=expr
+setl fdt=fold#fdt#get()
+setl fde=fold#md#fde#stacked()
+setl cole=2
+setl cocu=nc
 
 " fp  tw {{{2
 
@@ -504,7 +401,6 @@ let b:undo_ftplugin = get(b:, 'undo_ftplugin', 'exe')
     \ | setl ai< cms< cocu< cole< com< fde< fdm< fdt< flp< fml< spl< tw< wrap<
     \ | set efm< fp< kp< mp<
     \ | unlet! b:cr_command b:exchange_indent b:sandwich_recipes b:markdown_embed
-    \ | exe 'au! my_markdown * <buffer>'
     \ | exe 'sil! au! instant-markdown * <buffer>'
     \
     \ | exe 'unmap <buffer> [['

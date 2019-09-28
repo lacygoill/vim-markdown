@@ -11,10 +11,11 @@ fu! markdown#link_inline2ref#main() abort "{{{2
     if !exists('g:syntax_on')
         syntax enable
     endif
-    let fen_save = &l:fen
+
+    let [fen_save, winid, bufnr] = [&l:fen, win_getid(), bufnr('%')]
+    let &l:fen = 0
 
     try
-        let &l:fen = 0
         " Make sure syntax highlighting is enabled.
         " `:argdo`, `:bufdo`, ... could disable it (e.g. `:argdo LinkInline2Ref`).
         let &ei = '' | do Syntax
@@ -45,7 +46,10 @@ fu! markdown#link_inline2ref#main() abort "{{{2
         let id2url = s:create_reflinks()
         call s:populate_reference_section(id2url)
     finally
-        let &l:fen = fen_save
+        if winbufnr(winid) == bufnr
+            let [tabnr, winnr] = win_id2tabwin(winid)
+            call settabwinvar(tabnr, winnr, '&fen', fen_save)
+        endif
         call winrestview(view)
     endtry
 endfu
