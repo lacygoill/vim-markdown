@@ -129,13 +129,13 @@ com! -bar -buffer -complete=custom,markdown#commit_hash2link#completion -nargs=1
 " Warning: Don't call this command `:Fix`. It wouldn't work as expected with `:argdo`.
 com! -buffer -bar FixFormatting call markdown#fix_formatting()
 
-cnorea  <buffer><expr>  fixformatting  getcmdtype() is# ':' && getcmdpos() ==# 14
+cnorea  <buffer><expr>  fixformatting  getcmdtype() is# ':' && getcmdpos() == 14
 \                                      ?    'FixFormatting'
 \                                      :    'fixformatting'
 
 com! -bar -buffer -range=%  FoldSortBySize  exe fold#md#sort#by_size(<line1>,<line2>)
 
-cnorea  <buffer><expr>  foldsortbysize  getcmdtype() is# ':' && getcmdpos() ==# 15
+cnorea  <buffer><expr>  foldsortbysize  getcmdtype() is# ':' && getcmdpos() == 15
 \                                       ?    'FoldSortBySize'
 \                                       :    'foldsortbysize'
 

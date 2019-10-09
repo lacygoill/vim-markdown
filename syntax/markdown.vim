@@ -737,8 +737,6 @@ syn match markdownError '\w\@1<=_\w\@='
 
 syn match markdownPointer '^\s\+\%([v^✘✔]\+\s*\)\+$'
 
-syn region markdownKey matchgroup=Special start=/<kbd>/ end=/<\/kbd>/ concealends
-
 exe 'syn match markdownTodo  /\CTO'.'DO\|FIX'.'ME/ contained'
 
 " If you change this regex, test the new syntax highlighting against this text:{{{
