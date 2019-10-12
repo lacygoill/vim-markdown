@@ -63,10 +63,10 @@ fu s:create_reflinks() abort "{{{2
     while search('\[.\{-}]\zs\%(\[\d\+]\|(.\{-})\)', 'W') && id < s:GUARD
         let line = getline('.')
         let col = col('.')
-        let char_under_cursor = matchstr(line, '\%' . col . 'c.')
+        let char_under_cursor = matchstr(line, '\%'..col..'c.')
         " [some text][some id]
         if char_under_cursor is# '['
-            let old_id = matchstr(line, '\%' . col . 'c\[\zs\d\+\ze]')
+            let old_id = matchstr(line, '\%'..col..'c\[\zs\d\+\ze]')
             let url = s:get_url(old_id)
             " update id{{{
             "
@@ -78,7 +78,7 @@ fu s:create_reflinks() abort "{{{2
             "
             "     [some text][1]
             "}}}
-            let new_line = substitute(line, '\%' . col . 'c\[\d\+', '[' . id, '')
+            let new_line = substitute(line, '\%'..col..'c\[\d\+', '['..id, '')
             " Do *not* use `:s`!{{{
             "
             " It would make the cursor move which would fuck everything up.
@@ -95,7 +95,7 @@ fu s:create_reflinks() abort "{{{2
             norm! %
             let col_end = col('.')
             norm! %
-            let new_line = substitute(line, '\%' . col . 'c(.*\%' . col_end . 'c)', '[' . id . ']', '')
+            let new_line = substitute(line, '\%'..col..'c(.*\%'..col_end..'c)', '['..id..']', '')
             call setline('.', new_line)
             let id2url[id] = url
         endif
@@ -105,7 +105,7 @@ fu s:create_reflinks() abort "{{{2
 endfu
 
 fu s:populate_reference_section(id2url) abort "{{{2
-    call search('^' . s:REF_SECTION . '$')
+    call search('^'..s:REF_SECTION..'$')
     if ! search('^\[\d\+]:')
         norm! G
     endif
@@ -117,17 +117,17 @@ fu s:populate_reference_section(id2url) abort "{{{2
     " > **Strings**, Lists, Dicts and Funcrefs **will be considered as being 0**.
     "}}}
     let lines = sort(values(map(copy(a:id2url),
-        \ {k,v -> '[' . k . ']: ' . v})),
+        \ {k,v -> '['..k..']: '..v})),
         \ {a,b -> matchstr(a, '\d\+') - matchstr(b, '\d\+')})
     call append('.', lines)
-    sil exe 'keepj keepp %s/^' . s:REF_SECTION . '\n\n\zs\n//e'
+    sil exe 'keepj keepp %s/^'..s:REF_SECTION..'\n\n\zs\n//e'
 endfu
 " }}}1
 " Util {{{1
 fu s:get_url(...) abort "{{{2
     if a:0
         let id = a:1
-        return matchstr(getline(search('^\[' . id . ']:', 'n')), ':\s*\zs.*')
+        return matchstr(getline(search('^\['..id..']:', 'n')), ':\s*\zs.*')
     else
         " Do *not* use `norm! %`!{{{
         "
@@ -154,9 +154,9 @@ fu s:get_url(...) abort "{{{2
 endfu
 
 fu s:id_outside_reference_section() abort "{{{2
-    let ref_section_lnum = search('^' . s:REF_SECTION . '$', 'n')
+    let ref_section_lnum = search('^'..s:REF_SECTION..'$', 'n')
     if search('^\[\d\+]:', 'n', ref_section_lnum)
-        sil exe 'lvim /^\[\d\+]:\%<' . ref_section_lnum . 'l/j %'
+        sil exe 'lvim /^\[\d\+]:\%<'..ref_section_lnum..'l/j %'
         echom "There're id declarations outside the Reference section"
         call setloclist(0, [], 'a', {'title': 'move them inside or remove/edit them'})
         return 1
@@ -170,7 +170,7 @@ fu s:is_a_real_link() abort "{{{2
 endfu
 
 fu s:make_sure_reference_section_exists() abort "{{{2
-    let ref_section_lnum = search('^' . s:REF_SECTION . '$', 'n')
+    let ref_section_lnum = search('^'..s:REF_SECTION..'$', 'n')
     if ! ref_section_lnum
         call append('$', ['', '##', s:REF_SECTION, ''])
         "                 ├┘{{{
@@ -196,7 +196,7 @@ fu s:multi_line_links() abort "{{{2
     let pat = '\[[^][]*\n\_[^][]*](.*)'
     while search(pat, 'W') && g <= s:GUARD
         if s:is_a_real_link()
-            exe 'lvim /'.pat.'/gj %'
+            exe 'lvim /'..pat..'/gj %'
             call setloclist(0, [], 'a',
                 \ {'title': 'some descriptions of links span multiple lines; make them mono-line'})
             return 1
