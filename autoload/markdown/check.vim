@@ -1,4 +1,4 @@
-fu! markdown#check#punctuation(type, lnum1, lnum2) abort "{{{1
+fu markdown#check#punctuation(type, lnum1, lnum2) abort "{{{1
     if a:type is# '-help'
         h markdown-punctuation
         return ''
@@ -14,7 +14,15 @@ fu! markdown#check#punctuation(type, lnum1, lnum2) abort "{{{1
         " make sure any coordinating conjunction is preceded by a comma
         " > She wanted to study but she was tired. (✘)
         " > She wanted to study, but she was tired. (✔)
-        let fanboys = ['for', 'and', 'nor', 'but', 'or', 'yet', 'so']
+        let fanboys =<< trim END
+            for
+            and
+            nor
+            but
+            or
+            yet
+            so
+        END
         let pat = join(fanboys, '\|')
         let pat = '\C[^,; \t]\zs\ze\_s\+\%('.pat.'\)\_s\+'
 
@@ -48,6 +56,6 @@ fu! markdown#check#punctuation(type, lnum1, lnum2) abort "{{{1
     return ''
 endfu
 
-fu! markdown#check#punctuation_complete(arglead, _cmdline, _pos) abort "{{{1
+fu markdown#check#punctuation_complete(arglead, _cmdline, _pos) abort "{{{1
     return join(['-comma', '-help'], "\n")
 endfu

@@ -6,7 +6,7 @@ endif
 
 " setl fdm=expr fde=Markdown_fold() fdt=Markdown_fold_text()
 
-" fu! Markdown_fold_text() abort
+" fu Markdown_fold_text() abort
 "     let hash_indent = s:hash_indent(v:foldstart)
 "     let title       = substitute(getline(v:foldstart), '^#\+\s*', '', '')
 "     let foldsize    = (v:foldend - v:foldstart + 1)
@@ -14,7 +14,7 @@ endif
 "     return hash_indent.' '.title.' '.linecount
 " endfu
 
-" fu! Markdown_fold() abort
+" fu Markdown_fold() abort
 "     let line = getline(v:lnum)
 
 "     " Regular headers
@@ -36,7 +36,7 @@ endif
 "     return '='
 " endfu
 
-" fu! s:hash_indent(lnum) abort
+" fu s:hash_indent(lnum) abort
 "     let hash_header = matchstr(getline(a:lnum), '^#\{1,6}')
 "     if len(hash_header) > 0
 "         " hashtag header
@@ -118,26 +118,18 @@ endif
 
 " Commands {{{1
 
-com! -bar -buffer -complete=custom,markdown#check#punctuation_complete -nargs=1 -range=%
+com -bar -buffer -complete=custom,markdown#check#punctuation_complete -nargs=1 -range=%
     \ CheckPunctuation  echo markdown#check#punctuation(<q-args>, <line1>, <line2>)
     "                   │{{{
     "                   └ useful to erase the command from the command-line after its execution
     "}}}
 
-com! -bar -buffer -complete=custom,markdown#commit_hash2link#completion -nargs=1 -range=% CommitHash2Link call markdown#commit_hash2link#main(<line1>,<line2>, <q-args>)
+com -bar -buffer -complete=custom,markdown#commit_hash2link#completion -nargs=1 -range=% CommitHash2Link call markdown#commit_hash2link#main(<line1>,<line2>, <q-args>)
 
 " Warning: Don't call this command `:Fix`. It wouldn't work as expected with `:argdo`.
-com! -buffer -bar FixFormatting call markdown#fix_formatting()
+com -bar -buffer FixFormatting call markdown#fix_formatting()
 
-cnorea  <buffer><expr>  fixformatting  getcmdtype() is# ':' && getcmdpos() == 14
-\                                      ?    'FixFormatting'
-\                                      :    'fixformatting'
-
-com! -bar -buffer -range=%  FoldSortBySize  exe fold#md#sort#by_size(<line1>,<line2>)
-
-cnorea  <buffer><expr>  foldsortbysize  getcmdtype() is# ':' && getcmdpos() == 15
-\                                       ?    'FoldSortBySize'
-\                                       :    'foldsortbysize'
+com -bar -buffer -range=%  FoldSortBySize  exe fold#md#sort#by_size(<line1>,<line2>)
 
 " Purpose: Convert inline link:{{{
 "
@@ -149,9 +141,9 @@ cnorea  <buffer><expr>  foldsortbysize  getcmdtype() is# ':' && getcmdpos() == 1
 "
 "  Make it local to markdown
 "}}}
-com! -buffer -bar -range=% LinkInline2Ref  call markdown#link_inline2ref#main()
+com -buffer -bar -range=% LinkInline2Ref  call markdown#link_inline2ref#main()
 
-com! -buffer -bar Preview call markdown#preview#main()
+com -buffer -bar Preview call markdown#preview#main()
 
 " Mappings {{{1
 
@@ -348,7 +340,7 @@ setl wrap
 " When we hit `CR`, we want the cursor to move on the 100th column.
 " By default, it moves on the 80th column.
 
-let b:cr_command = 'norm! 100|'
+const b:cr_command = 'norm! 100|'
 
 " exchange_indent {{{2
 
@@ -356,7 +348,7 @@ let b:cr_command = 'norm! 100|'
 " But we don't want that for markdown buffers.
 " For more info:    :h g:exchange_indent
 
-let b:exchange_indent = ''
+const b:exchange_indent = ''
 
 " markdown_embed {{{2
 
@@ -365,15 +357,27 @@ let b:exchange_indent = ''
 " performance.
 
 if search('^```\S\+', 'n')
-    let b:markdown_embed = map(uniq(sort(filter(getline(1, '$'),
+    const b:markdown_embed = map(uniq(sort(filter(getline(1, '$'),
         \ {_,v -> v =~# '^```\S\+'}))),
         \ {_,v -> matchstr(v, '```\zs[a-z]\+')})
 endif
 
+" mc_chain {{{2
+
+const b:mc_chain =<< trim END
+    file
+    keyn
+    tags
+    ulti
+    dict
+    abbr
+    c-n
+END
+
 " sandwich_recipes {{{2
 
 " Let us conceal the answer to a question by pressing `sa {text-object} c`.
-let b:sandwich_recipes = deepcopy(get(g:, 'sandwich#recipes', get(g:, 'sandwich#default_recipes', [])))
+const b:sandwich_recipes = deepcopy(get(g:, 'sandwich#recipes', get(g:, 'sandwich#default_recipes', [])))
     \ + [{
     \     'buns': ['↣ ', ' ↢'],
     \     'input': ['c'],
@@ -400,7 +404,7 @@ let b:undo_ftplugin = get(b:, 'undo_ftplugin', 'exe')
     \ . "
     \ | setl ai< cms< cocu< cole< com< fde< fdm< fdt< flp< fml< spl< tw< wrap<
     \ | set efm< fp< kp< mp<
-    \ | unlet! b:cr_command b:exchange_indent b:sandwich_recipes b:markdown_embed
+    \ | unlet! b:cr_command b:exchange_indent b:sandwich_recipes b:markdown_embed b:mc_chain
     \ | exe 'sil! au! instant-markdown * <buffer>'
     \
     \ | exe 'unmap <buffer> [['
@@ -411,7 +415,6 @@ let b:undo_ftplugin = get(b:, 'undo_ftplugin', 'exe')
     \ | exe 'xunmap <buffer> gd'
     \ | exe 'nunmap <buffer> gl'
     \
-    \ | exe 'cuna <buffer> foldsortbysize'
     \ | delc CheckPunctuation
     \ | delc CommitHash2Link
     \ | delc FixFormatting

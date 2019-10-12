@@ -6,7 +6,7 @@ let s:GUARD = 1000
 let s:REF_SECTION = '# Reference'
 
 " Interface {{{1
-fu! markdown#link_inline2ref#main() abort "{{{2
+fu markdown#link_inline2ref#main() abort "{{{2
     let view = winsaveview()
     if !exists('g:syntax_on')
         syntax enable
@@ -55,7 +55,7 @@ fu! markdown#link_inline2ref#main() abort "{{{2
 endfu
 " }}}1
 " Core {{{1
-fu! s:create_reflinks() abort "{{{2
+fu s:create_reflinks() abort "{{{2
     call cursor(1,1)
     let id = 1
     let id2url = {}
@@ -104,7 +104,7 @@ fu! s:create_reflinks() abort "{{{2
     return id2url
 endfu
 
-fu! s:populate_reference_section(id2url) abort "{{{2
+fu s:populate_reference_section(id2url) abort "{{{2
     call search('^' . s:REF_SECTION . '$')
     if ! search('^\[\d\+]:')
         norm! G
@@ -124,7 +124,7 @@ fu! s:populate_reference_section(id2url) abort "{{{2
 endfu
 " }}}1
 " Util {{{1
-fu! s:get_url(...) abort "{{{2
+fu s:get_url(...) abort "{{{2
     if a:0
         let id = a:1
         return matchstr(getline(search('^\[' . id . ']:', 'n')), ':\s*\zs.*')
@@ -153,7 +153,7 @@ fu! s:get_url(...) abort "{{{2
     endif
 endfu
 
-fu! s:id_outside_reference_section() abort "{{{2
+fu s:id_outside_reference_section() abort "{{{2
     let ref_section_lnum = search('^' . s:REF_SECTION . '$', 'n')
     if search('^\[\d\+]:', 'n', ref_section_lnum)
         sil exe 'lvim /^\[\d\+]:\%<' . ref_section_lnum . 'l/j %'
@@ -163,13 +163,13 @@ fu! s:id_outside_reference_section() abort "{{{2
     endif
 endfu
 
-fu! s:is_a_real_link() abort "{{{2
+fu s:is_a_real_link() abort "{{{2
     return match(reverse(map(synstack(line('.'), col('.')),
         \ {_,v -> synIDattr(v, 'name')})),
         \ '^markdownLink') >= 0
 endfu
 
-fu! s:make_sure_reference_section_exists() abort "{{{2
+fu s:make_sure_reference_section_exists() abort "{{{2
     let ref_section_lnum = search('^' . s:REF_SECTION . '$', 'n')
     if ! ref_section_lnum
         call append('$', ['', '##', s:REF_SECTION, ''])
@@ -181,7 +181,7 @@ fu! s:make_sure_reference_section_exists() abort "{{{2
     endif
 endfu
 
-fu! s:markdown_link_syntax_group_exists() abort "{{{2
+fu s:markdown_link_syntax_group_exists() abort "{{{2
     try
         sil syn list markdownLink
     catch /^Vim\%((\a\+)\)\=:E28:/
@@ -190,7 +190,7 @@ fu! s:markdown_link_syntax_group_exists() abort "{{{2
     return 1
 endfu
 
-fu! s:multi_line_links() abort "{{{2
+fu s:multi_line_links() abort "{{{2
     call cursor(1,1)
     let g = 0
     let pat = '\[[^][]*\n\_[^][]*](.*)'

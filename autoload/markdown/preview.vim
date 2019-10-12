@@ -20,7 +20,7 @@ endif
 "}}}
 let s:redirection = '>/dev/null 2>&1 &'
 
-fu! s:getlines() abort "{{{1
+fu s:getlines() abort "{{{1
     let lines = getline(1, '$')
     " Inject an invisible marker.{{{
     "
@@ -34,7 +34,7 @@ fu! s:getlines() abort "{{{1
     return lines
 endfu
 
-fu! s:kill_daemon() abort "{{{1
+fu s:kill_daemon() abort "{{{1
     "                      ┌ silent: don't show progress meter or error messages{{{
     "                      │
     "                      │  ┌ specifies  a custom  request method  to use
@@ -55,7 +55,7 @@ fu! s:kill_daemon() abort "{{{1
     "}}}
 endfu
 
-fu! markdown#preview#main() abort "{{{1
+fu markdown#preview#main() abort "{{{1
     call s:start_daemon(getline(1, '$'))
     aug instant-markdown
         au! * <buffer>
@@ -64,7 +64,7 @@ fu! markdown#preview#main() abort "{{{1
     aug END
 endfu
 
-fu! s:refresh() abort "{{{1
+fu s:refresh() abort "{{{1
     if !exists('b:changedtick_last')
         let b:changedtick_last = b:changedtick
 
@@ -79,7 +79,7 @@ fu! s:refresh() abort "{{{1
     endif
 endfu
 
-fu! s:start_daemon(initial_lines) abort "{{{1
+fu s:start_daemon(initial_lines) abort "{{{1
     " The markdown preview server can be configured via several environment variables:{{{
     "
     "    ┌─────────────────────────────────────────┬─────────────────────────────────────────────────────────────┐

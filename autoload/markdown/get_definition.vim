@@ -1,4 +1,4 @@
-fu! markdown#get_definition#main(...) abort
+fu markdown#get_definition#main(...) abort
     if a:0
         norm! gvy
         let word = @"

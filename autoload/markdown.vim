@@ -1,5 +1,5 @@
 " Interface {{{1
-fu! markdown#highlight_embedded_languages() abort "{{{2
+fu markdown#highlight_embedded_languages() abort "{{{2
     " What's the purpose of this `for` loop?{{{
     "
     " Iterate over the  languages mentioned in `b:markdown_embed`,  and for each
@@ -71,7 +71,7 @@ fu! markdown#highlight_embedded_languages() abort "{{{2
     endfor
 endfu
 
-fu! markdown#fix_formatting() abort "{{{2
+fu markdown#fix_formatting() abort "{{{2
     let view = winsaveview()
 
     " A page may have an embedded codeblock which is not properly ended with ```` ``` ````.{{{
@@ -144,7 +144,7 @@ endfu
 
 " }}}1
 " Utilities {{{1
-fu! s:get_filetype(ft) abort "{{{2
+fu s:get_filetype(ft) abort "{{{2
     let ft = a:ft
     if filereadable($VIMRUNTIME.'/syntax/'.ft.'.vim')
         return ft
