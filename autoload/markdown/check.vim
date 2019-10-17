@@ -15,13 +15,13 @@ fu markdown#check#punctuation(type, lnum1, lnum2) abort "{{{1
         " > She wanted to study but she was tired. (✘)
         " > She wanted to study, but she was tired. (✔)
         let fanboys =<< trim END
-            for
-            and
-            nor
-            but
-            or
-            yet
-            so
+        for
+        and
+        nor
+        but
+        or
+        yet
+        so
         END
         let pat = join(fanboys, '\|')
         let pat = '\C[^,; \t]\zs\ze\_s\+\%('.pat.'\)\_s\+'
@@ -30,7 +30,9 @@ fu markdown#check#punctuation(type, lnum1, lnum2) abort "{{{1
         call cursor(1,1)
         let loclist = []
         let g = 0
-        while search(pat, 'W') && g <= 1000
+        let flags = 'cW'
+        while search(pat, flags) && g <= 1000
+            let flags = 'W'
             let loclist += [{
                 \ 'lnum': line('.'),
                 \ 'col': col('.'),
@@ -56,6 +58,6 @@ fu markdown#check#punctuation(type, lnum1, lnum2) abort "{{{1
     return ''
 endfu
 
-fu markdown#check#punctuation_complete(arglead, _cmdline, _pos) abort "{{{1
+fu markdown#check#punctuation_complete(_a, _l, _p) abort "{{{1
     return join(['-comma', '-help'], "\n")
 endfu

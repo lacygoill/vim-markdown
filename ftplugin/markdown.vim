@@ -147,11 +147,11 @@ com -buffer -bar Preview call markdown#preview#main()
 
 " Mappings {{{1
 
-nno  <buffer><nowait><silent>  cof  :<c-u>call fold#md#fde#toggle()<cr>
+nno <buffer><nowait><silent> cof :<c-u>call fold#md#fde#toggle()<cr>
 
-nno  <buffer><nowait><silent>  gd  :<c-u>call markdown#get_definition#main()<cr>
-xno  <buffer><nowait><silent>  gd  :<c-u>call markdown#get_definition#main('vis')<cr>
-nno  <buffer><nowait><silent>  gl  :<c-u>call fold#md#how_many#print()<cr>
+nno <buffer><nowait><silent> gd :<c-u>call markdown#get_definition#main()<cr>
+xno <buffer><nowait><silent> gd :<c-u>call markdown#get_definition#main('vis')<cr>
+nno <buffer><nowait><silent> gl :<c-u>call fold#md#how_many#print()<cr>
 
 " Don't put a guard around the mappings,{{{
 " to check the existence of `lg#motion#regex#rhs()`.
@@ -162,8 +162,8 @@ nno  <buffer><nowait><silent>  gl  :<c-u>call fold#md#how_many#print()<cr>
 " you'll reload  a markdown  buffer, or  change its filetype,  it will  raise an
 " error.
 "}}}
-noremap  <buffer><expr><nowait><silent>  [[  lg#motion#regex#rhs('#',0)
-noremap  <buffer><expr><nowait><silent>  ]]  lg#motion#regex#rhs('#',1)
+noremap <buffer><expr><nowait><silent> [[ lg#motion#regex#rhs('#',0)
+noremap <buffer><expr><nowait><silent> ]] lg#motion#regex#rhs('#',1)
 
 if stridx(&rtp, 'vim-lg-lib') >= 0
     call lg#motion#repeatable#make#all({
@@ -365,13 +365,13 @@ endif
 " mc_chain {{{2
 
 const b:mc_chain =<< trim END
-    file
-    keyn
-    tags
-    ulti
-    dict
-    abbr
-    c-n
+file
+keyn
+tags
+ulti
+dict
+abbr
+c-n
 END
 
 " sandwich_recipes {{{2
@@ -401,19 +401,19 @@ let b:did_ftplugin = 1
 " Teardown {{{1
 
 let b:undo_ftplugin = get(b:, 'undo_ftplugin', 'exe')
-    \ . "
+    \ ..'
     \ | setl ai< cms< cocu< cole< com< fde< fdm< fdt< flp< fml< spl< tw< wrap<
     \ | set efm< fp< kp< mp<
     \ | unlet! b:cr_command b:exchange_indent b:sandwich_recipes b:markdown_embed b:mc_chain
-    \ | exe 'sil! au! instant-markdown * <buffer>'
+    \ | exe "sil! au! instant-markdown * <buffer>"
     \
-    \ | exe 'unmap <buffer> [['
-    \ | exe 'unmap <buffer> ]]'
+    \ | exe "unmap <buffer> [["
+    \ | exe "unmap <buffer> ]]"
     \
-    \ | exe 'nunmap <buffer> cof'
-    \ | exe 'nunmap <buffer> gd'
-    \ | exe 'xunmap <buffer> gd'
-    \ | exe 'nunmap <buffer> gl'
+    \ | exe "nunmap <buffer> cof"
+    \ | exe "nunmap <buffer> gd"
+    \ | exe "xunmap <buffer> gd"
+    \ | exe "nunmap <buffer> gl"
     \
     \ | delc CheckPunctuation
     \ | delc CommitHash2Link
@@ -421,5 +421,5 @@ let b:undo_ftplugin = get(b:, 'undo_ftplugin', 'exe')
     \ | delc FoldSortBySize
     \ | delc LinkInline2Ref
     \ | delc Preview
-    \"
+    \ '
 

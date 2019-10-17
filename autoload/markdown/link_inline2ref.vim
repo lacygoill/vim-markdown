@@ -8,9 +8,8 @@ let s:REF_SECTION = '# Reference'
 " Interface {{{1
 fu markdown#link_inline2ref#main() abort "{{{2
     let view = winsaveview()
-    if !exists('g:syntax_on')
-        syntax enable
-    endif
+    let syntax_was_enabled = exists('g:syntax_on')
+    if ! syntax_was_enabled | syn enable | endif
 
     let [fen_save, winid, bufnr] = [&l:fen, win_getid(), bufnr('%')]
     let &l:fen = 0
@@ -50,6 +49,7 @@ fu markdown#link_inline2ref#main() abort "{{{2
             let [tabnr, winnr] = win_id2tabwin(winid)
             call settabwinvar(tabnr, winnr, '&fen', fen_save)
         endif
+        if ! syntax_was_enabled | syn off | endif
         call winrestview(view)
     endtry
 endfu
@@ -59,8 +59,9 @@ fu s:create_reflinks() abort "{{{2
     call cursor(1,1)
     let id = 1
     let id2url = {}
-    " Always use the `W` flag when you use `search()` in a `while` loop.
-    while search('\[.\{-}]\zs\%(\[\d\+]\|(.\{-})\)', 'W') && id < s:GUARD
+    let flags = 'cW'
+    while search('\[.\{-}]\zs\%(\[\d\+]\|(.\{-})\)', flags) && id < s:GUARD
+        let flags = 'W'
         let line = getline('.')
         let col = col('.')
         let char_under_cursor = matchstr(line, '\%'..col..'c.')
@@ -194,7 +195,9 @@ fu s:multi_line_links() abort "{{{2
     call cursor(1,1)
     let g = 0
     let pat = '\[[^][]*\n\_[^][]*](.*)'
-    while search(pat, 'W') && g <= s:GUARD
+    let flags = 'cW'
+    while search(pat, flags) && g <= s:GUARD
+        let flags = 'W'
         if s:is_a_real_link()
             exe 'lvim /'..pat..'/gj %'
             call setloclist(0, [], 'a',

@@ -126,7 +126,9 @@ fu markdown#fix_formatting() abort "{{{2
 
     call cursor(1, 1)
     let g = 0
-    while search('^#', 'W') && g < 1000
+    let flags = 'cW'
+    while search('^#', flags) && g < 1000
+        let flags = 'W'
         let item = get(map(synstack(line('.'), col('.')), {_,v -> synIDattr(v, 'name')}), -1, '')
         " Why `''` in addition to `Delimiter`?{{{
         "

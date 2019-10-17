@@ -13,7 +13,7 @@ fu markdown#commit_hash2link#main(line1, line2, pgm) abort
     exe range . 's;\(\x\{7}\)\x\+;[`\1`](' . url . '&);'
 endfu
 
-fu markdown#commit_hash2link#completion(_arglead, _cmdline, _pos) abort
+fu markdown#commit_hash2link#completion(_a, _l, _p) abort
     return join(['nvim', 'tmux', 'vim'], "\n")
 endfu
 
