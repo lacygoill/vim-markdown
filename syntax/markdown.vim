@@ -133,7 +133,7 @@ syn match markdownHeader
 " The alternative would probably consist of refining the regexes to tell Vim
 " to look for a non-whitespace before or after `*`:
 "
-"     \S\@<=\*\|\*\S\@=
+"     \S\@1<=\*\|\*\S\@=
 "
 " I think that's what tpope does, and I think he does it for the same reason.
 "

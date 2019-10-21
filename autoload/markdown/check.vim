@@ -15,13 +15,13 @@ fu markdown#check#punctuation(type, lnum1, lnum2) abort "{{{1
         " > She wanted to study but she was tired. (✘)
         " > She wanted to study, but she was tired. (✔)
         let fanboys =<< trim END
-        for
-        and
-        nor
-        but
-        or
-        yet
-        so
+            for
+            and
+            nor
+            but
+            or
+            yet
+            so
         END
         let pat = join(fanboys, '\|')
         let pat = '\C[^,; \t]\zs\ze\_s\+\%('.pat.'\)\_s\+'

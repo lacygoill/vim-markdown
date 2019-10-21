@@ -365,13 +365,13 @@ endif
 " mc_chain {{{2
 
 const b:mc_chain =<< trim END
-file
-keyn
-tags
-ulti
-dict
-abbr
-c-n
+    file
+    keyn
+    tags
+    ulti
+    dict
+    abbr
+    c-n
 END
 
 " sandwich_recipes {{{2
