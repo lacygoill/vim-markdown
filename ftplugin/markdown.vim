@@ -401,25 +401,5 @@ let b:did_ftplugin = 1
 " Teardown {{{1
 
 let b:undo_ftplugin = get(b:, 'undo_ftplugin', 'exe')
-    \ ..'
-    \ | setl ai< cms< cocu< cole< com< fde< fdm< fdt< flp< fml< spl< tw< wrap<
-    \ | set efm< fp< kp< mp<
-    \ | unlet! b:cr_command b:exchange_indent b:sandwich_recipes b:markdown_embed b:mc_chain
-    \ | exe "sil! au! instant-markdown * <buffer>"
-    \
-    \ | exe "unmap <buffer> [["
-    \ | exe "unmap <buffer> ]]"
-    \
-    \ | exe "nunmap <buffer> cof"
-    \ | exe "nunmap <buffer> gd"
-    \ | exe "xunmap <buffer> gd"
-    \ | exe "nunmap <buffer> gl"
-    \
-    \ | delc CheckPunctuation
-    \ | delc CommitHash2Link
-    \ | delc FixFormatting
-    \ | delc FoldSortBySize
-    \ | delc LinkInline2Ref
-    \ | delc Preview
-    \ '
+    \ ..'| call markdown#undo_ftplugin()'
 

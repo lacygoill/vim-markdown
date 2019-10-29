@@ -144,6 +144,27 @@ fu markdown#fix_formatting() abort "{{{2
     call winrestview(view)
 endfu
 
+fu markdown#undo_ftplugin() abort "{{{2
+    setl ai< cms< cocu< cole< com< fde< fdm< fdt< flp< fml< spl< tw< wrap<
+    set efm< fp< kp< mp<
+    unlet! b:cr_command b:exchange_indent b:sandwich_recipes b:markdown_embed b:mc_chain
+    sil! au! instant-markdown * <buffer>
+
+    unmap <buffer> [[
+    unmap <buffer> ]]
+
+    nunmap <buffer> cof
+    nunmap <buffer> gd
+    xunmap <buffer> gd
+    nunmap <buffer> gl
+
+    delc CheckPunctuation
+    delc CommitHash2Link
+    delc FixFormatting
+    delc FoldSortBySize
+    delc LinkInline2Ref
+    delc Preview
+endfu
 " }}}1
 " Utilities {{{1
 fu s:get_filetype(ft) abort "{{{2
