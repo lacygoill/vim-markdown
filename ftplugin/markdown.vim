@@ -153,6 +153,14 @@ nno <buffer><nowait><silent> gd :<c-u>call markdown#get_definition#main()<cr>
 xno <buffer><nowait><silent> gd :<c-u>call markdown#get_definition#main('vis')<cr>
 nno <buffer><nowait><silent> gl :<c-u>call fold#md#how_many#print()<cr>
 
+" Why not just `[#`, `]#`?{{{
+"
+" To be consistent with `C-g [-` and `C-g ]-`, which have a similar purpose.
+" More generally, when we use `[` or `]` as a prefix, it's to move, not to edit.
+"}}}
+nno <buffer><nowait><silent> <c-g>[# :<c-u>call markdown#put_fold(0)<cr>
+nno <buffer><nowait><silent> <c-g>]# :<c-u>call markdown#put_fold(1)<cr>
+
 " Don't put a guard around the mappings,{{{
 " to check the existence of `lg#motion#regex#rhs()`.
 " Why?

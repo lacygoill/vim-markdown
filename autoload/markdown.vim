@@ -144,6 +144,20 @@ fu markdown#fix_formatting() abort "{{{2
     call winrestview(view)
 endfu
 
+fu markdown#put_fold(below) abort "{{{2
+    let header = matchstr(getline(search('^#', 'bnW')), '^#\+')
+    if header is# '' | let header = '#' | endif
+
+    if a:below
+        call append('.', ['', header, '', ''])
+        norm! 4j
+    else
+        call append(line('.')-1, [header, '', '', ''])
+        norm! 2k
+    endif
+    startinsert!
+endfu
+
 fu markdown#undo_ftplugin() abort "{{{2
     setl ai< cms< cocu< cole< com< fde< fdm< fdt< flp< fml< spl< tw< wrap<
     set efm< fp< kp< mp<
@@ -152,6 +166,9 @@ fu markdown#undo_ftplugin() abort "{{{2
 
     unmap <buffer> [[
     unmap <buffer> ]]
+
+    nunmap <buffer> <c-g>[#
+    nunmap <buffer> <c-g>]#
 
     nunmap <buffer> cof
     nunmap <buffer> gd
