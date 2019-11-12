@@ -163,6 +163,7 @@ fu markdown#undo_ftplugin() abort "{{{2
     set efm< fp< kp< mp<
     unlet! b:cr_command b:exchange_indent b:sandwich_recipes b:markdown_embed b:mc_chain
     sil! au! instant-markdown * <buffer>
+    sil! au! my_fold_markdown * <buffer>
 
     unmap <buffer> [[
     unmap <buffer> ]]
