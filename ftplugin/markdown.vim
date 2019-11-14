@@ -313,7 +313,7 @@ compiler pandoc
 
 augroup my_fold_markdown
     au BufWinEnter,FileChangedShellPost <buffer>
-        \ | setl fml=0
+        \   setl fml=0
         \ | setl fdm=expr
         \ | setl fdt=fold#fdt#get()
         \ | setl fde=fold#md#fde#stacked()
