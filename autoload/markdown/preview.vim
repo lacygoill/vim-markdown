@@ -10,9 +10,9 @@ let g:autoloaded_markdown#preview = 1
 "     $ cd instant-markdown-d
 "     $ npm install
 "}}}
-let s:web_server = $HOME.'/Vcs/instant-markdown-d/instant-markdown-d'
+let s:web_server = $HOME..'/Vcs/instant-markdown-d/instant-markdown-d'
 if !executable(s:web_server)
-    echom 'cannot find the web server:   '.s:web_server
+    echom 'cannot find the web server:   '..s:web_server
 endif
 " If you have an issue, to debug it, you could change the assignment like this:{{{
 "
@@ -44,7 +44,7 @@ fu s:kill_daemon() abort "{{{1
     "                      │  │ instead of  the method otherwise  used (which
     "                      │  │ defaults to GET).
     "                      │  │}}}
-    sil call system('curl -s -X DELETE http://localhost:8090 '.s:redirection)
+    sil call system('curl -s -X DELETE http://localhost:8090 '..s:redirection)
     " What's the meaning of the `DELETE` method?{{{
     "
     " >   The DELETE method requests that  the origin server delete the resource
@@ -70,7 +70,7 @@ fu s:refresh() abort "{{{1
 
     elseif b:changedtick_last != b:changedtick
         let b:changedtick_last = b:changedtick
-        sil call system('curl -X PUT -T - http://localhost:8090 '.s:redirection, s:getlines())
+        sil call system('curl -X PUT -T - http://localhost:8090 '..s:redirection, s:getlines())
         "                         │ │{{{
         "                         │ └ use stdin instead of a given file
         "                         │
@@ -102,6 +102,6 @@ fu s:start_daemon(initial_lines) abort "{{{1
     " For Vimium to be allowed to work, yes.
     "}}}
     let env = 'INSTANT_MARKDOWN_ALLOW_UNSAFE_CONTENT=1'
-    sil call system(env.' '.s:web_server.' '.s:redirection, a:initial_lines)
+    sil call system(env..' '..s:web_server..' '..s:redirection, a:initial_lines)
 endfu
 
