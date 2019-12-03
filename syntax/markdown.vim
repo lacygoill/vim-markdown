@@ -332,6 +332,7 @@ syn region markdownListItemCodeSpan
     \ keepend
     \ contained
     \ concealends
+    \ oneline
 " }}}1
 
 " Codeblock {{{1
