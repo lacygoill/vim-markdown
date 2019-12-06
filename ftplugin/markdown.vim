@@ -307,7 +307,7 @@ setl com=fbn:-,fb:*,fb:+
 
 " compiler {{{2
 
-compiler pandoc
+try | compiler pandoc | catch /^Vim\%((\a\+)\)\=:E666:/ | endtry
 
 " folding + conceal "{{{2
 
