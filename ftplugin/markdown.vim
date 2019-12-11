@@ -153,34 +153,8 @@ nno <buffer><nowait><silent> gd :<c-u>call markdown#get_definition#main()<cr>
 xno <buffer><nowait><silent> gd :<c-u>call markdown#get_definition#main('vis')<cr>
 nno <buffer><nowait><silent> gl :<c-u>call fold#md#how_many#print()<cr>
 
-" Why not just `[#`, `]#`?{{{
-"
-" To be consistent with `C-g [-` and `C-g ]-`, which have a similar purpose.
-" More generally, when we use `[` or `]` as a prefix, it's to move, not to edit.
-"}}}
-nno <buffer><nowait><silent> <c-g>[# :<c-u>call markdown#put_fold(0)<cr>
-nno <buffer><nowait><silent> <c-g>]# :<c-u>call markdown#put_fold(1)<cr>
-
-" Don't put a guard around the mappings,{{{
-" to check the existence of `lg#motion#regex#rhs()`.
-" Why?
-"
-" Because  of `b:undo_ftplugin`. If  the  function doesn't  exist, the  mappings
-" won't be installed.  But the teardown  will still try to remove them. So, when
-" you'll reload  a markdown  buffer, or  change its filetype,  it will  raise an
-" error.
-"}}}
-noremap <buffer><expr><nowait><silent> [[ lg#motion#regex#rhs('#',0)
-noremap <buffer><expr><nowait><silent> ]] lg#motion#regex#rhs('#',1)
-
-if stridx(&rtp, 'vim-lg-lib') >= 0
-    call lg#motion#repeatable#make#all({
-    \        'mode':   '',
-    \        'buffer': 1,
-    \        'from':   expand('<sfile>:p').':'.expand('<slnum>'),
-    \        'motions': [{'bwd': '[[',  'fwd': ']]'}]
-    \ })
-endif
+nno <buffer><nowait><silent> +[# :<c-u>call markdown#put_fold(0)<cr>
+nno <buffer><nowait><silent> +]# :<c-u>call markdown#put_fold(1)<cr>
 
 " Options {{{1
 " ai {{{2
@@ -397,11 +371,6 @@ const b:sandwich_recipes = deepcopy(get(g:, 'sandwich#recipes', get(g:, 'sandwic
     \         "keepj keepp '[s/^\\s*↣\\s*$/↣/e",
     \         "keepj keepp 'zs/^\\s*↢\\s*$/↢/e",
     \ ]}]
-
-" showbreak {{{2
-
-" Used in the autocmd `my_showbreak` in vimrc to (re)set `'showbreak'`.
-let b:showbreak = 0
 
 " did_ftplugin {{{2
 

@@ -168,8 +168,8 @@ fu markdown#undo_ftplugin() abort "{{{2
     unmap <buffer> [[
     unmap <buffer> ]]
 
-    nunmap <buffer> <c-g>[#
-    nunmap <buffer> <c-g>]#
+    nunmap <buffer> +[#
+    nunmap <buffer> +]#
 
     nunmap <buffer> cof
     nunmap <buffer> gd
