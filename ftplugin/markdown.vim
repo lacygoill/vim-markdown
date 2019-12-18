@@ -349,14 +349,14 @@ endif
 
 " mc_chain {{{2
 
-const b:mc_chain =<< trim END
+let b:mc_chain =<< trim END
     file
     keyn
     tags
     ulti
-    dict
     abbr
     c-n
+    dict
 END
 
 " sandwich_recipes {{{2

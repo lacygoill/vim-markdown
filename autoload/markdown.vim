@@ -165,9 +165,6 @@ fu markdown#undo_ftplugin() abort "{{{2
     sil! au! instant-markdown * <buffer>
     sil! au! my_fold_markdown * <buffer>
 
-    unmap <buffer> [[
-    unmap <buffer> ]]
-
     nunmap <buffer> +[#
     nunmap <buffer> +]#
 
