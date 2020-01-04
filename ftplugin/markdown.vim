@@ -156,6 +156,10 @@ nno <buffer><nowait><silent> gl :<c-u>call fold#md#how_many#print()<cr>
 nno <buffer><nowait><silent> +[# :<c-u>call markdown#put_fold(0)<cr>
 nno <buffer><nowait><silent> +]# :<c-u>call markdown#put_fold(1)<cr>
 
+nno <buffer><nowait><silent> =r-  :<c-u>set opfunc=markdown#hyphens2hashes<cr>g@
+nno <buffer><nowait><silent> =r-- :<c-u>set opfunc=markdown#hyphens2hashes<bar>exe 'norm! '..v:count1..'g@_'<cr>
+xno <buffer><nowait><silent> =r-  :<c-u>call markdown#hyphens2hashes('vis')<cr>
+
 " Options {{{1
 " ai {{{2
 

@@ -125,9 +125,8 @@ fu markdown#fix_formatting() abort "{{{2
     let &ei = '' | do Syntax
 
     call cursor(1, 1)
-    let g = 0
     let flags = 'cW'
-    while search('^#', flags) && g < 1000
+    let g = 0 | while search('^#', flags) && g < 999 | let g += 1
         let flags = 'W'
         let item = get(map(synstack(line('.'), col('.')), {_,v -> synIDattr(v, 'name')}), -1, '')
         " Why `''` in addition to `Delimiter`?{{{
@@ -139,7 +138,6 @@ fu markdown#fix_formatting() abort "{{{2
             let new_line = ' ' . line
             call setline('.', new_line)
         endif
-        let g += 1
     endwhile
     call winrestview(view)
 endfu
@@ -165,13 +163,17 @@ fu markdown#undo_ftplugin() abort "{{{2
     sil! au! instant-markdown * <buffer>
     sil! au! my_fold_markdown * <buffer>
 
-    nunmap <buffer> +[#
-    nunmap <buffer> +]#
-
     nunmap <buffer> cof
     nunmap <buffer> gd
     xunmap <buffer> gd
     nunmap <buffer> gl
+
+    nunmap <buffer> +[#
+    nunmap <buffer> +]#
+
+    nunmap <buffer> =r-
+    nunmap <buffer> =r--
+    xunmap <buffer> =r-
 
     delc CheckPunctuation
     delc CommitHash2Link
@@ -179,6 +181,12 @@ fu markdown#undo_ftplugin() abort "{{{2
     delc FoldSortBySize
     delc LinkInline2Ref
     delc Preview
+endfu
+
+fu markdown#hyphens2hashes(type, ...) abort "{{{2
+    let range = a:type is# 'vis' ? "'<,'>" : "'[,']"
+    let hashes = matchstr(getline(search('^#', 'bnW')), '^#*')
+    sil exe range..'s/^---/'..hashes..' ?/e'
 endfu
 " }}}1
 " Utilities {{{1

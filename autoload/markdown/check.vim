@@ -28,22 +28,20 @@ fu markdown#check#punctuation(type, lnum1, lnum2) abort "{{{1
 
         let range = a:lnum1.','.a:lnum2
         call cursor(1,1)
-        let loclist = []
-        let g = 0
+        let items = []
         let flags = 'cW'
-        while search(pat, flags) && g <= 1000
+        let g = 0 | while search(pat, flags) && g < 999 | let g += 1
             let flags = 'W'
-            let loclist += [{
+            let items += [{
                 \ 'lnum': line('.'),
                 \ 'col': col('.'),
                 \ 'bufnr': bufnr,
                 \ 'text': getline('.'),
                 \ }]
-            let g += 1
         endwhile
-        call setloclist(0, loclist)
         " populate the command-line with `:ldo s/\%#/,/c` when we press `C-g s`
-        call setloclist(0, [], 'a', {
+        call setloclist(0, [], ' ', {
+            \ 'items': items,
             \ 'title': ':CheckPunctuation -comma',
             \ 'context': {'populate': 'ldo s/\%#/,/c'}
             \ })

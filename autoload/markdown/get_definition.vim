@@ -25,9 +25,8 @@ fu markdown#get_definition#main(...) abort
         " erase possible previous 'no definition for' message
         redraw!
     endif
-    call setloclist(0, lines)
-    call setloclist(0, [], 'a', {'title': word})
-    lwindow
+    call setloclist(0, [], ' ', {'items': lines, 'title': word})
+    lw
     if &ft is# 'qf'
         lfirst
         norm! zMzvzz

@@ -9,7 +9,7 @@ let s:REF_SECTION = '# Reference'
 fu markdown#link_inline2ref#main() abort "{{{2
     let view = winsaveview()
     let syntax_was_enabled = exists('g:syntax_on')
-    if ! syntax_was_enabled | syn enable | endif
+    if !syntax_was_enabled | syn enable | endif
 
     let [fen_save, winid, bufnr] = [&l:fen, win_getid(), bufnr('%')]
     let &l:fen = 0
@@ -30,7 +30,7 @@ fu markdown#link_inline2ref#main() abort "{{{2
             return
         endif
 
-        if ! s:markdown_link_syntax_group_exists()
+        if !s:markdown_link_syntax_group_exists()
             echohl ErrorMsg
             echom 'The function relies on the syntax group ‘markdownLink’; but it doesn''t exist'
             echohl NONE
@@ -49,7 +49,7 @@ fu markdown#link_inline2ref#main() abort "{{{2
             let [tabnr, winnr] = win_id2tabwin(winid)
             call settabwinvar(tabnr, winnr, '&fen', fen_save)
         endif
-        if ! syntax_was_enabled | syn off | endif
+        if !syntax_was_enabled | syn off | endif
         call winrestview(view)
     endtry
 endfu
@@ -89,7 +89,7 @@ fu s:create_reflinks() abort "{{{2
 
         " [some text](some url)
         elseif char_under_cursor is# '('
-            if ! s:is_a_real_link()
+            if !s:is_a_real_link()
                 continue
             endif
             let url = s:get_url()
@@ -107,7 +107,7 @@ endfu
 
 fu s:populate_reference_section(id2url) abort "{{{2
     call search('^'..s:REF_SECTION..'$')
-    if ! search('^\[\d\+]:')
+    if !search('^\[\d\+]:')
         norm! G
     endif
     sil keepj keepp .,$g/^\[\d\+]:/d_
@@ -172,7 +172,7 @@ endfu
 
 fu s:make_sure_reference_section_exists() abort "{{{2
     let ref_section_lnum = search('^'..s:REF_SECTION..'$', 'n')
-    if ! ref_section_lnum
+    if !ref_section_lnum
         call append('$', ['', '##', s:REF_SECTION, ''])
         "                 ├┘{{{
         "                 └ necessary if the last line of the buffer is a list item;
@@ -193,10 +193,9 @@ endfu
 
 fu s:multi_line_links() abort "{{{2
     call cursor(1,1)
-    let g = 0
     let pat = '\[[^][]*\n\_[^][]*](.*)'
     let flags = 'cW'
-    while search(pat, flags) && g <= s:GUARD
+    let g = 0 | while search(pat, flags) && g <= s:GUARD | let g += 1
         let flags = 'W'
         if s:is_a_real_link()
             exe 'lvim /'..pat..'/gj %'
@@ -204,7 +203,6 @@ fu s:multi_line_links() abort "{{{2
                 \ {'title': 'some descriptions of links span multiple lines; make them mono-line'})
             return 1
         endif
-        let g += 1
     endwhile
     return 0
 endfu
