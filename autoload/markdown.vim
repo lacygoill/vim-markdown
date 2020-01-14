@@ -69,6 +69,30 @@ fu markdown#highlight_embedded_languages() abort "{{{2
         \ . ' contains=@markdownEmbed'.ft
         let done_include[delim] = 1
     endfor
+    if !empty(delims) | syn sync ccomment markdownHeader | endif
+    " TODO: The previous line is necessary to fix an issue.  But is it the right fix?{{{
+    "
+    " Here is the issue:
+    "
+    "     $ vim +"%d|pu=['# x', '', '\`\`\`vim']+repeat([''], 9)+['\`\`\`']+repeat([''], 109)+['# x', '', 'some text']" +x /tmp/md.md
+    "     $ vim +'norm! Gzo' /tmp/md.md
+    "
+    " Without the  previous `:syn sync`,  `some text` is wrongly  highlighted by
+    " `markdownFencedCodeBlock`.  Study `:h 44.10` then `:h :syn-sync`.
+    "
+    " ---
+    "
+    " Note that whenever  we run a `:syn  include`, there is a risk  that it has
+    " changed how  the synchronization is  performed (by sourcing a  `:syn sync`
+    " directive).
+    "
+    " ---
+    "
+    " Is there a risk that a `:syn include` resets a `:syn iskeyword`?
+    " Or some other syntax-specific setting?
+    " If so, should  we try to save its value before  `:syn include` and restore
+    " it afterward?
+    "}}}
 endfu
 
 fu markdown#fix_formatting() abort "{{{2
@@ -77,8 +101,7 @@ fu markdown#fix_formatting() abort "{{{2
     " A page may have an embedded codeblock which is not properly ended with ```` ``` ````.{{{
     "
     " As an example, look at the very bottom of this page:
-    "
-    "     https://github.com/junegunn/fzf/wiki/Examples
+    " https://github.com/junegunn/fzf/wiki/Examples
     "
     " In  this case,  the highlighting  of the  reference links  we're going  to
     " create may be wrong.
