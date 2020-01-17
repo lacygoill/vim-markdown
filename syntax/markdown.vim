@@ -133,7 +133,7 @@ syn match markdownHeader
 " The alternative would probably consist of refining the regexes to tell Vim
 " to look for a non-whitespace before or after `*`:
 "
-"     \S\@1<=\*\|\*\S\@=
+"     \S\@1<=\*\|\*\ze\S
 "
 " I think that's what tpope does, and I think he does it for the same reason.
 "
@@ -537,19 +537,18 @@ syn cluster markdownListItemElements contains=
 " In any case, more than 4 spaces means that we're still in the current list item.
 " So, we need 3 spaces or less to end the latter.
 "}}}
-" Why `\|\n\%(\s*```\s*$\)\@=` in the `end` pattern?{{{
+" Why `\|\n\ze\s*‵‵‵\s*$` in the `end` pattern?{{{
 "
 " Sometimes, in a wiki page on github, a fenced codeblock is written right after
 " a list item, without any empty line in-between:
-"
-"     https://github.com/ranger/ranger/wiki/Image-Previews
+" https://github.com/ranger/ranger/wiki/Image-Previews
 "
 " When that  happens, the codeblock is  wrongly highlighted as a  list item.  It
 " can mess up the highlighting of the rest of the buffer.
 "}}}
 syn region markdownListItem
     \ start=/^ \{,3\}\%([-*+]\|\d\+\.\)\s\+\S/
-    \ end=/^\s*\n\%( \{,3}\S\)\@=\|\n\%(\s*```\s*$\)\@=/
+    \ end=/^\s*\n\ze \{,3}\S\|\n\ze\s*```\s*$/
     \ keepend
     \ contains=@markdownListItemElements
 " }}}1
@@ -674,15 +673,15 @@ syn region markdownLinkRefTitle
 "
 "          ┌ optional subpattern
 "          ├─────────────────────┐
-"     !\=\[\%(\_[^]]*] \=[[(]\)\@=
-"     ├─┘├┘   ├─────┘│├─┘├──┘
-"     │  │    │      ││  └ an opening square bracket or parenthesis
-"     │  │    │      │└ an optional space
-"     │  │    │      └ a closing square bracket
-"     │  │    │
-"     │  │    └ a newline and any other character,
-"     │  │      except a closing square bracket,
-"     │  │      as many as possible
+"     !\=\[\_[^]]*] \=[[(]
+"     ├─┘├┘├─────┘│├─┘├──┘
+"     │  │ │      ││  └ an opening square bracket or parenthesis
+"     │  │ │      │└ an optional space
+"     │  │ │      └ a closing square bracket
+"     │  │ │
+"     │  │ └ a newline and any other character,
+"     │  │   except a closing square bracket,
+"     │  │   as many as possible
 "     │  │
 "     │  └ an opening square bracket
 "     └ an optional bang
@@ -698,8 +697,8 @@ syn region markdownLinkRefTitle
 "}}}
 exe 'syn region markdownLinkText'
     \ . ' matchgroup=markdownLinkTextDelimiter'
-    \ . ' start=/!\=\[\%(\_[^]]*] \=[[(]\)\@=/'
-    \ . ' end=/\]\%( \=[[(]\)\@=/'
+    \ . ' start=/!\=\[\ze\_[^]]*] \=[[(]/'
+    \ . ' end=/\]\ze \=[[(]/'
     \ . ' nextgroup=markdownLink,markdownId'
     \ . ' skipwhite'
     \ . ' concealends'
@@ -725,7 +724,7 @@ syn region markdownId
 
 syn region markdownAutomaticLink
     \ matchgroup=markdownUrlDelimiter
-    \ start=/<\%(\w\+:\|[[:alnum:]_+-]\+@\)\@=/
+    \ start=/<\ze\w\+:\|[[:alnum:]_+-]\+@/
     \ end=/>/
     \ keepend
     \ oneline
@@ -734,7 +733,7 @@ syn match markdownFootnote '\[^[^\]]\+\]'
 syn match markdownFootnoteDefinition '^\[^[^\]]\+\]:'
 
 syn match markdownEscape '\\[][\\`*_{}()<>#+.!-]'
-syn match markdownError '\w\@1<=_\w\@='
+syn match markdownError '\w\@1<=_\ze\w'
 
 syn match markdownPointer '^\s\+\%([v^✘✔]\+\s*\)\+$'
 
@@ -775,7 +774,7 @@ exe 'syn match markdownTodo  /\CTO'.'DO\|FIX'.'ME/ contained'
 "}}}
 syn match markdownTable /^    \%([┌└]─\|│.*[^ \t│].*│\|├─.*┤\|│.*├\).*/
 
-syn match markdownOption /`\@1<='[-a-z]\{2,}'`\@=/ contained containedin=markdownCodeSpan,markdownListItemCodeSpan
+syn match markdownOption /`\@1<='[-a-z]\{2,}'\ze`/ contained containedin=markdownCodeSpan,markdownListItemCodeSpan
 
 call markdown#highlight_embedded_languages()
 

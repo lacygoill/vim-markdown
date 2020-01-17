@@ -24,9 +24,9 @@ fu markdown#check#punctuation(type, lnum1, lnum2) abort "{{{1
             so
         END
         let pat = join(fanboys, '\|')
-        let pat = '\C[^,; \t]\zs\ze\_s\+\%('.pat.'\)\_s\+'
+        let pat = '\C[^,; \t]\zs\ze\_s\+\%('..pat..'\)\_s\+'
 
-        let range = a:lnum1.','.a:lnum2
+        let range = a:lnum1..','..a:lnum2
         call cursor(1,1)
         let items = []
         let flags = 'cW'
