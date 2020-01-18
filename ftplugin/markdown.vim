@@ -237,36 +237,6 @@ try | compiler pandoc | catch /^Vim\%((\a\+)\)\=:E666:/ | endtry
 
 " folding + conceal "{{{2
 
-" TODO: With lazyfold, do we still need an autocmd to reapply fold settings?{{{
-" Doesn't lazyfold already reapply folding settings when necessary?
-"
-" ---
-"
-" And why do we need `:LazyFoldUpdate`?
-"
-" ---
-"
-" It seems that we still need this autocmd, and we really need `:LazyFoldUpdate`.
-" Try this:
-"
-"     $ vim -O ~/wiki/vim/highlighting.md ~/wiki/vim/abbrev.md
-"     :tabe ~/wiki/vim/highlighting.md
-"
-" But this is weird.
-" There is  an autocmd listening to  `BufWinEnter` in `vim-fold` which  seems to
-" re-apply the old fold method:
-"
-"     if &l:fdm is# 'manual' && exists('w:last_fdm')
-"         let &l:fdm = w:last_fdm
-"     endif
-"
-" We should not need an autocmd here...
-"
-" ---
-"
-" And why don't we let `vim-lg-lib` handle these settings?
-"}}}
-
 augroup my_fold_markdown
     au BufWinEnter,FileChangedShellPost <buffer>
         \   setl fml=0
@@ -275,7 +245,6 @@ augroup my_fold_markdown
         \ | setl fde=fold#md#fde#stacked()
         \ | setl cole=2
         \ | setl cocu=nc
-        \ | sil! LazyFoldUpdate
 augroup END
 
 " fp  tw {{{2
