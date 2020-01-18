@@ -237,16 +237,16 @@ try | compiler pandoc | catch /^Vim\%((\a\+)\)\=:E666:/ | endtry
 
 " folding + conceal "{{{2
 
-" TODO: With fastfold, do we still need an autocmd to reapply fold settings?{{{
-" Doesn't fastfold already reapply folding settings when necessary?
+" TODO: With lazyfold, do we still need an autocmd to reapply fold settings?{{{
+" Doesn't lazyfold already reapply folding settings when necessary?
 "
 " ---
 "
-" And why do we need `:FastFoldUpdate`?
+" And why do we need `:LazyFoldUpdate`?
 "
 " ---
 "
-" It seems that we still need this autocmd, and we really need `:FastFoldUpdate`.
+" It seems that we still need this autocmd, and we really need `:LazyFoldUpdate`.
 " Try this:
 "
 "     $ vim -O ~/wiki/vim/highlighting.md ~/wiki/vim/abbrev.md
@@ -261,6 +261,10 @@ try | compiler pandoc | catch /^Vim\%((\a\+)\)\=:E666:/ | endtry
 "     endif
 "
 " We should not need an autocmd here...
+"
+" ---
+"
+" And why don't we let `vim-lg-lib` handle these settings?
 "}}}
 
 augroup my_fold_markdown
@@ -271,7 +275,7 @@ augroup my_fold_markdown
         \ | setl fde=fold#md#fde#stacked()
         \ | setl cole=2
         \ | setl cocu=nc
-        \ | sil! FastFoldUpdate
+        \ | sil! LazyFoldUpdate
 augroup END
 
 " fp  tw {{{2
