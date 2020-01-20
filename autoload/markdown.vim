@@ -1,14 +1,14 @@
 " Interface {{{1
-fu markdown#highlight_embedded_languages() abort "{{{2
+fu markdown#highlight_languages() abort "{{{2
     " What's the purpose of this `for` loop?{{{
     "
-    " Iterate over the  languages mentioned in `b:markdown_embed`,  and for each
+    " Iterate over the  languages mentioned in `b:markdown_highlight`,  and for each
     " of them, include the corresponding syntax plugin.
     "}}}
     let done_include = {}
-    let delims = get(b:, 'markdown_embed', [])
+    let delims = get(b:, 'markdown_highlight', [])
     for delim in delims
-        " If by accident, we manually  assign a value to `b:markdown_embed`, and
+        " If by accident, we manually  assign a value to `b:markdown_highlight`, and
         " we write duplicate values, we want to include the corresponding syntax
         " plugin only once.
         if has_key(done_include, delim)
@@ -28,22 +28,33 @@ fu markdown#highlight_embedded_languages() abort "{{{2
         let ft = s:get_filetype(delim)
         if empty(ft) | continue | endif
 
+        " Warning: do *not* use a different prefix than `markdownHighlight` in the cluster name{{{
+        "
+        " That's the  prefix used by the  default markdown plugin; as  a result,
+        " that's the one assumed by other default syntax plugins such as the zsh
+        " one:
+        "
+        " https://github.com/chrisbra/vim-zsh/blob/25c49bd61b8e82fd8f002c0ef21416d6550f79ea/syntax/zsh.vim#L22-L24
+        "
+        " If  you change  the prefix,  an embedded fenced  codeblock may  not be
+        " correctly highlighted.
+        "}}}
         " What's the effect of `:syn include`?{{{
         "
         " If you execute:
         "
-        "     syn include @markdownEmbedpython syntax/python.vim
+        "     syn include @markdownHighlightpython syntax/python.vim
         "
         " 1. Vim will define all groups from  all python syntax plugins, but for
         " each of them, it will add the argument `contained`.
         "
-        " 2. Vim will  define the cluster `@markdownEmbedpython`  which contains
+        " 2. Vim will  define the cluster `@markdownHighlightpython`  which contains
         " all the syntax groups define in python syntax plugins.
         "
         " Note that if `b:current_syntax` is set, Vim won't define the contained
         " python syntax groups; the cluster will be defined but contain nothing.
         "}}}
-        exe 'syn include @markdownEmbed'.ft.' syntax/'.ft.'.vim'
+        exe 'syn include @markdownHighlight'..ft..' syntax/'..ft..'.vim'
         " Why?{{{
         "
         " The previous `:syn  include` has caused `b:current_syntax`  to bet set
@@ -55,18 +66,18 @@ fu markdown#highlight_embedded_languages() abort "{{{2
 
         " Note that the name of the region is identical to the name of the cluster:{{{
         "
-        "     'markdownEmbed'.ft
+        "     'markdownHighlight'..ft
         "
         " But there's no conflict.
         " Probably because a cluster name is always prefixed by `@`.
         "}}}
-        exe 'syn region markdownEmbed'.ft
-        \ . ' matchgroup=markdownCodeDelimiter'
-        \ . ' start=/^\s*````*\s*'.delim.'\S\@!.*$/'
-        \ . ' end=/^\s*````*\ze\s*$/'
-        \ . ' keepend'
-        \ . ' concealends'
-        \ . ' contains=@markdownEmbed'.ft
+        exe 'syn region markdownHighlight'..ft
+        \ ..' matchgroup=markdownCodeDelimiter'
+        \ ..' start=/^\s*````*\s*'..delim..'\S\@!.*$/'
+        \ ..' end=/^\s*````*\ze\s*$/'
+        \ ..' keepend'
+        \ ..' concealends'
+        \ ..' contains=@markdownHighlight'..ft
         let done_include[delim] = 1
     endfor
     if !empty(delims) | syn sync ccomment markdownHeader | endif
@@ -108,7 +119,7 @@ fu markdown#fix_formatting() abort "{{{2
     " And the rest of the function  relies on the syntax highlighting, which may
     " have additional unexpected side effects.
     "}}}
-    if get(map(synstack('$', 1), {_,v -> synIDattr(v, 'name')}), 0, '') =~# '^markdownEmbed'
+    if get(map(synstack('$', 1), {_,v -> synIDattr(v, 'name')}), 0, '') =~# '^markdownHighlight'
         call append('$', ['```', ''])
     endif
 
@@ -158,7 +169,7 @@ fu markdown#fix_formatting() abort "{{{2
         "}}}
         if index(['', 'Delimiter'], item) == -1
             let line = getline('.')
-            let new_line = ' ' . line
+            let new_line = ' '..line
             call setline('.', new_line)
         endif
     endwhile
@@ -182,7 +193,7 @@ endfu
 fu markdown#undo_ftplugin() abort "{{{2
     setl ai< cms< cocu< cole< com< fde< fdm< fdt< flp< fml< spl< tw< wrap<
     set efm< fp< kp< mp<
-    unlet! b:cr_command b:exchange_indent b:sandwich_recipes b:markdown_embed b:mc_chain
+    unlet! b:cr_command b:exchange_indent b:sandwich_recipes b:markdown_highlight b:mc_chain
     sil! au! instant-markdown * <buffer>
     sil! au! my_fold_markdown * <buffer>
 
@@ -215,12 +226,12 @@ endfu
 " Utilities {{{1
 fu s:get_filetype(ft) abort "{{{2
     let ft = a:ft
-    if filereadable($VIMRUNTIME.'/syntax/'.ft.'.vim')
+    if filereadable($VIMRUNTIME..'/syntax/'..ft..'.vim')
         return ft
     else
         let ft = matchstr(get(filter(split(execute('autocmd filetypedetect'), '\n'),
-            \ {_,v -> v =~# '\m\C\*\.'.ft.'\>'}), 0, ''), '\m\Csetf\%[iletype]\s*\zs\S*')
-        if filereadable($VIMRUNTIME.'/syntax/'.ft.'.vim')
+            \ {_,v -> v =~# '\m\C\*\.'..ft..'\>'}), 0, ''), '\m\Csetf\%[iletype]\s*\zs\S*')
+        if filereadable($VIMRUNTIME..'/syntax/'..ft..'.vim')
             return ft
         endif
     endif

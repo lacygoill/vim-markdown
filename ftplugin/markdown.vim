@@ -287,14 +287,14 @@ const b:cr_command = 'norm! 100|'
 
 const b:exchange_indent = ''
 
-" markdown_embed {{{2
+" markdown_highlight {{{2
 
 " We want  syntax highlighting  in fenced  blocks, but  only for  certain files,
 " because  the more  you  add syntax  plugins,  the  more it  has  an impact  on
 " performance.
 
 if search('^```\S\+', 'n')
-    const b:markdown_embed = map(uniq(sort(filter(getline(1, '$'),
+    const b:markdown_highlight = map(uniq(sort(filter(getline(1, '$'),
         \ {_,v -> v =~# '^```\S\+'}))),
         \ {_,v -> matchstr(v, '```\zs[a-z]\+')})
 endif
