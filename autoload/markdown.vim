@@ -195,7 +195,7 @@ fu markdown#undo_ftplugin() abort "{{{2
     set efm< fp< kp< mp<
     unlet! b:cr_command b:exchange_indent b:sandwich_recipes b:markdown_highlight b:mc_chain
     sil! au! instant-markdown * <buffer>
-    sil! au! my_fold_markdown * <buffer>
+    sil! au! markdown_window_settings * <buffer>
 
     nunmap <buffer> cof
     nunmap <buffer> gd
@@ -212,7 +212,6 @@ fu markdown#undo_ftplugin() abort "{{{2
     delc CheckPunctuation
     delc CommitHash2Link
     delc FixFormatting
-    delc FoldSortBySize
     delc LinkInline2Ref
     delc Preview
 endfu

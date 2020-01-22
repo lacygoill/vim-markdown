@@ -77,8 +77,6 @@ com -bar -buffer -complete=custom,markdown#commit_hash2link#completion -nargs=1 
 " Warning: Don't call this command `:Fix`. It wouldn't work as expected with `:argdo`.
 com -bar -buffer FixFormatting call markdown#fix_formatting()
 
-com -bar -buffer -range=%  FoldSortBySize  exe fold#md#sort#by_size(<line1>,<line2>)
-
 " Purpose: Convert inline link:{{{
 "
 "     [text](url)
@@ -89,7 +87,7 @@ com -bar -buffer -range=%  FoldSortBySize  exe fold#md#sort#by_size(<line1>,<lin
 "
 "  Make it local to markdown
 "}}}
-com -buffer -bar -range=% LinkInline2Ref  call markdown#link_inline2ref#main()
+com -buffer -bar -range=% LinkInline2Ref call markdown#link_inline2ref#main()
 
 com -buffer -bar Preview call markdown#preview#main()
 
@@ -237,14 +235,30 @@ try | compiler pandoc | catch /^Vim\%((\a\+)\)\=:E666:/ | endtry
 
 " folding + conceal "{{{2
 
-augroup my_fold_markdown
-    au BufWinEnter,FileChangedShellPost <buffer>
-        \   setl fml=0
-        \ | setl fdm=expr
-        \ | setl fdt=fold#fdt#get()
-        \ | setl fde=fold#md#fde#stacked()
-        \ | setl cole=2
-        \ | setl cocu=nc
+" Do *not* remove this function call; see our comment in
+" `lg#styled_comment#fold()` for an explanation.
+call markdown#window#settings()
+
+augroup markdown_window_settings
+    au! * <buffer>
+    " Why `#update_win()`?{{{
+    "
+    " `vim-fold`  automatically  resets the  value  of  `'fde'` from  `expr`  to
+    " `manual`, because the latter is less costly.
+    " But  it does  so only  on `FileType`;  the next  `BufWinEnter` will  reset
+    " `'fde'` again from `manual` to `expr`.
+    "
+    " So, we need to reset `'fde'` *again*:
+    "
+    "     expr → manual → expr → manual
+    "     │      │        │      │
+    "     │      │        │      └ #update_win()
+    "     │      │        └ our ftplugin on BufWinEnter <buffer>
+    "     │      └ vim-fold on FileType *
+    "     └ our ftplugin on FileType markdown
+    "}}}
+    au BufWinEnter,FileChangedShellPost <buffer> call markdown#window#settings()
+        \ | sil! call fold#lazy#update_win()
 augroup END
 
 " fp  tw {{{2
