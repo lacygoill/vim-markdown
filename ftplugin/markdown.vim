@@ -241,7 +241,7 @@ call markdown#window#settings()
 
 augroup markdown_window_settings
     au! * <buffer>
-    " Why `#update_win()`?{{{
+    " Why `#compute()`?{{{
     "
     " `vim-fold`  automatically  resets the  value  of  `'fde'` from  `expr`  to
     " `manual`, because the latter is less costly.
@@ -252,13 +252,13 @@ augroup markdown_window_settings
     "
     "     expr → manual → expr → manual
     "     │      │        │      │
-    "     │      │        │      └ #update_win()
+    "     │      │        │      └ our ftplugin via #compute() on BufWinEnter <buffer>
     "     │      │        └ our ftplugin on BufWinEnter <buffer>
     "     │      └ vim-fold on FileType *
     "     └ our ftplugin on FileType markdown
     "}}}
     au BufWinEnter,FileChangedShellPost <buffer> call markdown#window#settings()
-        \ | sil! call fold#lazy#update_win()
+        \ | sil! call fold#lazy#compute('force')
 augroup END
 
 " fp  tw {{{2
