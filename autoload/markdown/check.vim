@@ -51,7 +51,13 @@ fu markdown#check#punctuation(type, lnum1, lnum2) abort "{{{1
             let [tabnr, winnr] = win_id2tabwin(winid)
             call settabwinvar(tabnr, winnr, '&fen', fen_save)
         endif
-        call winrestview(view)
+        " TODO: When you remove `lg#`, and use the builtin `win_execute()`, rewrite the line:{{{
+        "
+        "     call win_execute(winid, 'call winrestview(view)')
+        "
+        " `win_execute()` can access a function-local variable; but not our `lg#win_execute()`.
+        "}}}
+        call lg#win_execute(winid, 'call winrestview('..string(view)..')')
     endtry
     return ''
 endfu
