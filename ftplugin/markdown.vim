@@ -270,7 +270,7 @@ let &l:fp = 'par -w'.&l:tw.'rjeq'
 
 " kp "{{{2
 
-if expand('%:p') =~# '/wiki/vim/'
+if expand('<afile>:p') =~# '/wiki/vim/'
     setl kp=:help
 else
     setl kp=:Man
