@@ -176,20 +176,6 @@ fu markdown#fix_formatting() abort "{{{2
     call winrestview(view)
 endfu
 
-fu markdown#put_fold(below) abort "{{{2
-    let header = matchstr(getline(search('^#', 'bnW')), '^#\+')
-    if header is# '' | let header = '#' | endif
-
-    if a:below
-        call append('.', ['', header, '', ''])
-        norm! 4j
-    else
-        call append(line('.')-1, [header, '', '', ''])
-        norm! 2k
-    endif
-    startinsert!
-endfu
-
 fu markdown#undo_ftplugin() abort "{{{2
     setl ai< cms< cocu< cole< com< fde< fdm< fdt< flp< fml< spl< tw< wrap<
     set efm< fp< kp< mp<
@@ -198,6 +184,8 @@ fu markdown#undo_ftplugin() abort "{{{2
     sil! au! markdown_window_settings * <buffer>
 
     nunmap <buffer> cof
+    nunmap <buffer> [of
+    nunmap <buffer> ]of
     nunmap <buffer> gd
     xunmap <buffer> gd
     nunmap <buffer> gl
@@ -209,9 +197,13 @@ fu markdown#undo_ftplugin() abort "{{{2
     nunmap <buffer> =r--
     xunmap <buffer> =r-
 
+    xunmap <buffer> H
+    xunmap <buffer> L
+
     delc CheckPunctuation
     delc CommitHash2Link
     delc FixFormatting
+    delc FoldSortBySize
     delc LinkInline2Ref
     delc Preview
 endfu

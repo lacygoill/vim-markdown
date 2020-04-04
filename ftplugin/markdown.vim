@@ -77,6 +77,8 @@ com -bar -buffer -complete=custom,markdown#commit_hash2link#completion -nargs=1 
 " Warning: Don't call this command `:Fix`. It wouldn't work as expected with `:argdo`.
 com -bar -buffer FixFormatting call markdown#fix_formatting()
 
+com -bar -buffer -range=% FoldSortBySize exe markdown#fold#sort#by_size(<line1>,<line2>)
+
 " Purpose: Convert inline link:{{{
 "
 "     [text](url)
@@ -87,24 +89,43 @@ com -bar -buffer FixFormatting call markdown#fix_formatting()
 "
 "  Make it local to markdown
 "}}}
-com -buffer -bar -range=% LinkInline2Ref call markdown#link_inline2ref#main()
+com -bar -buffer -range=% LinkInline2Ref call markdown#link_inline2ref#main()
 
 com -buffer -bar Preview call markdown#preview#main()
 
 " Mappings {{{1
 
-nno <buffer><nowait><silent> cof :<c-u>call fold#md#fde#toggle()<cr>
+nno <buffer><nowait><silent> cof :<c-u>call markdown#fold#foldexpr#toggle()<cr>
+" Increase/decrease  'fdl' when folds are nested.{{{
+"
+" Use it to quickly see the titles up to an arbitrary depth.
+" Useful  to get  an overview  of  the contents  of  the notes  of an  arbitrary
+" precision.
+"}}}
+nno <buffer><nowait><silent> [of :<c-u>call markdown#fold#option#fdl('less')<cr>
+nno <buffer><nowait><silent> ]of :<c-u>call markdown#fold#option#fdl('more')<cr>
+sil! call repmap#make#all({
+    \ 'mode': 'n',
+    \ 'buffer': 1,
+    \ 'from': expand('<sfile>:p')..':'..expand('<slnum>'),
+    \ 'motions': [
+    \              {'bwd': '[of',  'fwd': ']of'},
+    \            ]
+    \ })
 
 nno <buffer><nowait><silent> gd :<c-u>call markdown#get_definition#main()<cr>
 xno <buffer><nowait><silent> gd :<c-u>call markdown#get_definition#main('vis')<cr>
-nno <buffer><nowait><silent> gl :<c-u>call fold#md#how_many#print()<cr>
+nno <buffer><nowait><silent> gl :<c-u>call markdown#fold#how_many#print()<cr>
 
-nno <buffer><nowait><silent> +[# :<c-u>call markdown#put_fold(0)<cr>
-nno <buffer><nowait><silent> +]# :<c-u>call markdown#put_fold(1)<cr>
+nno <buffer><nowait><silent> +[# :<c-u>call markdown#fold#put#main(0)<cr>
+nno <buffer><nowait><silent> +]# :<c-u>call markdown#fold#put#main(1)<cr>
 
 nno <buffer><nowait><silent> =r-  :<c-u>set opfunc=markdown#hyphens2hashes<cr>g@
 nno <buffer><nowait><silent> =r-- :<c-u>set opfunc=markdown#hyphens2hashes<bar>exe 'norm! '..v:count1..'g@_'<cr>
 xno <buffer><nowait><silent> =r-  :<c-u>call markdown#hyphens2hashes('vis')<cr>
+
+xno <buffer><nowait><silent> H :<c-u>call markdown#fold#promote#set('less')<bar>set opfunc=markdown#fold#promote#main<bar>exe 'norm! '..v:count1..'g@l'<cr>
+xno <buffer><nowait><silent> L :<c-u>call markdown#fold#promote#set('more')<bar>set opfunc=markdown#fold#promote#main<bar>exe 'norm! '..v:count1..'g@l'<cr>
 
 " Options {{{1
 " ai {{{2
