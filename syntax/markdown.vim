@@ -4,8 +4,8 @@ endif
 
 " TODO: Read this:
 "
-"https://github.com/russross/blackfriday/wiki/Extensions
-"https://commonmark.org/
+" https://github.com/russross/blackfriday/wiki/Extensions
+" https://commonmark.org/
 
 " TODO: It would be nice if some styles could be applied on multi-line texts.
 " Like bold and italic; maybe codespan too.
@@ -306,8 +306,7 @@ syn region markdownBlockquoteBoldItalic
 " It can continue on a whole screen, until you insert the closing backtick.
 " This is distracting.
 "}}}
-" If you change the name of `markdownCodeDelimiter`, update
-" `./autoload/markdown.vim`
+" If you change the name of `markdownCodeDelimiter`, update `./autoload/markdown.vim`.
 syn region markdownCodeSpan
     \ matchgroup=markdownCodeDelimiter
     \ start=/\z(`\+\)/
@@ -340,8 +339,7 @@ syn region markdownListItemCodeSpan
 " Why `contains=@Spell`?{{{
 "
 " When we enable `'spell'`, errors aren't highlighted inside a code block.
-" So we add the @Spell cluster.
-" See `:h spell-syntax`
+" So we add the @Spell cluster.  See `:h spell-syntax`
 "}}}
 " Do *not* define a codeblock as a region!{{{
 "
@@ -370,9 +368,7 @@ syn region markdownListItemCodeBlock
 
 " Some wiki pages on github use fenced codeblocks.{{{
 "
-" Example:
-"
-"     https://github.com/junegunn/fzf/wiki/Examples-(completion)
+" Example: https://github.com/junegunn/fzf/wiki/Examples-(completion)
 "
 " It's not visible  on github; you have to  clone the wiki and read  the page in
 " Vim to see the triple backticks at the bottom of the page:
@@ -823,19 +819,17 @@ hi link markdownEscape                Special
 " According  to tpope,  we should  always wrap a  word containing  an underscore
 " inside a code span:
 "
-" > There's no such thing as an underscore in natural language.
-" > What you want is an inline code block, no two ways about it.
+" >     There's no such thing as an underscore in natural language.
+" >     What you want is an inline code block, no two ways about it.
 "
-" > Different  markdown  engines  have  different tolerance  levels  for  inline
-" > underscores.
-" > Many will screw  you over with a  giant block of emphasized  text the second
-" > you use 2 in one paragraph.
-" > I flag them  as errors because they  *are* errors, even if  some engines are
-" > more forgiving about them.
+" >     Different  markdown  engines  have  different tolerance  levels  for  inline
+" >     underscores.
+" >     Many will screw  you over with a  giant block of emphasized  text the second
+" >     you use 2 in one paragraph.
+" >     I flag them  as errors because they  *are* errors, even if  some engines are
+" >     more forgiving about them.
 "
-" Source:
-"
-"     https://github.com/tpope/vim-markdown/issues/85#issuecomment-149206804
+" Source: https://github.com/tpope/vim-markdown/issues/85#issuecomment-149206804
 "}}}
 " Are there other ways to eliminate them?{{{
 "

@@ -7,7 +7,7 @@ endif
 " Yes, because html tags can be used in Markdown:
 " https://daringfireball.net/projects/markdown/syntax#html
 "
-" Besides, that's what tpope does in its markdown plugin.
+" Besides, that's what tpope does in his markdown plugin.
 "}}}
 " How could I source them?{{{
 "
@@ -26,23 +26,21 @@ endif
 " We set `'sw'` to 2 in an html  file (as per google style guide), but we prefer
 " to set it to 4 in a markdown file.
 "
-" In our  HTML plugin (`~/.vim/after/ftplugin/html.vim`),
-" We set up  the web browser to look for the word under the cursor when we press `K`.
+" In  our HTML  plugin  (`~/.vim/after/ftplugin/html.vim`), we  set  up the  web
+" browser to look for the word under the cursor when we press `K`.
 " But, in a markdown buffer, we prefer a more granular approach.
 " Sometimes, `:Man`,  sometimes `:help`,  and maybe other  values in  the future
 " depending on the location of the file.
 "}}}
 
-" TODO:
-" read this: http://www.oliversherouse.com/2017/08/21/vim_zero.html
+" TODO: Read this: http://www.oliversherouse.com/2017/08/21/vim_zero.html
 "
 " And this: https://www.romanzolotarev.com/jekyll/
 "
 " Jekyll is a program which could convert our markdown notes into webpages.
 " We could read the latter in firefox.
 
-" TODO:
-" Study this plugin.
+" TODO: Study this plugin:
 "
 " https://github.com/vim-pandoc/vim-rmarkdown
 " https://rmarkdown.rstudio.com/lesson-1.html
@@ -72,7 +70,8 @@ com -bar -buffer -complete=custom,markdown#check#punctuation_complete -nargs=1 -
     "                   └ useful to erase the command from the command-line after its execution
     "}}}
 
-com -bar -buffer -complete=custom,markdown#commit_hash2link#completion -nargs=1 -range=% CommitHash2Link call markdown#commit_hash2link#main(<line1>,<line2>, <q-args>)
+com -bar -buffer -complete=custom,markdown#commit_hash2link#completion -nargs=1 -range=%
+    \ CommitHash2Link call markdown#commit_hash2link#main(<line1>,<line2>, <q-args>)
 
 " Warning: Don't call this command `:Fix`. It wouldn't work as expected with `:argdo`.
 com -bar -buffer FixFormatting call markdown#fix_formatting()
@@ -86,12 +85,13 @@ com -bar -buffer -range=% FoldSortBySize exe markdown#fold#sort#by_size(<line1>,
 " ...  to reference link:
 "
 "     [text][ref]
-"
-"  Make it local to markdown
+"     ...
+"     # Reference
+"     [ref]: link
 "}}}
 com -bar -buffer -range=% LinkInline2Ref call markdown#link_inline2ref#main()
 
-com -buffer -bar Preview call markdown#preview#main()
+com -bar -buffer Preview call markdown#preview#main()
 
 " Mappings {{{1
 
@@ -130,14 +130,14 @@ xno <buffer><nowait><silent> L :<c-u>call markdown#fold#promote#set('more')<bar>
 " Options {{{1
 " ai {{{2
 
-" There's no  indent plugin in $VIMRUNTIME/indent/, so we  use 'autoindent' as a
-" poor-man's solution.
+" There's no indent plugin in `$VIMRUNTIME/indent/`, so we use `'autoindent'` as
+" a poor-man's solution.
 setl ai
 
 " cms {{{2
 
-" template for a comment (taken from html); will be used by `gc` (could also
-" be used by `zf` &friends, if &l:fdm = 'manual')
+" template for a comment (taken from html);  will be used by `gc` (could also be
+" used by `zf` &friends, if `&l:fdm = 'manual'`)
 setl cms=>\ %s
 
 " comments {{{2
@@ -181,20 +181,20 @@ setl com=fbn:-,fb:*,fb:+
 " We can make Vim recognize multi-line ones too.
 " Doing so allows us to format them with `gw`.
 "}}}
-" Don't confuse 'com' with 'cms'{{{
+" Don't confuse 'com' with 'cms'.{{{
 "
-" 'cms' is just a template used by folding commands (ex: `zf`) when they have
-" to (un)comment a marker which they need to add/remove on the starting/ending
+" `'cms'` is just a template used by  folding commands (ex: `zf`) when they have
+" to (un)comment a  marker which they need to add/remove  on the starting/ending
 " line of a fold.
 " We often use it to infer what a comment looks like, because it's easier than
 " parsing 'com', but that's it.
 "
-"                 ┌ %s is replaced by "{{_{ and "}}_}  at the end of resp.
-"                 │ the starting line of the fold and the ending line of the fold
-"                 ├──────────┐
-"         "%s  →  "{{_{  "}}_}
-"         ├─┘
-"         └ template
+"             ┌ %s is replaced by "{{_{ and "}}_}  at the end of resp.
+"             │ the starting line of the fold and the ending line of the fold
+"             ├──────────┐
+"     "%s  →  "{{_{  "}}_}
+"     ├─┘
+"     └ template
 "}}}
 " What's the meaning of the 'f' flag? {{{
 
@@ -232,7 +232,9 @@ setl com=fbn:-,fb:*,fb:+
 "
 " It's useful  to let Vim know  that 2 comment leaders  can be nested. Otherwise
 " `gw` won't set the proper indentation level for all the lines.
+"
 " MWE:
+"
 "     * - some very long comment some very long comment some very long comment some very long comment
 "
 " Without `n`:
@@ -243,6 +245,7 @@ setl com=fbn:-,fb:*,fb:+
 "       very long comment
 "
 " With `n`:
+"
 "       ┌ recognized as a (nested) comment leader
 "       │
 "     * - some very long comment some very long comment some very long comment
@@ -287,7 +290,7 @@ augroup END
 setl tw=80
 
 " We want `gq` to use par in a markdown buffer.
-let &l:fp = 'par -w'.&l:tw.'rjeq'
+let &l:fp = 'par -w'..&l:tw..'rjeq'
 
 " kp "{{{2
 
@@ -318,7 +321,7 @@ const b:cr_command = 'norm! 100|'
 
 " We've set up `vim-exchange` to re-indent linewise exchanges with `==`.
 " But we don't want that for markdown buffers.
-" For more info:    :h g:exchange_indent
+" For more info: `:h g:exchange_indent`.
 
 const b:exchange_indent = ''
 
@@ -330,8 +333,8 @@ const b:exchange_indent = ''
 
 if search('^```\S\+', 'n')
     const b:markdown_highlight = map(uniq(sort(filter(getline(1, '$'),
-        \ {_,v -> v =~# '^```\S\+'}))),
-        \ {_,v -> matchstr(v, '```\zs[a-z]\+')})
+        \ 'v:val =~# "^```\\S\\+"'))),
+        \ 'matchstr(v:val, "```\\zs[a-z]\\+")')
 endif
 
 " mc_chain {{{2
