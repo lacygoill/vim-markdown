@@ -193,6 +193,7 @@ fu markdown#undo_ftplugin() abort "{{{2
     nunmap <buffer> +[#
     nunmap <buffer> +]#
 
+    nunmap <buffer> =rb
     nunmap <buffer> =r-
     nunmap <buffer> =r--
     xunmap <buffer> =r-

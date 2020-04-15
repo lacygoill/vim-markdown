@@ -104,7 +104,7 @@ nno <buffer><nowait><silent> cof :<c-u>call markdown#fold#foldexpr#toggle()<cr>
 "}}}
 nno <buffer><nowait><silent> [of :<c-u>call markdown#fold#option#fdl('less')<cr>
 nno <buffer><nowait><silent> ]of :<c-u>call markdown#fold#option#fdl('more')<cr>
-sil! call repmap#make#all({
+sil! call repmap#make#repeatable({
     \ 'mode': 'n',
     \ 'buffer': 1,
     \ 'from': expand('<sfile>:p')..':'..expand('<slnum>'),
@@ -120,6 +120,7 @@ nno <buffer><nowait><silent> gl :<c-u>call markdown#fold#how_many#print()<cr>
 nno <buffer><nowait><silent> +[# :<c-u>call markdown#fold#put#main(0)<cr>
 nno <buffer><nowait><silent> +]# :<c-u>call markdown#fold#put#main(1)<cr>
 
+nno <buffer><nowait><silent> =rb  :<c-u>set opfunc=sh#break_long_cmd<cr>g@l
 nno <buffer><nowait><silent> =r-  :<c-u>set opfunc=markdown#hyphens2hashes<cr>g@
 nno <buffer><nowait><silent> =r-- :<c-u>set opfunc=markdown#hyphens2hashes<bar>exe 'norm! '..v:count1..'g@_'<cr>
 xno <buffer><nowait><silent> =r-  :<c-u>call markdown#hyphens2hashes('vis')<cr>
