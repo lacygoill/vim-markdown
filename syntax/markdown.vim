@@ -438,7 +438,7 @@ syn cluster markdownBlockquoteSpanElements contains=
 "}}}
 syn match markdownBlockquote
     \ /^ \{,3}>\+\%(\s.*\|$\)/
-    \ contains=@markdownBlockquoteSpanElements,markdownBlockquoteLeadingChar
+    \ contains=@Spell,@markdownBlockquoteSpanElements,markdownBlockquoteLeadingChar
     \ keepend
 
 syn match markdownBlockquoteLeadingChar

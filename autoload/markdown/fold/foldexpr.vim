@@ -46,7 +46,7 @@ endfu
 "}}}1
 fu markdown#fold#foldexpr#heading_depth(lnum) abort "{{{1
     let thisline = getline(a:lnum)
-    let level = len(matchstr(thisline, '^#\{1,6}'))
+    let level = strlen(matchstr(thisline, '^#\{1,6}'))
     if !level && thisline isnot# '' && thisline isnot# '```'
         let nextline = getline(a:lnum+1)
         if nextline =~# '^=\+\s*$'
@@ -81,7 +81,7 @@ fu markdown#fold#foldexpr#stacked() abort "{{{1
     "     $ vim -Nu <(cat <<'EOF'
     "     setl fdm=expr fde=Heading_depth(v:lnum)>0?'>1':'='
     "     fu Heading_depth(lnum)
-    "         let level = len(matchstr(getline(a:lnum), '^#\{1,6}'))
+    "         let level = strlen(matchstr(getline(a:lnum), '^#\{1,6}'))
     "         if !level
     "             if getline(a:lnum+1) =~ '^=\+\s*$'
     "                 let level = 1

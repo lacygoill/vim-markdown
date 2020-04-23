@@ -1,6 +1,6 @@
 fu markdown#fold#sort#by_size(lnum1,lnum2) abort "{{{1
     " get the level of the first fold
-    let lvl = len(matchstr(getline(a:lnum1), '^#*'))
+    let lvl = strlen(matchstr(getline(a:lnum1), '^#*'))
     if lvl == 0
         return 'echoerr "the first line is not a fold title"'
     endif

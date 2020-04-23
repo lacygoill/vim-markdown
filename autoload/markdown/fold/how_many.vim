@@ -58,7 +58,7 @@ endfu
 fu s:get_current_lvl() abort "{{{2
     let pat = '^#\+\ze\s\+'
     let first_line = search(pat, 'bcnW')
-    let current_lvl = len(matchstr(getline(first_line), pat))
+    let current_lvl = strlen(matchstr(getline(first_line), pat))
     return current_lvl
 endfu
 
