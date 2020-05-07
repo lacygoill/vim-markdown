@@ -516,8 +516,8 @@ syn cluster markdownListItemElements contains=
 "
 " From: https://daringfireball.net/projects/markdown/syntax#list
 "
-" > List markers typically start  at the left margin, but may  be indented by up
-" > to three spaces.
+" >     List markers typically start  at the left margin, but may  be indented by up
+" >     to three spaces.
 " }}}
 " Why ` \{,3}` in the `end` pattern?{{{
 "

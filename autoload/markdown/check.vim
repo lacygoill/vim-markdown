@@ -12,8 +12,8 @@ fu markdown#check#punctuation(type, lnum1, lnum2) abort "{{{1
 
     try
         " make sure any coordinating conjunction is preceded by a comma
-        " > She wanted to study but she was tired. (✘)
-        " > She wanted to study, but she was tired. (✔)
+        " >     She wanted to study but she was tired. (✘)
+        " >     She wanted to study, but she was tired. (✔)
         let fanboys =<< trim END
             for
             and

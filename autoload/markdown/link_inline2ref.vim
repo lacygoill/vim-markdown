@@ -114,8 +114,9 @@ fu s:populate_reference_section(id2url) abort "{{{2
     " Why don't you simply use `n` as the second argument of `sort()`, to get a numerical sort?{{{
     "
     " From `:h sort()`:
-    " > Implementation detail: This  uses the strtod() function  to parse numbers,
-    " > **Strings**, Lists, Dicts and Funcrefs **will be considered as being 0**.
+    "
+    " >     Implementation detail: This  uses the strtod() function  to parse numbers,
+    " >     **Strings**, Lists, Dicts and Funcrefs **will be considered as being 0**.
     "}}}
     let lines = sort(values(map(copy(a:id2url),
         \ {k,v -> '['..k..']: '..v})),
