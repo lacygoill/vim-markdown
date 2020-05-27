@@ -209,9 +209,14 @@ fu markdown#undo_ftplugin() abort "{{{2
     delc Preview
 endfu
 
-fu markdown#hyphens2hashes(type, ...) abort "{{{2
-    let range = a:type is# 'vis' ? "'<,'>" : "'[,']"
+fu markdown#hyphens2hashes(...) abort "{{{2
+    if !a:0
+        let &opfunc = 'markdown#hyphens2hashes'
+        return 'g@'
+    endif
+    let range = "'[,']"
     let hashes = matchstr(getline(search('^#', 'bnW')), '^#*')
+    if empty(hashes) | return | endif
     sil exe range..'s/^---/'..hashes..' ?/e'
 endfu
 " }}}1

@@ -120,13 +120,13 @@ nno <buffer><nowait><silent> gl :<c-u>call markdown#fold#how_many#print()<cr>
 nno <buffer><nowait><silent> +[# :<c-u>call markdown#fold#put#main(0)<cr>
 nno <buffer><nowait><silent> +]# :<c-u>call markdown#fold#put#main(1)<cr>
 
-nno <buffer><nowait><silent> =rb  :<c-u>set opfunc=sh#break_long_cmd<cr>g@l
-nno <buffer><nowait><silent> =r-  :<c-u>set opfunc=markdown#hyphens2hashes<cr>g@
-nno <buffer><nowait><silent> =r-- :<c-u>set opfunc=markdown#hyphens2hashes<bar>exe 'norm! '..v:count1..'g@_'<cr>
-xno <buffer><nowait><silent> =r-  :<c-u>call markdown#hyphens2hashes('vis')<cr>
+nno <buffer><expr><nowait> =rb sh#break_long_cmd()
+nno <buffer><expr><nowait> =r- markdown#hyphens2hashes()
+nno <buffer><expr><nowait> =r-- markdown#hyphens2hashes()..'_'
+xno <buffer><expr><nowait> =r- markdown#hyphens2hashes()
 
-xno <buffer><nowait><silent> H :<c-u>call markdown#fold#promote#set('less')<bar>set opfunc=markdown#fold#promote#main<bar>exe 'norm! '..v:count1..'g@l'<cr>
-xno <buffer><nowait><silent> L :<c-u>call markdown#fold#promote#set('more')<bar>set opfunc=markdown#fold#promote#main<bar>exe 'norm! '..v:count1..'g@l'<cr>
+xno <buffer><expr><nowait> H markdown#fold#promote#setup('less')
+xno <buffer><expr><nowait> L markdown#fold#promote#setup('more')
 
 " Options {{{1
 " ai {{{2
