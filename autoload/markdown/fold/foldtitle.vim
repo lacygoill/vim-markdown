@@ -7,7 +7,7 @@ fu markdown#fold#foldtitle#get() abort "{{{1
     let title = substitute(foldstartline, '^#\+\s*', '', '')
     if get(b:, 'foldtitle_full', 0)
         let foldsize  = (v:foldend - v:foldstart)
-        let linecount = '['..foldsize..']'..repeat(' ', 4 - strchars(foldsize))
+        let linecount = '['..foldsize..']'..repeat(' ', 4 - strlen(foldsize))
         return indent ..(foldsize > 1 ? linecount : '')..title
     else
         return indent..title
