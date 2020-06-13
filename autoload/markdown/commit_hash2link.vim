@@ -1,6 +1,5 @@
 fu markdown#commit_hash2link#main(line1, line2, pgm) abort
     let pgm2url = {
-    \ 'nvim': 'https://github.com/neovim/neovim/commit/',
     \ 'vim' : 'https://github.com/vim/vim/commit/',
     \ 'tmux': 'https://github.com/tmux/tmux/commit/',
     \ }
@@ -14,6 +13,6 @@ fu markdown#commit_hash2link#main(line1, line2, pgm) abort
 endfu
 
 fu markdown#commit_hash2link#completion(_a, _l, _p) abort
-    return join(['nvim', 'tmux', 'vim'], "\n")
+    return join(['tmux', 'vim'], "\n")
 endfu
 

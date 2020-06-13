@@ -731,9 +731,16 @@ syn match markdownFootnoteDefinition '^\[^[^\]]\+\]:'
 syn match markdownEscape '\\[][\\`*_{}()<>#+.!-]'
 syn match markdownError '\w\@1<=_\ze\w'
 
-syn match markdownPointer '^\s\+\%([v^✘✔]\+\s*\)\+$'
+" If you try to exclude the comment leader with a positive lookbehind, make sure
+" it's not costly.  Last time I tried, it was.
+syn match markdownPointer '^\s\+\%("\s*\)\=\%([v^✘✔]\+\s*\)\+$'
+"                                  │
+"                                  └ support a Vim commented line in a codeblock
+" TODO: Should we get this comment leader programmatically?  If so, how?
+" And what  if we use  different comment leaders  because we write  in different
+" languages in the same document?
 
-exe 'syn match markdownTodo  /\CTO'.'DO\|FIX'.'ME/ contained'
+exe 'syn match markdownTodo  /\CTO'..'DO\|FIX'..'ME/ contained'
 
 " If you change this regex, test the new syntax highlighting against this text:{{{
 "
