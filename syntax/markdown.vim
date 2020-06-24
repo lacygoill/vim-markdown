@@ -477,7 +477,7 @@ syn match markdownRule '^- *- *-[ -]*$'
 " It's not readable; I would prefer each link to be on its own line.
 " Solution1: prepend `</br>` after each link:
 "
-"                              vvvvv
+"                              v---v
 "     <https://0x0.st/zam-.txt></br>
 "     <https://0x0.st/zami.txt>
 "
@@ -733,7 +733,7 @@ syn match markdownError '\w\@1<=_\ze\w'
 
 " If you try to exclude the comment leader with a positive lookbehind, make sure
 " it's not costly.  Last time I tried, it was.
-syn match markdownPointer '^\s\+\%("\s*\)\=\%([v^✘✔]\+\s*\)\+$'
+syn match markdownPointer '^\s\+\%("\s*\)\=\%([v^✘✔-]\+\s*\)\+$'
 "                                  │
 "                                  └ support a Vim commented line in a codeblock
 " TODO: Should we get this comment leader programmatically?  If so, how?
