@@ -79,17 +79,17 @@ fu markdown#fold#foldexpr#stacked() abort "{{{1
     " Run this shell command:
     "
     "     $ vim -Nu <(cat <<'EOF'
-    "     setl fdm=expr fde=Heading_depth(v:lnum)>0?'>1':'='
-    "     fu Heading_depth(lnum)
-    "         let level = strlen(matchstr(getline(a:lnum), '^#\{1,6}'))
-    "         if !level
-    "             if getline(a:lnum+1) =~ '^=\+\s*$'
-    "                 let level = 1
+    "         setl fdm=expr fde=Heading_depth(v:lnum)>0?'>1':'='
+    "         fu Heading_depth(lnum)
+    "             let level = strlen(matchstr(getline(a:lnum), '^#\{1,6}'))
+    "             if !level
+    "                 if getline(a:lnum+1) =~ '^=\+\s*$'
+    "                     let level = 1
+    "                 endif
     "             endif
-    "         endif
-    "         return level
-    "     endfu
-    "     ino <expr> <c-k><c-k> repeat('<del>', 300)
+    "             return level
+    "         endfu
+    "         ino <expr> <c-k><c-k> repeat('<del>', 300)
     "     EOF
     "     ) +"%d | put='text' | norm! yy300pG300Ax" /tmp/md.md
     "
