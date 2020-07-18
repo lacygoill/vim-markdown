@@ -359,8 +359,12 @@ syn match markdownCodeBlock
     \ contains=@Spell
     \ keepend
 
+" Don't use 8 spaces.  Use 9.{{{
+"
+" For your notes to be readable on github, you need at least 9 spaces.
+"}}}
 syn region markdownListItemCodeBlock
-    \ start=/^        \|^\t\t/
+    \ start=/^         \|^\t\t/
     \ end=/$/
     \ contained
     \ contains=@Spell
