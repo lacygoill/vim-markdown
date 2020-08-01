@@ -180,7 +180,7 @@ setl com=fbn:-,fb:*,fb:+
 
 " We aren't limited to single-line comments.
 " We can make Vim recognize multi-line ones too.
-" Doing so allows us to format them with `gw`.
+" Doing so lets us format them with `gw`.
 "}}}
 " Don't confuse 'com' with 'cms'.{{{
 "

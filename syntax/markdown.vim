@@ -111,15 +111,15 @@ syn region markdownHeader
     \ end=/$/
     \ keepend
     \ oneline
-    \ contains=@markdownSpanElements,markdownAutomaticLink
+    \ contains=@Spell,@markdownSpanElements,markdownAutomaticLink
 
 syn match markdownHeader
     \ /^.\+\n=\+$/
-    \ contains=@markdownSpanElements,markdownHeadingRule,markdownAutomaticLink
+    \ contains=@Spell,@markdownSpanElements,markdownHeadingRule,markdownAutomaticLink
 
 syn match markdownHeader
     \ /^.\+\n-\+$/
-    \ contains=@markdownSpanElements,markdownHeadingRule,markdownAutomaticLink
+    \ contains=@Spell,@markdownSpanElements,markdownHeadingRule,markdownAutomaticLink
 " }}}1
 
 " Don't change the order of `Italic`, `Bold` and `Bold+Italic`!{{{
@@ -755,6 +755,12 @@ exe 'syn match markdownTodo  /\CTO'..'DO\|FIX'..'ME/ contained'
 "    │  └ blue
 "    └ red
 "
+"    A + B + C
+"    │   │   │
+"    │   │   └ end
+"    │   └ middle
+"    └ beginning
+"
 "    ┌─────┬─────┬─────┐
 "    │ foo │ bar │ baz │
 "    ├─────┼─────┼─────┤
@@ -773,13 +779,19 @@ exe 'syn match markdownTodo  /\CTO'..'DO\|FIX'..'ME/ contained'
 "    │             │ no  │ bash_profile         │   -    │
 "    └─────────────┴─────┴──────────────────────┴────────┘
 "
-"    A + B + C
-"    │   │   │
-"    │   │   └ end
-"    │   └ middle
-"    └ beginning
+"                           ┌──────────────────────────────────────┐
+"                           │                  to                  │
+"                           ├───────────────┬──────────┬───────────┤
+"                           │ characterwise │ linewise │ blockwise │
+"    ┌──────┬───────────────┼───────────────┼──────────┼───────────┤
+"    │      │ characterwise │               │          │           │
+"    │      ├───────────────┼───────────────┼──────────┼───────────┤
+"    │ from │ linewise      │               │          │           │
+"    │      ├───────────────┼───────────────┼──────────┼───────────┤
+"    │      │ blockwise     │               │          │           │
+"    └──────┴───────────────┴───────────────┴──────────┴───────────┘
 "}}}
-syn match markdownTable /^    \%([┌└]─\|│.*[^ \t│].*│\|├─.*┤\|│.*├\).*/
+syn match markdownTable /^ \{4,}\%([┌└]─\|│.*[^ \t│].*│\|├─.*┤\|│.*├\).*/
 
 syn match markdownOption /`\@1<='[-a-z]\{2,}'\ze`/ contained containedin=markdownCodeSpan,markdownListItemCodeSpan
 

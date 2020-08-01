@@ -219,6 +219,24 @@ fu markdown#hyphens2hashes(...) abort "{{{2
     if empty(hashes) | return | endif
     sil exe range..'s/^---/'..hashes..' ?/e'
 endfu
+
+fu markdown#fix_fenced_code_block() abort "{{{2
+    if execute('syn list @markdownHighlightvim', 'silent!') !~# 'markdownHighlightvim'
+        return
+    endif
+    " Why here?  Why not in our Vim syntax plugin?{{{
+    "
+    " Well, we do write  it in our Vim syntax plugin  too; it's indeed necessary
+    " for Vim files, but it's not enough for markdown files, because `syn clear`
+    " is ignored when run from an included syntax file.
+    "
+    " From `:h 44.9`:
+    "
+    " >     The `:syntax  include` command is  clever enough  to ignore a  `:syntax clear`
+    " >     command in the included file.
+    "}}}
+    syn clear vimUsrCmd
+endfu
 " }}}1
 " Utilities {{{1
 fu s:get_filetype(ft) abort "{{{2
