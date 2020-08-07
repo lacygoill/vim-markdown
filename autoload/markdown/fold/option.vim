@@ -9,6 +9,6 @@ fu markdown#fold#option#fdl(choice) abort
     else
         let &l:fdl = (&l:fdl == 0 ? 0 : &l:fdl - 1)
     endif
-    echo "'fdl' = "..&l:fdl
+    echo "'fdl' = " .. &l:fdl
 endfu
 

@@ -73,7 +73,7 @@ com -bar -buffer -complete=custom,markdown#check#punctuation_complete -nargs=1 -
 com -bar -buffer -complete=custom,markdown#commit_hash2link#completion -nargs=1 -range=%
     \ CommitHash2Link call markdown#commit_hash2link#main(<line1>,<line2>, <q-args>)
 
-" Warning: Don't call this command `:Fix`. It wouldn't work as expected with `:argdo`.
+" Warning: Don't call this command `:Fix`.  It wouldn't work as expected with `:argdo`.
 com -bar -buffer FixFormatting call markdown#fix_formatting()
 
 com -bar -buffer -range=% FoldSortBySize exe markdown#fold#sort#by_size(<line1>,<line2>)
@@ -107,9 +107,9 @@ nno <buffer><nowait><silent> ]of :<c-u>call markdown#fold#option#fdl('more')<cr>
 sil! call repmap#make#repeatable({
     \ 'mode': 'n',
     \ 'buffer': 1,
-    \ 'from': expand('<sfile>:p')..':'..expand('<slnum>'),
+    \ 'from': expand('<sfile>:p') .. ':' .. expand('<slnum>'),
     \ 'motions': [
-    \              {'bwd': '[of',  'fwd': ']of'},
+    \              {'bwd': '[of', 'fwd': ']of'},
     \            ]
     \ })
 
@@ -122,7 +122,7 @@ nno <buffer><nowait><silent> +]# :<c-u>call markdown#fold#put#main(1)<cr>
 
 nno <buffer><expr><nowait> =rb sh#break_long_cmd()
 nno <buffer><expr><nowait> =r- markdown#hyphens2hashes()
-nno <buffer><expr><nowait> =r-- markdown#hyphens2hashes()..'_'
+nno <buffer><expr><nowait> =r-- markdown#hyphens2hashes() .. '_'
 xno <buffer><expr><nowait> =r- markdown#hyphens2hashes()
 
 xno <buffer><expr><nowait> H markdown#fold#promote#setup('less')
@@ -217,21 +217,21 @@ setl com=fbn:-,fb:*,fb:+
 "       very long comment
 "
 " This shows  why `f` is important  for a comment  leader used as a  bullet list
-" marker. The meaning  of a  comment leader  depends on  the context  where it's
-" used. It means that all the text between it and the next comment leader:
+" marker.  The  meaning of a  comment leader depends  on the context  where it's
+" used.  It means that all the text between it and the next comment leader:
 "
 "    - is commented in a regular paragraph
 "    - belongs to a same item in a bullet list
 "
-" So, you can break/join the lines of a regular paragraph, however you like,
-" without changing its meaning. But you can't do the same for a bullet list.
+" So, you  can break/join the  lines of a  regular paragraph, however  you like,
+" without changing its meaning.  But you can't do the same for a bullet list.
 "
 " Technically, if `f` is absent, Vim will add a marker every time it has to
 " break down a line, which is wrong in a bullet list.
 " }}}
 " What's the meaning of the 'n' flag? {{{
 "
-" It's useful  to let Vim know  that 2 comment leaders  can be nested. Otherwise
+" It's useful to let  Vim know that 2 comment leaders  can be nested.  Otherwise
 " `gw` won't set the proper indentation level for all the lines.
 "
 " MWE:
@@ -291,7 +291,7 @@ augroup END
 setl tw=80
 
 " We want `gq` to use par in a markdown buffer.
-let &l:fp = 'par -w'..&l:tw..'rjeq'
+let &l:fp = 'par -w' .. &l:tw .. 'rjeq'
 
 " kp "{{{2
 
@@ -333,9 +333,11 @@ const b:exchange_indent = ''
 " performance.
 
 if search('^```\S\+', 'n')
-    const b:markdown_highlight = map(uniq(sort(filter(getline(1, '$'),
-        \ 'v:val =~# "^```\\S\\+"'))),
-        \ 'matchstr(v:val, "```\\zs[a-z]\\+")')
+    const b:markdown_highlight = getline(1, '$')
+        \ ->filter('v:val =~# "^```\\S\\+"')
+        \ ->sort()
+        \ ->uniq()
+        \ ->map('matchstr(v:val, "```\\zs[a-z]\\+")')
 endif
 
 " mc_chain {{{2
@@ -353,7 +355,7 @@ END
 " sandwich_recipes {{{2
 
 " Let us conceal the answer to a question by pressing `sa {text-object} c`.
-const b:sandwich_recipes = deepcopy(get(g:, 'sandwich#recipes', get(g:, 'sandwich#default_recipes', [])))
+const b:sandwich_recipes = get(g:, 'sandwich#recipes', get(g:, 'sandwich#default_recipes', []))->deepcopy()
     \ + [{
     \     'buns': ['↣ ', ' ↢'],
     \     'input': ['c'],
@@ -372,5 +374,5 @@ let b:did_ftplugin = 1
 " Teardown {{{1
 
 let b:undo_ftplugin = get(b:, 'undo_ftplugin', 'exe')
-    \ ..'| call markdown#undo_ftplugin()'
+    \ .. '| call markdown#undo_ftplugin()'
 

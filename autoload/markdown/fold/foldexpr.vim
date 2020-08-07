@@ -8,11 +8,11 @@
 "         let fence_position = searchpairpos(start_fence, '', end_fence, 'W')
 "
 "         call cursor(pos)
-"         return fence_position !=# [0,0]
+"         return fence_position !=# [0, 0]
 "     endfu
 
 "     fu s:has_syntax_group(lnum) abort {{{2
-"         let syntax_groups = map(synstack(a:lnum, 1), {_,v -> synIDattr(v, 'name')})
+"         let syntax_groups = synstack(a:lnum, 1)->map({_, v -> synIDattr(v, 'name')})
 "         for value in syntax_groups
 "             if value =~? 'markdown\%(Code\|Highlight\)'
 "                 return 1
@@ -33,8 +33,8 @@
 
 fu markdown#fold#foldexpr#toggle() abort "{{{1
     let &l:fde = &l:fde is# 'markdown#fold#foldexpr#stacked()'
-             \ ?     'markdown#fold#foldexpr#nested()'
-             \ :     'markdown#fold#foldexpr#stacked()'
+        \ ?     'markdown#fold#foldexpr#nested()'
+        \ :     'markdown#fold#foldexpr#stacked()'
     " Why?{{{
     "
     " We set `'fdm'` to `manual` by default, because `expr` can be much more expensive.
@@ -46,8 +46,8 @@ endfu
 "}}}1
 fu markdown#fold#foldexpr#heading_depth(lnum) abort "{{{1
     let thisline = getline(a:lnum)
-    let level = strlen(matchstr(thisline, '^#\{1,6}'))
-    if !level && thisline isnot# '' && thisline isnot# '```'
+    let level = matchstr(thisline, '^#\{1,6}')->strlen()
+    if !level && thisline != '' && thisline isnot# '```'
         let nextline = getline(a:lnum+1)
         if nextline =~# '^=\+\s*$'
             return 1
@@ -70,7 +70,7 @@ endfu
 
 fu markdown#fold#foldexpr#nested() abort "{{{1
     let depth = markdown#fold#foldexpr#heading_depth(v:lnum)
-    return depth > 0 ? '>'..depth : '='
+    return depth > 0 ? '>' .. depth : '='
 endfu
 
 fu markdown#fold#foldexpr#stacked() abort "{{{1
@@ -81,7 +81,7 @@ fu markdown#fold#foldexpr#stacked() abort "{{{1
     "     $ vim -Nu <(cat <<'EOF'
     "         setl fdm=expr fde=Heading_depth(v:lnum)>0?'>1':'='
     "         fu Heading_depth(lnum)
-    "             let level = strlen(matchstr(getline(a:lnum), '^#\{1,6}'))
+    "             let level = getline(a:lnum)->matchstr('^#\{1,6}')->strlen()
     "             if !level
     "                 if getline(a:lnum+1) =~ '^=\+\s*$'
     "                     let level = 1

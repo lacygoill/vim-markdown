@@ -1,6 +1,6 @@
 fu markdown#fold#sort#by_size(lnum1,lnum2) abort "{{{1
     " get the level of the first fold
-    let lvl = strlen(matchstr(getline(a:lnum1), '^#*'))
+    let lvl = getline(a:lnum1)->matchstr('^#*')->strlen()
     if lvl == 0
         return 'echoerr "the first line is not a fold title"'
     endif
@@ -25,7 +25,7 @@ fu markdown#fold#sort#by_size(lnum1,lnum2) abort "{{{1
         " Thus, the quantifier *must* go below `lvl`.
         "
         "}}}
-        let pat = '\n\%(#\{1,'..lvl..'}#\@!\)\|\%$'
+        let pat = '\n\%(#\{1,' .. lvl .. '}#\@!\)\|\%$'
 
         call cursor(a:lnum1, 1)
 
@@ -60,18 +60,18 @@ fu markdown#fold#sort#by_size(lnum1,lnum2) abort "{{{1
                 if f.size > folds[-1].size
                     " move last fold above
                     sil exe printf('%d,%dm %d',
-                    \              folds[-1].foldstart,
-                    \              folds[-1].foldend,
-                    \              f.foldstart - 1)
+                        \ folds[-1].foldstart,
+                        \ folds[-1].foldend,
+                        \ f.foldstart - 1)
                     return markdown#fold#sort#by_size(a:lnum1,a:lnum2)
                 endif
             endfor
 
             let orig_lnum = line('.')
             let foldend = search(pat, 'W', a:lnum2)
-            "                  ┌ stop if you've found a fold whose level is < `lvl`
-            "                  │
-            if foldend == 0 || match(getline(orig_lnum+1), '^\%(#\{'..(lvl-1)..'}#\@!\)') == 0
+            "                                        ┌ stop if you've found a fold whose level is < `lvl`
+            "                                        │
+            if foldend == 0 || getline(orig_lnum+1)->match('^\%(#\{' .. (lvl-1) .. '}#\@!\)') == 0
                 break
             endif
             let folds += [{'foldstart': orig_lnum + 1, 'foldend': foldend, 'size': foldend - orig_lnum}]

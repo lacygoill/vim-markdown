@@ -22,7 +22,7 @@ fu markdown#fold#how_many#print() abort "{{{2
     let msg_second_part = s:get_number_of_folds(2)
     call winrestview(view)
 
-    echo msg_first_part..', '..msg_second_part
+    echo msg_first_part .. ', ' .. msg_second_part
 endfu
 " }}}1
 " Core {{{1
@@ -30,11 +30,11 @@ fu s:move_to_first_fold(n) abort "{{{2
     if a:n == 1
         let pat = s:current_lvl == 1
             \ ? '^#\+$\n\zs\|\%^'
-            \ : '^#\+$\n\zs\|^#\{'..(s:current_lvl - 1)..'}#\@!\s\S\+.*\n\zs\|\%^'
+            \ : '^#\+$\n\zs\|^#\{' .. (s:current_lvl - 1) .. '}#\@!\s\S\+.*\n\zs\|\%^'
     else
         let pat = s:current_lvl == 1
             \ ? '^\%(#\+\n\|\%^\)\zs#\s\S\+'
-            \ : '^#\{'..(s:current_lvl-1)..'}#\@!'
+            \ : '^#\{' .. (s:current_lvl-1) .. '}#\@!'
     endif
     call search(pat, 'bcW')
 endfu
@@ -42,12 +42,12 @@ endfu
 fu s:get_number_of_folds(n) abort "{{{2
     let pat = s:current_lvl == 1
         \ ? '^#\+$\|\%$'
-        \ : (a:n == 1 ? '^#\+$\|' : '')..'^#\{'..(s:current_lvl-1)..'}#\@!\|\%$'
+        \ : (a:n == 1 ? '^#\+$\|' : '') .. '^#\{' .. (s:current_lvl-1) .. '}#\@!\|\%$'
 
     let first_line_last_fold = search(pat, 'nW')
     let cnt = 0
     while cnt < 999 && line('.') < first_line_last_fold
-        call search('^#\{'..s:current_lvl..'}#\@!\s\S\+\|\%$', 'W')
+        call search('^#\{' .. s:current_lvl .. '}#\@!\s\S\+\|\%$', 'W')
         let cnt += 1
     endwhile
 
@@ -58,7 +58,7 @@ endfu
 fu s:get_current_lvl() abort "{{{2
     let pat = '^#\+\ze\s\+'
     let first_line = search(pat, 'bcnW')
-    let current_lvl = strlen(matchstr(getline(first_line), pat))
+    let current_lvl = getline(first_line)->matchstr(pat)->strlen()
     return current_lvl
 endfu
 

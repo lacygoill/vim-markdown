@@ -31,7 +31,7 @@ endif
 " We need `containedin`,  for example, to allow `xCommentTitle`  to be contained
 " in `xComment`.
 "
-" Update: We don't use `markdownCommentTitle` anymore. I found it too annoying.
+" Update: We don't use `markdownCommentTitle` anymore.  I found it too annoying.
 "
 " TODO:
 "
@@ -529,7 +529,7 @@ syn cluster markdownListItemElements contains=
 " non-whitespace, then we've found the first  line of a new paragraph inside the
 " current list item.
 "
-" If there are 5,6,7 spaces, I guess it's the same thing.
+" If there are 5, 6, 7 spaces, I guess it's the same thing.
 "
 " If there are  8 spaces, we've found  the first line of a  codeblock inside the
 " current list item.
@@ -540,7 +540,7 @@ syn cluster markdownListItemElements contains=
 " Why `\|\n\ze\s*‵‵‵\s*$` in the `end` pattern?{{{
 "
 " Sometimes, in a wiki page on github, a fenced codeblock is written right after
-" a list item, without any empty line in-between:
+" a list item, without any empty line in between:
 " https://github.com/ranger/ranger/wiki/Image-Previews
 "
 " When that  happens, the codeblock is  wrongly highlighted as a  list item.  It
@@ -696,13 +696,13 @@ syn region markdownLinkRefTitle
 " The same issue exists with any style contained in `markdownSpanElements`.
 "}}}
 exe 'syn region markdownLinkText'
-    \ . ' matchgroup=markdownLinkTextDelimiter'
-    \ . ' start=/!\=\[\ze\_[^]]*] \=[[(]/'
-    \ . ' end=/\]\ze \=[[(]/'
-    \ . ' nextgroup=markdownLink,markdownId'
-    \ . ' skipwhite'
-    \ . ' concealends'
-    \ . ' keepend'
+    \ .. ' matchgroup=markdownLinkTextDelimiter'
+    \ .. ' start=/!\=\[\ze\_[^]]*] \=[[(]/'
+    \ .. ' end=/\]\ze \=[[(]/'
+    \ .. ' nextgroup=markdownLink,markdownId'
+    \ .. ' skipwhite'
+    \ .. ' concealends'
+    \ .. ' keepend'
 
 " If  you  change the  name  the  items  beginning with  `markdownLink`,  update
 " `s:is_real_link()` in `./autoload/markdown/link_inline_to_ref.vim`.
@@ -744,9 +744,14 @@ syn match markdownPointer '^\s\+\%(["#]\s*\)\=\%([v^✘✔-]\+\s*\)\+$'
 " And what  if we use  different comment leaders  because we write  in different
 " languages in the same document?
 
-exe 'syn match markdownTodo  /\CTO'..'DO\|FIX'..'ME/ contained'
+exe 'syn match markdownTodo  /\CTO' .. 'DO\|FIX' .. 'ME/ contained'
 
 " If you change this regex, test the new syntax highlighting against this text:{{{
+"
+"    xxxxxx
+"    │   ├┘
+"    │   └ yyy
+"    └ zzz
 "
 "    ┌ foo
 "    ├────┐
@@ -760,6 +765,14 @@ exe 'syn match markdownTodo  /\CTO'..'DO\|FIX'..'ME/ contained'
 "    │   │   └ end
 "    │   └ middle
 "    └ beginning
+"
+"                                     search('=\%#>', 'bn', line('.'))
+"                                            └─────┤  └──┤  └───────┤
+"         match any `=[>]`, where `[]` denotes the ┘     │          │
+"                                                        │          │
+"                backwards without moving the cursor and ┘          │
+"                                                                   │
+"                                   search in the current line only ┘
 "
 "    ┌─────┬─────┬─────┐
 "    │ foo │ bar │ baz │
@@ -791,7 +804,7 @@ exe 'syn match markdownTodo  /\CTO'..'DO\|FIX'..'ME/ contained'
 "    │      │ blockwise     │               │          │           │
 "    └──────┴───────────────┴───────────────┴──────────┴───────────┘
 "}}}
-syn match markdownTable /^ \{4,}\%([┌└]─\|│.*[^ \t│].*│\|├─.*┤\|│.*├\).*/
+syn match markdownTable /^ \{4,}\%(┌─\|└─.*┤\@<!$\|│.*[^ \t│].*│\|├─.*┤\|│.*├.*┤\).*/
 
 syn match markdownOption /`\@1<='[-a-z]\{2,}'\ze`/ contained containedin=markdownCodeSpan,markdownListItemCodeSpan
 

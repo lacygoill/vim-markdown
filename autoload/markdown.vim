@@ -54,7 +54,7 @@ fu markdown#highlight_languages() abort "{{{2
         " Note that if `b:current_syntax` is set, Vim won't define the contained
         " python syntax groups; the cluster will be defined but contain nothing.
         "}}}
-        exe 'syn include @markdownHighlight'..ft..' syntax/'..ft..'.vim'
+        exe 'syn include @markdownHighlight' .. ft .. ' syntax/' .. ft .. '.vim'
         " Why?{{{
         "
         " The previous `:syn  include` has caused `b:current_syntax`  to bet set
@@ -66,18 +66,18 @@ fu markdown#highlight_languages() abort "{{{2
 
         " Note that the name of the region is identical to the name of the cluster:{{{
         "
-        "     'markdownHighlight'..ft
+        "     'markdownHighlight' .. ft
         "
         " But there's no conflict.
         " Probably because a cluster name is always prefixed by `@`.
         "}}}
-        exe 'syn region markdownHighlight'..ft
-        \ ..' matchgroup=markdownCodeDelimiter'
-        \ ..' start=/^\s*````*\s*'..delim..'\S\@!.*$/'
-        \ ..' end=/^\s*````*\ze\s*$/'
-        \ ..' keepend'
-        \ ..' concealends'
-        \ ..' contains=@markdownHighlight'..ft
+        exe 'syn region markdownHighlight' .. ft
+            \ .. ' matchgroup=markdownCodeDelimiter'
+            \ .. ' start=/^\s*````*\s*' .. delim .. '\S\@!.*$/'
+            \ .. ' end=/^\s*````*\ze\s*$/'
+            \ .. ' keepend'
+            \ .. ' concealends'
+            \ .. ' contains=@markdownHighlight' .. ft
         let done_include[delim] = 1
     endfor
     if !empty(delims) | syn sync ccomment markdownHeader | endif
@@ -119,7 +119,9 @@ fu markdown#fix_formatting() abort "{{{2
     " And the rest of the function  relies on the syntax highlighting, which may
     " have additional unexpected side effects.
     "}}}
-    if get(map(synstack('$', 1), {_,v -> synIDattr(v, 'name')}), 0, '') =~# '^markdownHighlight'
+    if synstack('$', 1)
+        \ ->map({_, v -> synIDattr(v, 'name')})
+        \ ->get(0, '') =~# '^markdownHighlight'
         call append('$', ['```', ''])
     endif
 
@@ -162,14 +164,16 @@ fu markdown#fix_formatting() abort "{{{2
     let flags = 'cW'
     let g = 0 | while search('^#', flags) && g < 999 | let g += 1
         let flags = 'W'
-        let item = get(map(synstack(line('.'), col('.')), {_,v -> synIDattr(v, 'name')}), -1, '')
+        let item = synstack('.', col('.'))
+            \ ->map({_, v -> synIDattr(v, 'name')})
+            \ ->get(-1, '')
         " Why `''` in addition to `Delimiter`?{{{
         "
         " Just in case there's still no syntax highlighting.
         "}}}
         if index(['', 'Delimiter'], item) == -1
             let line = getline('.')
-            let new_line = ' '..line
+            let new_line = ' ' .. line
             call setline('.', new_line)
         endif
     endwhile
@@ -215,9 +219,9 @@ fu markdown#hyphens2hashes(...) abort "{{{2
         return 'g@'
     endif
     let range = "'[,']"
-    let hashes = matchstr(getline(search('^#', 'bnW')), '^#*')
+    let hashes = search('^#', 'bnW')->getline()->matchstr('^#*')
     if empty(hashes) | return | endif
-    sil exe range..'s/^---/'..hashes..' ?/e'
+    sil exe range .. 's/^---/' .. hashes .. ' ?/e'
 endfu
 
 fu markdown#fix_fenced_code_block() abort "{{{2
@@ -241,12 +245,15 @@ endfu
 " Utilities {{{1
 fu s:get_filetype(ft) abort "{{{2
     let ft = a:ft
-    if filereadable($VIMRUNTIME..'/syntax/'..ft..'.vim')
+    if filereadable($VIMRUNTIME .. '/syntax/' .. ft .. '.vim')
         return ft
     else
-        let ft = matchstr(get(filter(split(execute('autocmd filetypedetect'), '\n'),
-            \ {_,v -> v =~# '\m\C\*\.'..ft..'\>'}), 0, ''), '\m\Csetf\%[iletype]\s*\zs\S*')
-        if filereadable($VIMRUNTIME..'/syntax/'..ft..'.vim')
+        let ft = execute('autocmd filetypedetect')
+            \ ->split('\n')
+            \ ->filter({_, v -> v =~# '\m\C\*\.' .. ft .. '\>'})
+            \ ->get(0, '')
+            \ ->matchstr('\m\Csetf\%[iletype]\s*\zs\S*')
+        if filereadable($VIMRUNTIME .. '/syntax/' .. ft .. '.vim')
             return ft
         endif
     endif

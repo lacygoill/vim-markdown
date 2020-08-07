@@ -4,7 +4,7 @@ fu markdown#fold#promote#main(_) abort "{{{2
     for i in range(1, cnt)
         call s:promote()
     endfor
-    call cursor(getpos("'[")[1:2])
+    call getpos("'[")[1:2]->cursor()
 endfu
 
 fu markdown#fold#promote#setup(how) abort "{{{2
@@ -15,11 +15,11 @@ endfu
 "}}}1
 " Core {{{1
 fu s:promote() abort "{{{2
-    let range = line("'[")..','..line("']")
+    let range = line("'[") .. ',' .. line("']")
     if s:how is# 'more'
-        sil exe 'keepj keepp '..range..'s/^\(#\+\)/\1#/e'
+        sil exe 'keepj keepp ' .. range .. 's/^\(#\+\)/\1#/e'
     else
-        sil exe 'keepj keepp '..range..'s/^\(#\+\)#/\1/e'
+        sil exe 'keepj keepp ' .. range .. 's/^\(#\+\)#/\1/e'
     endif
 endfu
 

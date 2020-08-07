@@ -9,14 +9,14 @@ fu markdown#get_definition#main(...) abort
     let fname = expand('%:p:t')
     if fname isnot# 'glossary.md'
         let cwd = getcwd()
-        exe 'sp '..cwd..'/glossary.md'
+        exe 'sp ' .. cwd .. '/glossary.md'
     endif
     let lines = getline(1, '$')
-    call map(lines, {i,v -> {'bufnr': bufnr('%'), 'lnum': i+1, 'text': v}})
-    let pat = '^#.*\c\V'..escape(word, '\')
-    call filter(lines, {_,v -> v.text =~# pat})
+    call map(lines, {i, v -> {'bufnr': bufnr('%'), 'lnum': i+1, 'text': v}})
+    let pat = '^#.*\c\V' .. escape(word, '\')
+    call filter(lines, {_, v -> v.text =~# pat})
     if empty(lines)
-        echom 'no definition for '..word
+        echom 'no definition for ' .. word
         if fname isnot# 'glossary.md'
             q
         endif
