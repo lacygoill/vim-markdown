@@ -520,8 +520,8 @@ syn cluster markdownListItemElements contains=
 "
 " From: https://daringfireball.net/projects/markdown/syntax#list
 "
-" >     List markers typically start  at the left margin, but may  be indented by up
-" >     to three spaces.
+"    > List markers typically start  at the left margin, but may  be indented by up
+"    > to three spaces.
 " }}}
 " Why ` \{,3}` in the `end` pattern?{{{
 "
@@ -855,15 +855,15 @@ hi link markdownEscape                Special
 " According  to tpope,  we should  always wrap a  word containing  an underscore
 " inside a code span:
 "
-" >     There's no such thing as an underscore in natural language.
-" >     What you want is an inline code block, no two ways about it.
+"    > There's no such thing as an underscore in natural language.
+"    > What you want is an inline code block, no two ways about it.
 "
-" >     Different  markdown  engines  have  different tolerance  levels  for  inline
-" >     underscores.
-" >     Many will screw  you over with a  giant block of emphasized  text the second
-" >     you use 2 in one paragraph.
-" >     I flag them  as errors because they  *are* errors, even if  some engines are
-" >     more forgiving about them.
+"    > Different  markdown  engines  have  different tolerance  levels  for  inline
+"    > underscores.
+"    > Many will screw  you over with a  giant block of emphasized  text the second
+"    > you use 2 in one paragraph.
+"    > I flag them  as errors because they  *are* errors, even if  some engines are
+"    > more forgiving about them.
 "
 " Source: https://github.com/tpope/vim-markdown/issues/85#issuecomment-149206804
 "}}}

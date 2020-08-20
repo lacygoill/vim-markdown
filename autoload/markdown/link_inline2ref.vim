@@ -115,8 +115,8 @@ fu s:populate_reference_section(id2url) abort "{{{2
     "
     " From `:h sort()`:
     "
-    " >     Implementation detail: This  uses the strtod() function  to parse numbers,
-    " >     **Strings**, Lists, Dicts and Funcrefs **will be considered as being 0**.
+    "    > Implementation detail: This  uses the strtod() function  to parse numbers,
+    "    > **Strings**, Lists, Dicts and Funcrefs **will be considered as being 0**.
     "}}}
     let lines = copy(a:id2url)
         \ ->map({k, v -> '[' .. k .. ']: ' .. v})

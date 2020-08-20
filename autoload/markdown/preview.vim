@@ -47,11 +47,10 @@ fu s:kill_daemon() abort "{{{1
     sil call system('curl -s -X DELETE http://localhost:8090 ' .. s:redirection)
     " What's the meaning of the `DELETE` method?{{{
     "
-    " >   The DELETE method requests that  the origin server delete the resource
-    " >   identified by the Request-URI.
+    "    > The DELETE method requests that  the origin server delete the resource
+    "    > identified by the Request-URI.
     "
-    " Source:
-    "     https://www.w3.org/Protocols/rfc2616/rfc2616-sec9.html
+    " Source: https://www.w3.org/Protocols/rfc2616/rfc2616-sec9.html
     "}}}
 endfu
 

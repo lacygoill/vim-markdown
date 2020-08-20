@@ -181,8 +181,7 @@ fu markdown#fix_formatting() abort "{{{2
 endfu
 
 fu markdown#undo_ftplugin() abort "{{{2
-    setl ai< cms< cocu< cole< com< fde< fdm< fdt< flp< fml< spl< tw< wrap<
-    set efm< fp< kp< mp<
+    set ai< cms< cocu< cole< com< efm< fde< fdm< fdt< flp< fml< fp< kp< mp< spl< tw< wrap<
     unlet! b:cr_command b:exchange_indent b:sandwich_recipes b:markdown_highlight b:mc_chain
     sil! au! instant-markdown * <buffer>
     sil! au! markdown_window_settings * <buffer>
@@ -236,8 +235,8 @@ fu markdown#fix_fenced_code_block() abort "{{{2
     "
     " From `:h 44.9`:
     "
-    " >     The `:syntax  include` command is  clever enough  to ignore a  `:syntax clear`
-    " >     command in the included file.
+    "    > The `:syntax  include` command is  clever enough  to ignore a  `:syntax clear`
+    "    > command in the included file.
     "}}}
     syn clear vimUsrCmd
 endfu
