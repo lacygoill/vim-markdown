@@ -51,7 +51,14 @@ fu markdown#fold#foldexpr#heading_depth(lnum) abort "{{{1
         let nextline = getline(a:lnum+1)
         if nextline =~# '^=\+\s*$'
             return 1
-        elseif nextline =~# '^-\+\s*$'
+        " Why `\{2,}` and not just `\+`?{{{
+        "
+        " Indeed, according to the markdown spec would parse, a single hyphen at
+        " the  start of  a line  is enough  to start  a heading.   However, it's
+        " *very* annoying for Vim to parse a  single hyphen as a heading when we
+        " put a diff in a markdown file.
+        "}}}
+        elseif nextline =~# '^-\{2,}\s*$'
             return 2
         endif
     endif
