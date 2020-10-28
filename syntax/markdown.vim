@@ -773,6 +773,14 @@ exe 'syn match markdownTodo  /\CTO' .. 'DO\|FIX' .. 'ME/ contained'
 "                backwards without moving the cursor and ┘          │
 "                                                                   │
 "                                   search in the current line only ┘
+"     $ tree
+"     .~
+"     ├── cat1
+"     │   ├── tig.1.gz
+"     │   └── youtube-dl.1.gz
+"     ├── index.db
+"     └── man1
+"         └── youtube-dl.1
 "
 "    ┌─────┬─────┬─────┐
 "    │ foo │ bar │ baz │
@@ -804,7 +812,7 @@ exe 'syn match markdownTodo  /\CTO' .. 'DO\|FIX' .. 'ME/ contained'
 "    │      │ blockwise     │               │          │           │
 "    └──────┴───────────────┴───────────────┴──────────┴───────────┘
 "}}}
-syn match markdownTable /^ \{4,}\%(┌─\|└─.*┤\@<!$\|│.*[^ \t│].*│\|├─.*┤\|│.*├.*┤\).*/
+syn match markdownTable /^ \{4,}\%(┌[─┬┼]\+[┤┐]\|└[─┴]\+┘\|│.*[^ \t│].*│\|├─.*┤\|│.*├.*┤\).*/
 
 syn match markdownOption /`\@1<='[-a-z]\{2,}'\ze`/ contained containedin=markdownCodeSpan,markdownListItemCodeSpan
 

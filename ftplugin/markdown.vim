@@ -361,7 +361,7 @@ END
 " sandwich_recipes {{{2
 
 " Let us conceal the answer to a question by pressing `sa {text-object} c`.
-const b:sandwich_recipes = get(g:, 'sandwich#recipes', get(g:, 'sandwich#default_recipes', []))->deepcopy()
+let b:sandwich_recipes = get(g:, 'sandwich#recipes', get(g:, 'sandwich#default_recipes', []))->deepcopy()
     \ + [{
     \     'buns': ['↣ ', ' ↢'],
     \     'input': ['c'],

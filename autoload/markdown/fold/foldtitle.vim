@@ -4,7 +4,7 @@ fu markdown#fold#foldtitle#get() abort "{{{1
     let level = markdown#fold#foldexpr#heading_depth(v:foldstart)
     let indent = repeat(' ', (level - 1) * 3)
     " remove noise
-    let title = substitute(foldstartline, '^#\+\s*', '', '')
+    let title = substitute(foldstartline, '^#\+\s*\|`', '', 'g')
     if get(b:, 'foldtitle_full', 0)
         let foldsize = (v:foldend - v:foldstart)
         let linecount = '[' .. foldsize .. ']' .. repeat(' ', 4 - strlen(foldsize))
