@@ -95,15 +95,15 @@ com -bar -buffer Preview call markdown#preview#main()
 
 " Mappings {{{1
 
-nno <buffer><nowait><silent> cof :<c-u>call markdown#fold#foldexpr#toggle()<cr>
+nno <buffer><nowait> cof <cmd>call markdown#fold#foldexpr#toggle()<cr>
 " Increase/decrease  'fdl' when folds are nested.{{{
 "
 " Use it to quickly see the titles up to an arbitrary depth.
 " Useful  to get  an overview  of  the contents  of  the notes  of an  arbitrary
 " precision.
 "}}}
-nno <buffer><nowait><silent> [of :<c-u>call markdown#fold#option#fdl('less')<cr>
-nno <buffer><nowait><silent> ]of :<c-u>call markdown#fold#option#fdl('more')<cr>
+nno <buffer><nowait> [of <cmd>call markdown#fold#option#fdl('less')<cr>
+nno <buffer><nowait> ]of <cmd>call markdown#fold#option#fdl('more')<cr>
 sil! call repmap#make#repeatable({
     \ 'mode': 'n',
     \ 'buffer': 1,
@@ -113,12 +113,12 @@ sil! call repmap#make#repeatable({
     \            ]
     \ })
 
-nno <buffer><nowait><silent> gd :<c-u>call markdown#get_definition#main()<cr>
-xno <buffer><nowait><silent> gd :<c-u>call markdown#get_definition#main('vis')<cr>
-nno <buffer><nowait><silent> gl :<c-u>call markdown#fold#how_many#print()<cr>
+nno <buffer><nowait> gd <cmd>call markdown#get_definition#main()<cr>
+xno <buffer><nowait> gd <cmd>call markdown#get_definition#main('vis')<cr>
+nno <buffer><nowait> gl <cmd>call markdown#fold#how_many#print()<cr>
 
-nno <buffer><nowait><silent> +[# :<c-u>call markdown#fold#put#main(0)<cr>
-nno <buffer><nowait><silent> +]# :<c-u>call markdown#fold#put#main(1)<cr>
+nno <buffer><nowait> +[# <cmd>call markdown#fold#put#main(0)<cr>
+nno <buffer><nowait> +]# <cmd>call markdown#fold#put#main(1)<cr>
 
 nno <buffer><expr><nowait> =rb sh#break_long_cmd()
 nno <buffer><expr><nowait> =r- markdown#hyphens2hashes()
