@@ -1,7 +1,7 @@
 fu markdown#fold#foldtitle#get() abort "{{{1
     let foldstartline = getline(v:foldstart)
     " get the desired level of indentation for the title
-    let level = markdown#fold#foldexpr#heading_depth(v:foldstart)
+    let level = markdown#fold#foldexpr#headingDepth(v:foldstart)
     let indent = repeat(' ', (level - 1) * 3)
     " remove noise
     let title = substitute(foldstartline, '^#\+\s*\|`', '', 'g')

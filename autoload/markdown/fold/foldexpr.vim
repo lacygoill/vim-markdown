@@ -46,7 +46,7 @@ def markdown#fold#foldexpr#toggle(): #{{{1
     sil! call fold#lazy#compute('force')
 enddef
 "}}}1
-def markdown#fold#foldexpr#heading_depth(lnum: number): number #{{{1
+def markdown#fold#foldexpr#headingDepth(lnum: number): number #{{{1
     var thisline = getline(lnum)
     var level = matchstr(thisline, '^#\{1,6}')->strlen()
     if !level && thisline != '' && thisline != '```'
@@ -78,7 +78,7 @@ def markdown#fold#foldexpr#heading_depth(lnum: number): number #{{{1
 enddef
 
 def markdown#fold#foldexpr#nested(): string #{{{1
-    var depth = markdown#fold#foldexpr#heading_depth(v:lnum)
+    var depth = markdown#fold#foldexpr#headingDepth(v:lnum)
     return depth > 0 ? '>' .. depth : '='
 enddef
 
@@ -132,6 +132,6 @@ def markdown#fold#foldexpr#stacked(): string #{{{1
     # No, because – in  big enough files – as soon as Vim  creates the folds, we
     # reset `'fdm'` to `manual` which is less costly.
     #}}}
-    return markdown#fold#foldexpr#heading_depth(v:lnum) > 0 ? '>1' : '='
+    return markdown#fold#foldexpr#headingDepth(v:lnum) > 0 ? '>1' : '='
 enddef
 
