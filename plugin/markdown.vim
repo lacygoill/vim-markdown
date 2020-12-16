@@ -7,7 +7,7 @@ let g:loaded_markdown = 1
 " https://github.com/vim/vim/issues/6587 is fixed.
 
 " In a Vim9 script, don't highlight a custom Vim function (called without `:call`) with `vimUsrCmd`.
-augroup markdown_fix_fenced_code_block | au!
+augroup MarkdownFixFencedCodeBlock | au!
     au Syntax markdown call markdown#fix_fenced_code_block()
 augroup END
 

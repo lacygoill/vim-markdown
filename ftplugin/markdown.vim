@@ -264,7 +264,7 @@ try | compiler pandoc | catch /^Vim\%((\a\+)\)\=:E666:/ | endtry
 " `lg/styled_comment.vim`) for an explanation.
 call markdown#window#settings()
 
-augroup markdown_window_settings
+augroup MarkdownWindowSettings
     au! * <buffer>
     " Why `#compute()`?{{{
     "
