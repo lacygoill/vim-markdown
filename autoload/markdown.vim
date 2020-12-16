@@ -183,7 +183,7 @@ endfu
 fu markdown#undo_ftplugin() abort "{{{2
     set ai< cms< cocu< cole< com< efm< fde< fdm< fdt< flp< fml< fp< kp< mp< spl< tw< wrap<
     unlet! b:cr_command b:exchange_indent b:sandwich_recipes b:markdown_highlight b:mc_chain
-    sil! au! instant-markdown * <buffer>
+    sil! au! InstantMarkdown * <buffer>
     sil! au! MarkdownWindowSettings * <buffer>
 
     nunmap <buffer> cof

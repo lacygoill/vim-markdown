@@ -56,7 +56,7 @@ endfu
 
 fu markdown#preview#main() abort "{{{1
     call getline(1, '$')->s:start_daemon()
-    aug instant-markdown
+    aug InstantMarkdown
         au! * <buffer>
         au CursorHold,BufWrite,InsertLeave <buffer> call s:refresh()
         au BufUnload <buffer> call s:kill_daemon()
