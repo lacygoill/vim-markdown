@@ -767,6 +767,12 @@ exe 'syn match markdownTodo  /\CTO' .. 'DO\|FIX' .. 'ME/ contained'
 "    │   └ middle
 "    └ beginning
 "
+"     foo bar baz
+"     │   ├─┘  │
+"     │   │    └ some comment
+"     │   └ some comment
+"     └ some comment
+"
 "                                     search('=\%#>', 'bn', line('.'))
 "                                            └─────┤  └──┤  └───────┤
 "         match any `=[>]`, where `[]` denotes the ┘     │          │
@@ -813,7 +819,14 @@ exe 'syn match markdownTodo  /\CTO' .. 'DO\|FIX' .. 'ME/ contained'
 "    │      │ blockwise     │               │          │           │
 "    └──────┴───────────────┴───────────────┴──────────┴───────────┘
 "}}}
-syn match markdownTable /^ \{4,}\%(┌[─┬┼]\+[┤┐]\|└[─┴]\+┘\|│.*[^ \t│].*│\|├─.*┤\|│.*├.*┤\).*/
+exe 'syn match markdownTable '
+    \ .. '/^ \{4,}\%('
+    \ ..         '┌[─┬┼]\+[┤┐]'
+    \ .. '\|' .. '└[─┴]\+┘'
+    \ .. '\|' .. '│[^┘┐]*[^┘┐ \t│][^┘┐]*│'
+    \ .. '\|' .. '├─.*┤'
+    \ .. '\|' .. '│.*├.*┤'
+    \ .. '\).*/'
 
 syn match markdownOption /`\@1<='[-a-z]\{2,}'\ze`/ contained containedin=markdownCodeSpan,markdownListItemCodeSpan
 
