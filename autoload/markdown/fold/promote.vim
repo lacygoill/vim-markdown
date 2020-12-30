@@ -4,7 +4,7 @@ fu markdown#fold#promote#main(_) abort "{{{2
     for i in range(1, cnt)
         call s:promote()
     endfor
-    call getpos("'[")[1:2]->cursor()
+    call getpos("'[")[1 : 2]->cursor()
 endfu
 
 fu markdown#fold#promote#setup(how) abort "{{{2

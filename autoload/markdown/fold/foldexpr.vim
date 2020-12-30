@@ -1,4 +1,7 @@
-vim9script
+vim9script noclear
+
+if exists('loaded') | finish | endif
+var loaded = true
 
 # Old but can still be useful {{{1
 #     fu s:has_surrounding_fencemarks(lnum) abort {{{2
