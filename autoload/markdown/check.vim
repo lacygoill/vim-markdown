@@ -1,20 +1,27 @@
-fu markdown#check#punctuation(type, lnum1, lnum2) abort "{{{1
-    if a:type is# '-help'
+vim9 noclear
+
+if exists('loaded') | finish | endif
+var loaded = true
+
+def markdown#check#punctuation(type: string, lnum1: number, lnum2: number): string #{{{1
+    if type == '-help'
         h markdown-punctuation
         return ''
-    elseif a:type isnot# '-comma'
+    elseif type != '-comma'
         return ''
     endif
 
-    let view = winsaveview()
-    let [fen_save, winid, bufnr] = [&l:fen, win_getid(), bufnr('%')]
-    let &l:fen = 0
+    view = winsaveview()
+    var fen_save = &l:fen
+    var winid = win_getid()
+    var bufnr = bufnr('%')
+    &l:fen = false
 
     try
-        " make sure any coordinating conjunction is preceded by a comma
-        "    > She wanted to study but she was tired. (✘)
-        "    > She wanted to study, but she was tired. (✔)
-        let fanboys =<< trim END
+        # make sure any coordinating conjunction is preceded by a comma
+        #    > She wanted to study but she was tired. (✘)
+        #    > She wanted to study, but she was tired. (✔)
+        var fanboys =<< trim END
             for
             and
             nor
@@ -23,39 +30,42 @@ fu markdown#check#punctuation(type, lnum1, lnum2) abort "{{{1
             yet
             so
         END
-        let pat = join(fanboys, '\|')
-        let pat = '\C[^,; \t]\zs\ze\_s\+\%(' .. pat .. '\)\_s\+'
+        var pat = join(fanboys, '\|')
+        pat = '\C[^,; \t]\zs\ze\_s\+\%(' .. pat .. '\)\_s\+'
 
-        let range = a:lnum1 .. ',' .. a:lnum2
-        call cursor(1, 1)
-        let items = []
-        let flags = 'cW'
-        let g = 0 | while search(pat, flags) && g < 999 | let g += 1
-            let flags = 'W'
-            let items += [{
-                \ 'lnum': line('.'),
-                \ 'col': col('.'),
-                \ 'bufnr': bufnr,
-                \ 'text': getline('.'),
-                \ }]
+        var range = ':' .. lnum1 .. ',' .. lnum2
+        cursor(1, 1)
+        var items = []
+        var flags = 'cW'
+        var g = 0 | while search(pat, flags) > 0 && g < 999 | g += 1
+            flags = 'W'
+            items += [{
+                lnum: line('.'),
+                col: col('.'),
+                bufnr: bufnr,
+                text: getline('.'),
+                }]
         endwhile
-        " populate the command-line with `:ldo s/\%#/,/c` when we press `C-g s`
-        call setloclist(0, [], ' ', {
-            \ 'items': items,
-            \ 'title': ':CheckPunctuation -comma',
-            \ 'context': {'populate': 'ldo s/\%#/,/c'}
-            \ })
+        # populate the command-line with `:ldo s/\%#/,/c` when we press `C-g s`
+        setloclist(0, [], ' ', {
+            items: items,
+            title: ':CheckPunctuation -comma',
+            context: {populate: 'ldo s/\%#/,/c'}
+            })
         lw
     finally
         if winbufnr(winid) == bufnr
-            let [tabnr, winnr] = win_id2tabwin(winid)
-            call settabwinvar(tabnr, winnr, '&fen', fen_save)
+            var tabnr: number
+            var winnr: number
+            [tabnr, winnr] = win_id2tabwin(winid)
+            settabwinvar(tabnr, winnr, '&fen', fen_save)
         endif
-        call win_execute(winid, 'call winrestview(view)')
+        win_execute(winid, 'winrestview(view)')
     endtry
     return ''
-endfu
+enddef
+var view: dict<number>
 
-fu markdown#check#punctuation_complete(_a, _l, _p) abort "{{{1
+def markdown#check#punctuation_complete(...l: any) #{{{1
     return join(['-comma', '-help'], "\n")
-endfu
+enddef

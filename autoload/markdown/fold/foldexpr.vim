@@ -1,43 +1,44 @@
-vim9script noclear
+vim9 noclear
 
 if exists('loaded') | finish | endif
 var loaded = true
 
 # Old but can still be useful {{{1
-#     fu s:has_surrounding_fencemarks(lnum) abort {{{2
-#         let pos = [line('.'), col('.')]
-#         call cursor(a:lnum, 1)
+#     def HasSurroundingFencemarks(lnum: number): bool {{{2
+#         var pos = [line('.'), col('.')]
+#         cursor(lnum, 1)
 #
-#         let start_fence = '\%^```\|^\n\zs```'
-#         let end_fence = '```\n^$'
-#         let fence_position = searchpairpos(start_fence, '', end_fence, 'W')
+#         var start_fence = '\%^```\|^\n\zs```'
+#         var end_fence = '```\n^$'
+#         var fence_position = searchpairpos(start_fence, '', end_fence, 'W')
 #
-#         call cursor(pos)
+#         cursor(pos)
 #         return fence_position != [0, 0]
-#     endfu
+#     enddef
 #
-#     fu s:has_syntax_group(lnum) abort {{{2
-#         let syntax_groups = synstack(a:lnum, 1)->map({_, v -> synIDattr(v, 'name')})
+#     def HasSyntaxGroup(lnum: number): bool {{{2
+#         var syntax_groups = synstack(lnum, 1)->map((_, v) => synIDattr(v, 'name'))
 #         for value in syntax_groups
 #             if value =~? 'markdown\%(Code\|Highlight\)'
-#                 return 1
+#                 return true
 #             endif
 #         endfor
-#     endfu
+#         return false
+#     enddef
 #
-#     fu s:line_is_fenced(lnum) abort {{{2
-#         if get(b:, 'current_syntax', '') is# 'markdown'
-#             " It's cheap to check if the current line has 'markdownCode' syntax group
-#             return s:has_syntax_group(a:lnum)
+#     def LineIsFenced(lnum: number): bool {{{2
+#         if get(b:, 'current_syntax', '') == 'markdown'
+#             # It's cheap to check if the current line has 'markdownCode' syntax group
+#             return HasSyntaxGroup(lnum)
 #         else
-#             " Using `searchpairpos()` is expensive, so only do it if syntax highlighting is not enabled
-#             return s:has_surrounding_fencemarks(a:lnum)
+#             # Using `searchpairpos()` is expensive, so only do it if syntax highlighting is not enabled
+#             return HasSurroundingFencemarks(lnum)
 #         endif
-#     endfu
-" }}}1
+#     enddef
+# }}}1
 
-def markdown#fold#foldexpr#toggle(): #{{{1
-    var &l:fde = &l:fde == 'markdown#fold#foldexpr#stacked()'
+def markdown#fold#foldexpr#toggle() #{{{1
+    &l:fde = &l:fde == 'markdown#fold#foldexpr#stacked()'
         ? 'markdown#fold#foldexpr#nested()'
         : 'markdown#fold#foldexpr#stacked()'
     # Why?{{{
@@ -46,9 +47,9 @@ def markdown#fold#foldexpr#toggle(): #{{{1
     # As a consequence, if we change  the value of `'fde'`, Vim won't re-compute
     # the folds; we want it to; that's why we need to execute `#compute()`.
     #}}}
-    sil! call fold#lazy#compute('force')
+    sil! fold#lazy#compute(false)
 enddef
-"}}}1
+#}}}1
 def markdown#fold#foldexpr#headingDepth(lnum: number): number #{{{1
     var thisline = getline(lnum)
     var level = matchstr(thisline, '^#\{1,6}')->strlen()
@@ -69,7 +70,7 @@ def markdown#fold#foldexpr#headingDepth(lnum: number): number #{{{1
     endif
     # Temporarily commented because it makes us gain 0.5 seconds when loading Vim notes:{{{
     #
-    #     if level > 0 && s:line_is_fenced(lnum)
+    #     if level > 0 && LineIsFenced(lnum)
     #         # Ignore # or === if they appear within fenced code blocks
     #         return 0
     #     endif
@@ -91,22 +92,22 @@ def markdown#fold#foldexpr#stacked(): string #{{{1
     # Run this shell command:
     #
     #     $ vim -Nu <(cat <<'EOF'
-    #         setl fdm=expr fde=Heading_depth(v:lnum)>0?'>1':'='
-    #         fu Heading_depth(lnum)
-    #             let level = getline(a:lnum)->matchstr('^#\{1,6}')->strlen()
-    #             if !level
-    #                 if getline(a:lnum + 1) =~ '^=\+\s*$'
-    #                     let level = 1
+    #         setl fdm=expr fde=HeadingDepth(v:lnum)>0?'>1':'=' debug=throw
+    #         def HeadingDepth(lnum: number): number
+    #             var level = getline(lnum)->matchstr('^#\{1,6}')->strlen()
+    #             if level == 0
+    #                 if getline(lnum + 1) =~ '^=\+\s*$'
+    #                     level = 1
     #                 endif
     #             endif
     #             return level
-    #         endfu
-    #         ino <expr> <c-k><c-k> repeat('<del>', 300)
+    #         enddef
+    #         ino <expr> <c-k> repeat('<del>', 300)
     #     EOF
     #     ) +"%d | put='text' | norm! yy300pG300Ax" /tmp/md.md
     #
-    # Vim starts up after about 3 seconds.
-    # Next, press `I C-k C-k`; Vim removes 300 characters after about 3 seconds.
+    # Vim starts up after about 2 seconds.
+    # Next, press `I C-k`; Vim removes 300 characters after about 2 seconds.
     #
     # Now, replace  `'='` with `1` and  re-run the same command:  this time, Vim
     # starts up immediately; similarly, it removes 300 characters immediately.

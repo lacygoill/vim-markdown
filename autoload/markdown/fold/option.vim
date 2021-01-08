@@ -1,14 +1,19 @@
-fu markdown#fold#option#fdl(choice) abort
-    if &l:fde !~# 'nested'
+vim9 noclear
+
+if exists('loaded') | finish | endif
+var loaded = true
+
+def markdown#fold#option#fdl(choice: string)
+    if &l:fde !~ 'nested'
         echo "the folds are not nested; change 'fde' first"
         return
     endif
 
-    if a:choice is# 'more'
-        let &l:fdl += 1
+    if choice == 'more'
+        &l:fdl += 1
     else
-        let &l:fdl = (&l:fdl == 0 ? 0 : &l:fdl - 1)
+        &l:fdl = (&l:fdl == 0 ? 0 : &l:fdl - 1)
     endif
     echo "'fdl' = " .. &l:fdl
-endfu
+enddef
 

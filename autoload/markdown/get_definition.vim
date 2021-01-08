@@ -1,35 +1,41 @@
-fu markdown#get_definition#main(...) abort
-    if a:0
+vim9 noclear
+
+if exists('loaded') | finish | endif
+var loaded = true
+
+def markdown#get_definition#main()
+    var word: string
+    if mode() =~ "^[vV\<c-v>]$"
         norm! gvy
-        let word = @"
+        word = @"
     else
-        let word = expand('<cWORD>')
+        word = expand('<cWORD>')
     endif
-    let word = substitute(word, '[“(]\|[”)].*\|[.?s]\{,2}$', '', 'g')
-    let fname = expand('%:p:t')
-    if fname isnot# 'glossary.md'
-        let cwd = getcwd()
+    word = substitute(word, '[“(]\|[”)].*\|[.?s]\{,2}$', '', 'g')
+    var fname = expand('%:p:t')
+    if fname != 'glossary.md'
+        var cwd = getcwd()
         exe 'sp ' .. cwd .. '/glossary.md'
     endif
-    let lines = getline(1, '$')
-    call map(lines, {i, v -> {'bufnr': bufnr('%'), 'lnum': i+1, 'text': v}})
-    let pat = '^#.*\c\V' .. escape(word, '\')
-    call filter(lines, {_, v -> v.text =~# pat})
+    var lines = getline(1, '$')
+    map(lines, (i, v) => ({bufnr: bufnr('%'), lnum: i + 1, text: v}))
+    var pat = '^#.*\c\V' .. escape(word, '\')
+    filter(lines, (_, v) => v.text =~ pat)
     if empty(lines)
         echom 'no definition for ' .. word
-        if fname isnot# 'glossary.md'
+        if fname != 'glossary.md'
             q
         endif
         return
     else
-        " erase possible previous 'no definition for' message
+        # erase possible previous 'no definition for' message
         redraw!
     endif
-    call setloclist(0, [], ' ', {'items': lines, 'title': word})
+    setloclist(0, [], ' ', {items: lines, title: word})
     lw
-    if &ft is# 'qf'
+    if &ft == 'qf'
         lfirst
         norm! zMzvzz
     endif
-endfu
+enddef
 

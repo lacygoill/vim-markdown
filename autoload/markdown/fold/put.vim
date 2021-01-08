@@ -1,14 +1,21 @@
-fu markdown#fold#put#main(below) abort "{{{1
-    let header = search('^#', 'bnW')->getline()->matchstr('^#\+')
-    if header == '' | let header = '#' | endif
+vim9 noclear
 
-    if a:below
-        call append('.', ['', header, '', ''])
+if exists('loaded') | finish | endif
+var loaded = true
+
+def markdown#fold#put#main(below = true) #{{{1
+    var header = search('^#', 'bnW')->getline()->matchstr('^#\+')
+    if header == ''
+        header = '#'
+    endif
+
+    if below
+        append('.', ['', header, '', ''])
         norm! 4j
     else
-        call append(line('.') - 1, [header, '', '', ''])
+        append(line('.') - 1, [header, '', '', ''])
         norm! 2k
     endif
     startinsert!
-endfu
+enddef
 

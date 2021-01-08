@@ -1,13 +1,13 @@
-if exists('g:loaded_markdown')
-    finish
-endif
-let g:loaded_markdown = 1
+vim9 noclear
 
-" TODO:  remove  this  file  and the  `#fix_fenced_code_block()`  function  once
-" https://github.com/vim/vim/issues/6587 is fixed.
+if exists('loaded') | finish | endif
+var loaded = true
 
-" In a Vim9 script, don't highlight a custom Vim function (called without `:call`) with `vimUsrCmd`.
+# TODO:  remove  this  file  and the  `#fix_fenced_code_block()`  function  once
+# https://github.com/vim/vim/issues/6587 is fixed.
+
+# In a Vim9 script, don't highlight a custom Vim function (called without `:call`) with `vimUsrCmd`.
 augroup MarkdownFixFencedCodeBlock | au!
-    au Syntax markdown call markdown#fix_fenced_code_block()
+    au Syntax markdown markdown#fixFencedCodeBlock()
 augroup END
 
