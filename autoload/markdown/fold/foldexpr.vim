@@ -55,7 +55,7 @@ def markdown#fold#foldexpr#headingDepth(lnum: number): number #{{{1
     var level = matchstr(thisline, '^#\{1,6}')->strlen()
     if !level && thisline != '' && thisline != '```'
         var nextline = getline(lnum + 1)
-        if nextline =~# '^=\+\s*$'
+        if nextline =~ '^=\+\s*$'
             return 1
         # Why `\{2,}` and not just `\+`?{{{
         #
@@ -64,7 +64,7 @@ def markdown#fold#foldexpr#headingDepth(lnum: number): number #{{{1
         # *very* annoying for Vim to parse a  single hyphen as a heading when we
         # put a diff in a markdown file.
         #}}}
-        elseif nextline =~# '^-\{2,}\s*$'
+        elseif nextline =~ '^-\{2,}\s*$'
             return 2
         endif
     endif
