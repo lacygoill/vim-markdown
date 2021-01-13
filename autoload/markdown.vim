@@ -10,7 +10,7 @@ def markdown#highlightLanguages() #{{{2
     # Iterate over the  languages mentioned in `b:markdown_highlight`,  and for each
     # of them, include the corresponding syntax plugin.
     #}}}
-    var done_include = {}
+    var done_include: dict<bool> = {}
     var delims = get(b:, 'markdown_highlight', [])
     for delim in delims
         # If by accident, we manually  assign a value to `b:markdown_highlight`, and
@@ -129,7 +129,7 @@ def markdown#fixFormatting() #{{{2
     # have additional unexpected side effects.
     #}}}
     if synstack('$', 1)
-        ->map((_, v) => synIDattr(v, 'name'))
+        ->mapnew((_, v) => synIDattr(v, 'name'))
         ->get(0, '') =~ '^markdownHighlight'
         append('$', ['```', ''])
     endif
@@ -174,7 +174,7 @@ def markdown#fixFormatting() #{{{2
     var g = 0 | while search('^#', flags) > 0 && g < 999 | g += 1
         flags = 'W'
         var item = synstack('.', col('.'))
-            ->map((_, v) => synIDattr(v, 'name'))
+            ->mapnew((_, v) => synIDattr(v, 'name'))
             ->get(-1, '')
         # Why `''` in addition to `Delimiter`?{{{
         #

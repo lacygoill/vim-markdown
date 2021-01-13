@@ -17,11 +17,11 @@ def markdown#get_definition#main()
         var cwd = getcwd()
         exe 'sp ' .. cwd .. '/glossary.md'
     endif
-    var lines = getline(1, '$')
-    map(lines, (i, v) => ({bufnr: bufnr('%'), lnum: i + 1, text: v}))
     var pat = '^#.*\c\V' .. escape(word, '\')
-    filter(lines, (_, v) => v.text =~ pat)
-    if empty(lines)
+    var items = getline(1, '$')
+        ->mapnew((i, v) => ({bufnr: bufnr('%'), lnum: i + 1, text: v}))
+        ->filter((_, v) => v.text =~ pat)
+    if empty(items)
         echom 'no definition for ' .. word
         if fname != 'glossary.md'
             q
@@ -31,7 +31,7 @@ def markdown#get_definition#main()
         # erase possible previous 'no definition for' message
         redraw!
     endif
-    setloclist(0, [], ' ', {items: lines, title: word})
+    setloclist(0, [], ' ', {items: items, title: word})
     lw
     if &ft == 'qf'
         lfirst

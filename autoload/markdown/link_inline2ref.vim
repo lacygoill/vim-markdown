@@ -72,7 +72,7 @@ enddef
 def CreateReflinks(): dict<string> #{{{2
     cursor(1, 1)
     var id = 1
-    var id2url = {}
+    var id2url: dict<string> = {}
     var flags = 'cW'
     while search('\[.\{-}]\zs\%(\[\d\+]\|(.\{-})\)', flags) > 0 && id < GUARD
         flags = 'W'
@@ -184,7 +184,7 @@ enddef
 
 def IsARealLink(): bool #{{{2
     return synstack('.', col('.'))
-        ->map((_, v) => synIDattr(v, 'name'))
+        ->mapnew((_, v) => synIDattr(v, 'name'))
         ->reverse()
         ->match('^markdownLink') >= 0
 enddef
