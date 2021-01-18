@@ -7,20 +7,20 @@ var loaded = true
 
 # `:LinkInline2Ref` won't work as expected if the buffer contains more than `GUARD` links.
 # This guard is useful to avoid being stuck in an infinite loop.
-const GUARD = 1000
-const REF_SECTION = '# Reference'
+const GUARD: number = 1'000
+const REF_SECTION: string = '# Reference'
 
 # Interface {{{1
 def markdown#link_inline2ref#main() #{{{2
-    var view = winsaveview()
-    var syntax_was_enabled = exists('g:syntax_on')
+    var view: dict<number> = winsaveview()
+    var syntax_was_enabled: bool = exists('g:syntax_on')
     if !syntax_was_enabled
         syn enable
     endif
 
-    var fen_save = &l:fen
-    var winid = win_getid()
-    var bufnr = bufnr('%')
+    var fen_save: bool = &l:fen
+    var winid: number = win_getid()
+    var bufnr: number = bufnr('%')
     &l:fen = false
 
     try
@@ -52,7 +52,7 @@ def markdown#link_inline2ref#main() #{{{2
             return
         endif
 
-        var id2url = CreateReflinks()
+        var id2url: dict<string> = CreateReflinks()
         PopulateReferenceSection(id2url)
     finally
         if winbufnr(winid) == bufnr
@@ -71,18 +71,18 @@ enddef
 # Core {{{1
 def CreateReflinks(): dict<string> #{{{2
     cursor(1, 1)
-    var id = 1
+    var id: number = 1
     var id2url: dict<string> = {}
-    var flags = 'cW'
+    var flags: string = 'cW'
     while search('\[.\{-}]\zs\%(\[\d\+]\|(.\{-})\)', flags) > 0 && id < GUARD
         flags = 'W'
-        var line = getline('.')
-        var col = col('.')
-        var char_under_cursor = matchstr(line, '\%' .. col .. 'c.')
+        var line: string = getline('.')
+        var col: number = col('.')
+        var char_under_cursor: string = matchstr(line, '\%' .. col .. 'c.')
         # [some text][some id]
         if char_under_cursor == '['
-            var old_id = matchstr(line, '\%' .. col .. 'c\[\zs\d\+\ze]')
-            var url = GetUrl(old_id)
+            var old_id: string = matchstr(line, '\%' .. col .. 'c\[\zs\d\+\ze]')
+            var url: string = GetUrl(old_id)
             # update id{{{
             #
             # For example, if the first reference link we find is:
@@ -93,7 +93,7 @@ def CreateReflinks(): dict<string> #{{{2
             #
             #     [some text][1]
             #}}}
-            var new_line = substitute(line, '\%' .. col .. 'c\[\d\+', '[' .. id, '')
+            var new_line: string = substitute(line, '\%' .. col .. 'c\[\d\+', '[' .. id, '')
             # Do *not* use `:s`!{{{
             #
             # It would make the cursor move which would fuck everything up.
@@ -106,11 +106,16 @@ def CreateReflinks(): dict<string> #{{{2
             if !IsARealLink()
                 continue
             endif
-            var url = GetUrl()
+            var url: string = GetUrl()
             norm! %
-            var col_end = col('.')
+            var col_end: number = col('.')
             norm! %
-            var new_line = substitute(line, '\%' .. col .. 'c(.*\%' .. col_end .. 'c)', '[' .. id .. ']', '')
+            var new_line: string = substitute(
+                line,
+                '\%' .. col .. 'c(.*\%' .. col_end .. 'c)',
+                '[' .. id .. ']',
+                ''
+                )
             setline('.', new_line)
             id2url[id] = url
         endif
@@ -132,7 +137,7 @@ def PopulateReferenceSection(id2url: dict<string>) #{{{2
     #    > Implementation detail: This  uses the strtod() function  to parse numbers,
     #    > **Strings**, Lists, Dicts and Funcrefs **will be considered as being 0**.
     #}}}
-    var lines = mapnew(id2url, (k: string, v: string) => '[' .. k .. ']: ' .. v)
+    var lines: list<string> = mapnew(id2url, (k: string, v: string) => '[' .. k .. ']: ' .. v)
         ->values()
         ->sort((a: string, b: string) =>
             matchstr(a, '\d\+')->str2nr() - matchstr(b, '\d\+')->str2nr())
@@ -172,7 +177,7 @@ def GetUrl(id = 0): string #{{{2
 enddef
 
 def IdOutsideReferenceSection(): bool #{{{2
-    var ref_section_lnum = search('^' .. REF_SECTION .. '$', 'n')
+    var ref_section_lnum: number = search('^' .. REF_SECTION .. '$', 'n')
     if search('^\[\d\+]:', 'n', ref_section_lnum)
         sil exe 'lvim /^\[\d\+]:\%<' .. ref_section_lnum .. 'l/j %'
         echom 'There are id declarations outside the Reference section'
@@ -190,7 +195,7 @@ def IsARealLink(): bool #{{{2
 enddef
 
 def MakeSureReferenceSectionExists() #{{{2
-    var ref_section_lnum = search('^' .. REF_SECTION .. '$', 'n')
+    var ref_section_lnum: number = search('^' .. REF_SECTION .. '$', 'n')
     if ref_section_lnum == 0
         append('$', ['', '##', REF_SECTION, ''])
         #            ├┘{{{
@@ -212,9 +217,9 @@ enddef
 
 def MultiLineLinks(): bool #{{{2
     cursor(1, 1)
-    var pat = '\[[^][]*\n\_[^][]*](.*)'
-    var flags = 'cW'
-    var g = 0 | while search(pat, flags) > 0 && g <= GUARD | g += 1
+    var pat: string = '\[[^][]*\n\_[^][]*](.*)'
+    var flags: string = 'cW'
+    var g: number = 0 | while search(pat, flags) > 0 && g <= GUARD | g += 1
         flags = 'W'
         if IsARealLink()
             exe 'lvim /' .. pat .. '/gj %'

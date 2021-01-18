@@ -107,13 +107,12 @@ nno <buffer><nowait> cof <cmd>call markdown#fold#foldexpr#toggle()<cr>
 nno <buffer><nowait> [of <cmd>call markdown#fold#option#fdl('less')<cr>
 nno <buffer><nowait> ]of <cmd>call markdown#fold#option#fdl('more')<cr>
 sil! repmap#make#repeatable({
-    'mode': 'n',
-    'buffer': 1,
-    'from': expand('<sfile>:p') .. ':' .. expand('<slnum>'),
-    'motions': [
-                 {'bwd': '[of', 'fwd': ']of'},
-               ]
-    })
+    mode: 'n',
+    buffer: true,
+    from: expand('<sfile>:p') .. ':' .. expand('<slnum>'),
+    motions: [
+        {bwd: '[of', fwd: ']of'},
+        ]})
 
 nno <buffer><nowait> gd <cmd>call markdown#get_definition#main()<cr>
 xno <buffer><nowait> gd <cmd>call markdown#get_definition#main('vis')<cr>
@@ -258,7 +257,10 @@ setl com=fbn:-,fb:*,fb:+
 
 # compiler {{{2
 
-try | compiler pandoc | catch /^Vim\%((\a\+)\)\=:E666:/ | endtry
+try
+    compiler pandoc
+catch /^Vim\%((\a\+)\)\=:E666:/
+endtry
 
 # folding + conceal "{{{2
 

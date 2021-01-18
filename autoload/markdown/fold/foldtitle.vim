@@ -4,15 +4,15 @@ if exists('loaded') | finish | endif
 var loaded = true
 
 def markdown#fold#foldtitle#get(): string #{{{1
-    var foldstartline = getline(v:foldstart)
+    var foldstartline: string = getline(v:foldstart)
     # get the desired level of indentation for the title
-    var level = markdown#fold#foldexpr#headingDepth(v:foldstart)
-    var indent = repeat(' ', (level - 1) * 3)
+    var level: number = markdown#fold#foldexpr#headingDepth(v:foldstart)
+    var indent: string = repeat(' ', (level - 1) * 3)
     # remove noise
-    var title = substitute(foldstartline, '^#\+\s*\|`', '', 'g')
+    var title: string = substitute(foldstartline, '^#\+\s*\|`', '', 'g')
     if get(b:, 'foldtitle_full', false)
-        var foldsize = (v:foldend - v:foldstart)
-        var linecount = '[' .. foldsize .. ']' .. repeat(' ', 4 - strlen(foldsize))
+        var foldsize: number = (v:foldend - v:foldstart)
+        var linecount: string = '[' .. foldsize .. ']' .. repeat(' ', 4 - strlen(foldsize))
         return indent .. (foldsize > 1 ? linecount : '') .. title
     else
         return indent .. title

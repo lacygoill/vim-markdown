@@ -12,13 +12,13 @@ def markdown#get_definition#main()
         word = expand('<cWORD>')
     endif
     word = substitute(word, '[“(]\|[”)].*\|[.?s]\{,2}$', '', 'g')
-    var fname = expand('%:p:t')
+    var fname: string = expand('%:p:t')
     if fname != 'glossary.md'
-        var cwd = getcwd()
+        var cwd: string = getcwd()
         exe 'sp ' .. cwd .. '/glossary.md'
     endif
-    var pat = '^#.*\c\V' .. escape(word, '\')
-    var items = getline(1, '$')
+    var pat: string = '^#.*\c\V' .. escape(word, '\')
+    var items: list<dict<any>> = getline(1, '$')
         ->mapnew((i, v) => ({bufnr: bufnr('%'), lnum: i + 1, text: v}))
         ->filter((_, v) => v.text =~ pat)
     if empty(items)

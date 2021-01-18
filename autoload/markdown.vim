@@ -11,7 +11,7 @@ def markdown#highlightLanguages() #{{{2
     # of them, include the corresponding syntax plugin.
     #}}}
     var done_include: dict<bool> = {}
-    var delims = get(b:, 'markdown_highlight', [])
+    var delims: list<string> = get(b:, 'markdown_highlight', [])
     for delim in delims
         # If by accident, we manually  assign a value to `b:markdown_highlight`, and
         # we write duplicate values, we want to include the corresponding syntax
@@ -30,7 +30,7 @@ def markdown#highlightLanguages() #{{{2
         #     " there's no js syntax plugin
         #     " we want the javascript syntax plugin
         #}}}
-        var ft = GetFiletype(delim)
+        var ft: string = GetFiletype(delim)
         if empty(ft)
             continue
         endif
@@ -116,7 +116,7 @@ def markdown#highlightLanguages() #{{{2
 enddef
 
 def markdown#fixFormatting() #{{{2
-    var view = winsaveview()
+    var view: dict<number> = winsaveview()
 
     # A page may have an embedded codeblock which is not properly ended with ```` ``` ````.{{{
     #
@@ -170,10 +170,10 @@ def markdown#fixFormatting() #{{{2
     &ei = '' | do Syntax
 
     cursor(1, 1)
-    var flags = 'cW'
-    var g = 0 | while search('^#', flags) > 0 && g < 999 | g += 1
+    var flags: string = 'cW'
+    var g: number = 0 | while search('^#', flags) > 0 && g < 999 | g += 1
         flags = 'W'
-        var item = synstack('.', col('.'))
+        var item: string = synstack('.', col('.'))
             ->mapnew((_, v) => synIDattr(v, 'name'))
             ->get(-1, '')
         # Why `''` in addition to `Delimiter`?{{{
@@ -181,8 +181,8 @@ def markdown#fixFormatting() #{{{2
         # Just in case there's still no syntax highlighting.
         #}}}
         if index(['', 'Delimiter'], item) == -1
-            var line = getline('.')
-            var new_line = ' ' .. line
+            var line: string = getline('.')
+            var new_line: string = ' ' .. line
             setline('.', new_line)
         endif
     endwhile
@@ -226,8 +226,8 @@ def markdown#hyphens2hashes(type = ''): string #{{{2
         &opfunc = 'markdown#hyphens2hashes'
         return 'g@'
     endif
-    var range = ":'[,']"
-    var hashes = search('^#', 'bnW')->getline()->matchstr('^#*')
+    var range: string = ":'[,']"
+    var hashes: string = search('^#', 'bnW')->getline()->matchstr('^#*')
     if empty(hashes)
         return ''
     endif
@@ -258,7 +258,7 @@ def GetFiletype(argft: string): string #{{{2
     if filereadable($VIMRUNTIME .. '/syntax/' .. argft .. '.vim')
         return argft
     else
-        var ft = execute('autocmd filetypedetect')
+        var ft: string = execute('autocmd filetypedetect')
             ->split('\n')
             ->filter((_, v) => v =~ '\m\C\*\.' .. argft .. '\>')
             ->get(0, '')

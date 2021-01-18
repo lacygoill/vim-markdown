@@ -5,19 +5,20 @@ var loaded = true
 
 # Old but can still be useful {{{1
 #     def HasSurroundingFencemarks(lnum: number): bool {{{2
-#         var pos = [line('.'), col('.')]
+#         var pos: list<number> = [line('.'), col('.')]
 #         cursor(lnum, 1)
 #
-#         var start_fence = '\%^```\|^\n\zs```'
-#         var end_fence = '```\n^$'
-#         var fence_position = searchpairpos(start_fence, '', end_fence, 'W')
+#         var start_fence: string = '\%^```\|^\n\zs```'
+#         var end_fence: string = '```\n^$'
+#         var fence_position: list<number> = searchpairpos(start_fence, '', end_fence, 'W')
 #
 #         cursor(pos)
 #         return fence_position != [0, 0]
 #     enddef
 #
 #     def HasSyntaxGroup(lnum: number): bool {{{2
-#         var syntax_groups = synstack(lnum, 1)->map((_, v) => synIDattr(v, 'name'))
+#         var syntax_groups: list<string> = synstack(lnum, 1)
+#             ->mapnew((_, v) => synIDattr(v, 'name'))
 #         for value in syntax_groups
 #             if value =~? 'markdown\%(Code\|Highlight\)'
 #                 return true
@@ -51,10 +52,10 @@ def markdown#fold#foldexpr#toggle() #{{{1
 enddef
 #}}}1
 def markdown#fold#foldexpr#headingDepth(lnum: number): number #{{{1
-    var thisline = getline(lnum)
-    var level = matchstr(thisline, '^#\{1,6}')->strlen()
+    var thisline: string = getline(lnum)
+    var level: number = matchstr(thisline, '^#\{1,6}')->strlen()
     if !level && thisline != '' && thisline != '```'
-        var nextline = getline(lnum + 1)
+        var nextline: string = getline(lnum + 1)
         if nextline =~ '^=\+\s*$'
             return 1
         # Why `\{2,}` and not just `\+`?{{{
@@ -76,13 +77,13 @@ def markdown#fold#foldexpr#headingDepth(lnum: number): number #{{{1
     #     endif
     #
     # If  you uncomment it, in  the previous block, replace  `return {1|2}` with
-    # `var level = {1|2}`.
+    # `var level: number = {1|2}`.
     #}}}
     return level
 enddef
 
 def markdown#fold#foldexpr#nested(): string #{{{1
-    var depth = markdown#fold#foldexpr#headingDepth(v:lnum)
+    var depth: number = markdown#fold#foldexpr#headingDepth(v:lnum)
     return depth > 0 ? '>' .. depth : '='
 enddef
 
@@ -94,7 +95,7 @@ def markdown#fold#foldexpr#stacked(): string #{{{1
     #     $ vim -Nu <(cat <<'EOF'
     #         setl fdm=expr fde=HeadingDepth(v:lnum)>0?'>1':'=' debug=throw
     #         def HeadingDepth(lnum: number): number
-    #             var level = getline(lnum)->matchstr('^#\{1,6}')->strlen()
+    #             var level: number = getline(lnum)->matchstr('^#\{1,6}')->strlen()
     #             if level == 0
     #                 if getline(lnum + 1) =~ '^=\+\s*$'
     #                     level = 1

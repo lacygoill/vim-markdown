@@ -5,15 +5,15 @@ var loaded = true
 
 def markdown#fold#sort#by_size(lnum1: number, lnum2: number): string #{{{1
     # get the level of the first fold
-    var lvl = getline(lnum1)->matchstr('^#*')->strlen()
+    var lvl: number = getline(lnum1)->matchstr('^#*')->strlen()
     if lvl == 0
         return 'echoerr "the first line is not a fold title"'
     endif
 
     # disable folding, because it could badly interfere when we move lines with `:m`
-    var fen_save = &l:fen
-    var winid = win_getid()
-    var bufnr = bufnr('%')
+    var fen_save: bool = &l:fen
+    var winid: number = win_getid()
+    var bufnr: number = bufnr('%')
     [fen_save, winid, bufnr] = [&l:fen, win_getid(), bufnr('%')]
     &l:fen = false
     try
@@ -33,12 +33,12 @@ def markdown#fold#sort#by_size(lnum1: number, lnum2: number): string #{{{1
         # Thus, the quantifier *must* go below `lvl`.
         #
         #}}}
-        var pat = '\n\%(#\{1,' .. lvl .. '}#\@!\)\|\%$'
+        var pat: string = '\n\%(#\{1,' .. lvl .. '}#\@!\)\|\%$'
 
         cursor(lnum1, 1)
 
         # search the end of the first fold
-        var foldend = search(pat, 'W', lnum2)
+        var foldend: number = search(pat, 'W', lnum2)
         if foldend == 0
             return ''
         endif
@@ -51,7 +51,7 @@ def markdown#fold#sort#by_size(lnum1: number, lnum2: number): string #{{{1
         #    - foldend:      last line in the fold
         #    - size:         size of the fold
         #}}}
-        var folds = [ {
+        var folds: list<dict<number>> = [{
             foldstart: lnum1,
             foldend: foldend,
             size: foldend - lnum1 + 1,
@@ -81,7 +81,7 @@ def markdown#fold#sort#by_size(lnum1: number, lnum2: number): string #{{{1
                 endif
             endfor
 
-            var orig_lnum = line('.')
+            var orig_lnum: number = line('.')
             foldend = search(pat, 'W', lnum2)
             #                                          ┌ stop if you've found a fold whose level is < `lvl`
             #                                          │

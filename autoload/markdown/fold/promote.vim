@@ -5,7 +5,7 @@ var loaded = true
 
 # Interface {{{1
 def markdown#fold#promote#main(_: any) #{{{2
-    var cnt = v:count1
+    var cnt: number = v:count1
     for i in range(1, cnt)
         Promote()
     endfor
@@ -21,7 +21,7 @@ var how: string
 #}}}1
 # Core {{{1
 def Promote() #{{{2
-    var range = ':' .. line("'[") .. ',' .. line("']")
+    var range: string = ':' .. line("'[") .. ',' .. line("']")
     if how == 'more'
         sil exe 'keepj keepp ' .. range .. 's/^\(#\+\)/\1#/e'
     else

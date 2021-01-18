@@ -12,16 +12,16 @@ def markdown#check#punctuation(type: string, lnum1: number, lnum2: number): stri
     endif
 
     view = winsaveview()
-    var fen_save = &l:fen
-    var winid = win_getid()
-    var bufnr = bufnr('%')
+    var fen_save: bool = &l:fen
+    var winid: number = win_getid()
+    var bufnr: number = bufnr('%')
     &l:fen = false
 
     try
         # make sure any coordinating conjunction is preceded by a comma
         #    > She wanted to study but she was tired. (✘)
         #    > She wanted to study, but she was tired. (✔)
-        var fanboys =<< trim END
+        var fanboys: list<string> =<< trim END
             for
             and
             nor
@@ -30,14 +30,14 @@ def markdown#check#punctuation(type: string, lnum1: number, lnum2: number): stri
             yet
             so
         END
-        var pat = join(fanboys, '\|')
+        var pat: string = join(fanboys, '\|')
         pat = '\C[^,; \t]\zs\ze\_s\+\%(' .. pat .. '\)\_s\+'
 
-        var range = ':' .. lnum1 .. ',' .. lnum2
+        var range: string = ':' .. lnum1 .. ',' .. lnum2
         cursor(1, 1)
         var items: list<dict<any>> = []
-        var flags = 'cW'
-        var g = 0 | while search(pat, flags) > 0 && g < 999 | g += 1
+        var flags: string = 'cW'
+        var g: number = 0 | while search(pat, flags) > 0 && g < 999 | g += 1
             flags = 'W'
             items += [{
                 lnum: line('.'),

@@ -10,18 +10,18 @@ var loaded = true
 #     $ cd instant-markdown-d
 #     $ npm install
 #}}}
-const WEB_SERVER = $HOME .. '/Vcs/instant-markdown-d/instant-markdown-d'
+const WEB_SERVER: string = $HOME .. '/Vcs/instant-markdown-d/instant-markdown-d'
 if !executable(WEB_SERVER)
     echom 'cannot find the web server:   ' .. WEB_SERVER
 endif
 # If you have an issue, to debug it, you could change the assignment like this:{{{
 #
-#     var REDIRECTION = '>/tmp/log 2>&1 &'
+#     var REDIRECTION: string = '>/tmp/log 2>&1 &'
 #}}}
-const REDIRECTION = '>/dev/null 2>&1 &'
+const REDIRECTION: string = '>/dev/null 2>&1 &'
 
 def Getlines(): list<string> #{{{1
-    var lines = getline(1, '$')
+    var lines: list<string> = getline(1, '$')
     # Inject an invisible marker.{{{
     #
     # The web server will use it to  scroll the window where we've made our last
@@ -104,8 +104,8 @@ def StartDaemon(initial_lines: list<string>) #{{{1
     #
     # For Vimium to be allowed to work, yes.
     #}}}
-    var env = 'INSTANT_MARKDOWN_ALLOW_UNSAFE_CONTENT=1'
-    var cmd = env .. ' ' .. WEB_SERVER .. ' ' .. REDIRECTION
+    var env: string = 'INSTANT_MARKDOWN_ALLOW_UNSAFE_CONTENT=1'
+    var cmd: string = env .. ' ' .. WEB_SERVER .. ' ' .. REDIRECTION
     sil system(cmd, initial_lines)
 enddef
 
