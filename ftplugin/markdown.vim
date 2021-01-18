@@ -287,7 +287,7 @@ augroup MarkdownWindowSettings
     #     └ our ftplugin on FileType markdown
     #}}}
     au BufWinEnter,FileChangedShellPost <buffer> markdown#window#settings()
-        | sil! fold#lazy#compute(v:false)
+        | sil! fold#lazy#compute(false)
 augroup END
 
 # fp  tw {{{2
