@@ -78,7 +78,7 @@ com -bar -buffer -nargs=? -range=% -complete=custom,markdown#commit_hash2link#co
 # Warning: Don't call this command `:Fix`.  It wouldn't work as expected with `:argdo`.
 com -bar -buffer FixFormatting markdown#fixFormatting()
 
-com -bar -buffer -range=% FoldSortBySize exe markdown#fold#sort#by_size(<line1>, <line2>)
+com -bar -buffer -range=% FoldSortBySize markdown#fold#sort#by_size(<line1>, <line2>)
 
 # Purpose: Convert inline link:{{{
 #

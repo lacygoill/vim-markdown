@@ -3,11 +3,14 @@ vim9 noclear
 if exists('loaded') | finish | endif
 var loaded = true
 
-def markdown#fold#sort#by_size(lnum1: number, lnum2: number): string #{{{1
+def markdown#fold#sort#by_size(lnum1: number, lnum2: number) #{{{1
     # get the level of the first fold
     var lvl: number = getline(lnum1)->matchstr('^#*')->strlen()
     if lvl == 0
-        return 'echoerr "the first line is not a fold title"'
+        echohl ErrorMsg
+        echo 'The first line is not a fold title'
+        echohl NONE
+        return
     endif
 
     # disable folding, because it could badly interfere when we move lines with `:m`
@@ -40,7 +43,7 @@ def markdown#fold#sort#by_size(lnum1: number, lnum2: number): string #{{{1
         # search the end of the first fold
         var foldend: number = search(pat, 'W', lnum2)
         if foldend == 0
-            return ''
+            return
         endif
         # What's this?{{{
         #
@@ -77,7 +80,8 @@ def markdown#fold#sort#by_size(lnum1: number, lnum2: number): string #{{{1
                         folds[-1].foldstart,
                         folds[-1].foldend,
                         f.foldstart - 1)
-                    return markdown#fold#sort#by_size(lnum1, lnum2)
+                    markdown#fold#sort#by_size(lnum1, lnum2)
+                    return
                 endif
             endfor
 
@@ -102,6 +106,5 @@ def markdown#fold#sort#by_size(lnum1: number, lnum2: number): string #{{{1
             settabwinvar(tabnr, winnr, '&fen', fen_save)
         endif
     endtry
-    return ''
 enddef
 
