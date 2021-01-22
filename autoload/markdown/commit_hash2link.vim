@@ -14,7 +14,7 @@ def markdown#commit_hash2link#main(...l: list<any>)
 
                 [`5a2db4c`](https://github.com/tmux/tmux/commit/5a2db4c7e8ba94fadb31075e6813cf53b87b5366)
         END
-        echom help->join("\n")
+        echo help->join("\n")
         return
     endif
 
