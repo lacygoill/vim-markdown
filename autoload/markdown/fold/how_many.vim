@@ -35,11 +35,11 @@ var current_lvl: number
 def MoveToFirstFold(n: number) #{{{2
     var pat: string
     if n == 1
-        pat = s:current_lvl == 1
+        pat = current_lvl == 1
             ? '^#\+$\n\zs\|\%^'
             : '^#\+$\n\zs\|^#\{' .. (current_lvl - 1) .. '}#\@!\s\S\+.*\n\zs\|\%^'
     else
-        pat = s:current_lvl == 1
+        pat = current_lvl == 1
             ? '^\%(#\+\n\|\%^\)\zs#\s\S\+'
             : '^#\{' .. (current_lvl - 1) .. '}#\@!'
     endif

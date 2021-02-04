@@ -707,7 +707,7 @@ exe 'syn region markdownLinkText'
     .. ' keepend'
 
 # If  you  change the  name  the  items  beginning with  `markdownLink`,  update
-# `s:is_real_link()` in `./autoload/markdown/link_inline_to_ref.vim`.
+# `IsARealLink()` in `./autoload/markdown/link_inline2ref.vim`.
 syn region markdownLink
     \ matchgroup=markdownLinkDelimiter
     \ start=/(/

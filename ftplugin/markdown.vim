@@ -299,7 +299,7 @@ setl tw=80
 
 # kp "{{{2
 
-if expand('<afile>:p') =~# '/wiki/vim/'
+if expand('<afile>:p') =~ '/wiki/vim/'
     setl kp=:help
 else
     setl kp=:Man

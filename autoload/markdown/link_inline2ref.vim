@@ -178,7 +178,7 @@ enddef
 
 def IdOutsideReferenceSection(): bool #{{{2
     var ref_section_lnum: number = search('^' .. REF_SECTION .. '$', 'n')
-    if search('^\[\d\+]:', 'n', ref_section_lnum)
+    if search('^\[\d\+]:', 'n', ref_section_lnum) > 0
         sil exe 'lvim /^\[\d\+]:\%<' .. ref_section_lnum .. 'l/j %'
         echom 'There are id declarations outside the Reference section'
         setloclist(0, [], 'a', {title: 'move them inside or remove/edit them'})
