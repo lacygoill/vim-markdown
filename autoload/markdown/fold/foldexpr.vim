@@ -18,7 +18,7 @@ var loaded = true
 #
 #     def HasSyntaxGroup(lnum: number): bool {{{2
 #         var syntax_groups: list<string> = synstack(lnum, 1)
-#             ->mapnew((_, v) => synIDattr(v, 'name'))
+#             ->mapnew((_, v: number): string => synIDattr(v, 'name'))
 #         for value in syntax_groups
 #             if value =~? 'markdown\%(Code\|Highlight\)'
 #                 return true

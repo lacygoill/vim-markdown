@@ -338,10 +338,10 @@ const b:exchange_indent = ''
 
 if search('^```\S\+', 'n') > 0
     const b:markdown_highlight = getline(1, '$')
-        ->filter((_, v) => v =~ '^```\S\+')
+        ->filter((_, v: string): bool => v =~ '^```\S\+')
         ->sort()
         ->uniq()
-        ->map((_, v) => matchstr(v, '```\zs[a-z]\+'))
+        ->map((_, v: string): string => matchstr(v, '```\zs[a-z]\+'))
 endif
 
 # mc_chain {{{2

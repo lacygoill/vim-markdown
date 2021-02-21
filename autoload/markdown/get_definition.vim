@@ -19,8 +19,8 @@ def markdown#get_definition#main()
     endif
     var pat: string = '^#.*\c\V' .. escape(word, '\')
     var items: list<dict<any>> = getline(1, '$')
-        ->mapnew((i, v) => ({bufnr: bufnr('%'), lnum: i + 1, text: v}))
-        ->filter((_, v) => v.text =~ pat)
+        ->mapnew((i, v: string): dict<any> => ({bufnr: bufnr('%'), lnum: i + 1, text: v}))
+        ->filter((_, v: dict<any>): bool => v.text =~ pat)
     if empty(items)
         echom 'no definition for ' .. word
         if fname != 'glossary.md'

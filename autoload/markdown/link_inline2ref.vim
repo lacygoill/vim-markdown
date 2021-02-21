@@ -137,9 +137,10 @@ def PopulateReferenceSection(id2url: dict<string>) #{{{2
     #    > Implementation detail: This  uses the strtod() function  to parse numbers,
     #    > **Strings**, Lists, Dicts and Funcrefs **will be considered as being 0**.
     #}}}
-    var lines: list<string> = mapnew(id2url, (k: string, v: string) => '[' .. k .. ']: ' .. v)
+    var lines: list<string> = id2url
+        ->mapnew((k: string, v: string) => '[' .. k .. ']: ' .. v)
         ->values()
-        ->sort((a: string, b: string) =>
+        ->sort((a: string, b: string): number =>
             matchstr(a, '\d\+')->str2nr() - matchstr(b, '\d\+')->str2nr())
     append('.', lines)
     sil exe 'keepj keepp :%s/^' .. REF_SECTION .. '\n\n\zs\n//e'
@@ -189,7 +190,7 @@ enddef
 
 def IsARealLink(): bool #{{{2
     return synstack('.', col('.'))
-        ->mapnew((_, v) => synIDattr(v, 'name'))
+        ->mapnew((_, v: number): string => synIDattr(v, 'name'))
         ->reverse()
         ->match('^markdownLink') >= 0
 enddef

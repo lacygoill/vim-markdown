@@ -129,7 +129,7 @@ def markdown#fixFormatting() #{{{2
     # have additional unexpected side effects.
     #}}}
     if synstack('$', 1)
-        ->mapnew((_, v) => synIDattr(v, 'name'))
+        ->mapnew((_, v: number): string => synIDattr(v, 'name'))
         ->get(0, '') =~ '^markdownHighlight'
         append('$', ['```', ''])
     endif
@@ -174,7 +174,7 @@ def markdown#fixFormatting() #{{{2
     var g: number = 0 | while search('^#', flags) > 0 && g < 999 | g += 1
         flags = 'W'
         var item: string = synstack('.', col('.'))
-            ->mapnew((_, v) => synIDattr(v, 'name'))
+            ->mapnew((_, v: number): string => synIDattr(v, 'name'))
             ->get(-1, '')
         # Why `''` in addition to `Delimiter`?{{{
         #
@@ -260,7 +260,7 @@ def GetFiletype(argft: string): string #{{{2
     else
         var ft: string = execute('autocmd filetypedetect')
             ->split('\n')
-            ->filter((_, v) => v =~ '\m\C\*\.' .. argft .. '\>')
+            ->filter((_, v: string): bool => v =~ '\m\C\*\.' .. argft .. '\>')
             ->get(0, '')
             ->matchstr('\m\Csetf\%[iletype]\s*\zs\S*')
         if filereadable($VIMRUNTIME .. '/syntax/' .. ft .. '.vim')
