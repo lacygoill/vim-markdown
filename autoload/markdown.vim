@@ -10,7 +10,7 @@ def markdown#highlightLanguages() #{{{2
     # Iterate over the  languages mentioned in `b:markdown_highlight`,  and for each
     # of them, include the corresponding syntax plugin.
     #}}}
-    var done_include: dict<bool> = {}
+    var done_include: dict<bool>
     var delims: list<string> = get(b:, 'markdown_highlight', [])
     for delim in delims
         # If by accident, we manually  assign a value to `b:markdown_highlight`, and
@@ -167,7 +167,10 @@ def markdown#fixFormatting() #{{{2
     # The syntax highlighting will be disabled.
     # See `:h :bufdo`.
     #}}}
-    &ei = '' | do Syntax
+    var ei_save: string = &ei
+    &ei = ''
+    do Syntax
+    &ei = ei_save
 
     cursor(1, 1)
     var flags: string = 'cW'
@@ -254,13 +257,13 @@ def markdown#fixFencedCodeBlock() #{{{2
 enddef
 # }}}1
 # Utilities {{{1
-def GetFiletype(argft: string): string #{{{2
-    if filereadable($VIMRUNTIME .. '/syntax/' .. argft .. '.vim')
-        return argft
+def GetFiletype(arg_ft: string): string #{{{2
+    if filereadable($VIMRUNTIME .. '/syntax/' .. arg_ft .. '.vim')
+        return arg_ft
     else
         var ft: string = execute('autocmd filetypedetect')
             ->split('\n')
-            ->filter((_, v: string): bool => v =~ '\m\C\*\.' .. argft .. '\>')
+            ->filter((_, v: string): bool => v =~ '\m\C\*\.' .. arg_ft .. '\>')
             ->get(0, '')
             ->matchstr('\m\Csetf\%[iletype]\s*\zs\S*')
         if filereadable($VIMRUNTIME .. '/syntax/' .. ft .. '.vim')

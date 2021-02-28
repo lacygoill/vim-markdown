@@ -26,8 +26,10 @@ def markdown#link_inline2ref#main() #{{{2
     try
         # Make sure syntax highlighting is enabled.
         # `:argdo`, `:bufdo`, ... could disable it (e.g. `:argdo LinkInline2Ref`).
+        var ei_save: string = &ei
         &ei = ''
         do Syntax
+        &ei = ei_save
 
         # We're going to inspect the syntax highlighting under the cursor.
         # Sometimes, it's wrong.
@@ -72,7 +74,7 @@ enddef
 def CreateReflinks(): dict<string> #{{{2
     cursor(1, 1)
     var id: number = 1
-    var id2url: dict<string> = {}
+    var id2url: dict<string>
     var flags: string = 'cW'
     while search('\[.\{-}]\zs\%(\[\d\+]\|(.\{-})\)', flags) > 0 && id < GUARD
         flags = 'W'

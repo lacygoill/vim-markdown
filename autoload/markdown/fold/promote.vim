@@ -12,8 +12,8 @@ def markdown#fold#promote#main(_: any) #{{{2
     getpos("'[")[1 : 2]->cursor()
 enddef
 
-def markdown#fold#promote#setup(arghow: string): string #{{{2
-    how = arghow
+def markdown#fold#promote#setup(arg_how: string): string #{{{2
+    how = arg_how
     &opfunc = 'markdown#fold#promote#main'
     return 'g@'
 enddef

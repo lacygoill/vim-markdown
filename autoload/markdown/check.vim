@@ -35,7 +35,7 @@ def markdown#check#punctuation(type: string, lnum1: number, lnum2: number): stri
 
         var range: string = ':' .. lnum1 .. ',' .. lnum2
         cursor(1, 1)
-        var items: list<dict<any>> = []
+        var items: list<dict<any>>
         var flags: string = 'cW'
         var g: number = 0 | while search(pat, flags) > 0 && g < 999 | g += 1
             flags = 'W'
