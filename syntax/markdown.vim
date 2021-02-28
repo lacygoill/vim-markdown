@@ -22,12 +22,12 @@ endif
 # Check whether sometimes  you should have allowed a tab  character, in addition
 # to a space.
 # Read official spec to be sure.
-# Do the same thing for `~/.vim/plugged/vim-lg-lib/autoload/lg/styled_comment.vim`.
+# Do the same thing for `~/.vim/plugged/vim-lg-lib/autoload/lg/styledComment.vim`.
 
 # TODO: When should we prefer `containedin` vs `contained`?
 # Once you take a decision, apply your choice here and in:
 #
-#     ~/.vim/plugged/vim-lg-lib/autoload/lg/styled_comment.vim
+#     ~/.vim/plugged/vim-lg-lib/autoload/lg/styledComment.vim
 #
 # Update:
 # We need `containedin`,  for example, to allow `xCommentTitle`  to be contained

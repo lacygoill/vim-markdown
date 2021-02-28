@@ -66,6 +66,6 @@ def markdown#check#punctuation(type: string, lnum1: number, lnum2: number): stri
 enddef
 var view: dict<number>
 
-def markdown#check#punctuation_complete(...l: any) #{{{1
+def markdown#check#punctuationComplete(...l: any) #{{{1
     return join(['-comma', '-help'], "\n")
 enddef

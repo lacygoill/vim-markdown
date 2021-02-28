@@ -11,7 +11,7 @@ const GUARD: number = 1'000
 const REF_SECTION: string = '# Reference'
 
 # Interface {{{1
-def markdown#link_inline2ref#main() #{{{2
+def markdown#linkInline2ref#main() #{{{2
     var view: dict<number> = winsaveview()
     var syntax_was_enabled: bool = exists('g:syntax_on')
     if !syntax_was_enabled

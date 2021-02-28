@@ -66,19 +66,19 @@ endif
 
 # Commands {{{1
 
-com -bar -buffer -nargs=1 -range=% -complete=custom,markdown#check#punctuation_complete
+com -bar -buffer -nargs=1 -range=% -complete=custom,markdown#check#punctuationComplete
     \ CheckPunctuation echo markdown#check#punctuation(<q-args>, <line1>, <line2>)
     #                  │{{{
     #                  └ useful to erase the command from the command-line after its execution
     #}}}
 
-com -bar -buffer -nargs=? -range=% -complete=custom,markdown#commit_hash2link#completion
-    \ CommitHash2Link markdown#commit_hash2link#main(<line1>, <line2>, <q-args>)
+com -bar -buffer -nargs=? -range=% -complete=custom,markdown#commitHash2link#completion
+    \ CommitHash2Link markdown#commitHash2link#main(<line1>, <line2>, <q-args>)
 
 # Warning: Don't call this command `:Fix`.  It wouldn't work as expected with `:argdo`.
 com -bar -buffer FixFormatting markdown#fixFormatting()
 
-com -bar -buffer -range=% FoldSortBySize markdown#fold#sort#by_size(<line1>, <line2>)
+com -bar -buffer -range=% FoldSortBySize markdown#fold#sort#bySize(<line1>, <line2>)
 
 # Purpose: Convert inline link:{{{
 #
@@ -91,7 +91,7 @@ com -bar -buffer -range=% FoldSortBySize markdown#fold#sort#by_size(<line1>, <li
 #     # Reference
 #     [ref]: link
 #}}}
-com -bar -buffer -range=% LinkInline2Ref markdown#link_inline2ref#main()
+com -bar -buffer -range=% LinkInline2Ref markdown#linkInline2ref#main()
 
 com -bar -buffer Preview markdown#preview#main()
 
@@ -114,9 +114,9 @@ sil! repmap#make#repeatable({
         {bwd: '[of', fwd: ']of'},
         ]})
 
-nno <buffer><nowait> gd <cmd>call markdown#get_definition#main()<cr>
-xno <buffer><nowait> gd <cmd>call markdown#get_definition#main('vis')<cr>
-nno <buffer><nowait> gl <cmd>call markdown#fold#how_many#print()<cr>
+nno <buffer><nowait> gd <cmd>call markdown#getDefinition#main()<cr>
+xno <buffer><nowait> gd <cmd>call markdown#getDefinition#main('vis')<cr>
+nno <buffer><nowait> gl <cmd>call markdown#fold#howMany#print()<cr>
 
 nno <buffer><nowait> +[# <cmd>call markdown#fold#put#main(v:false)<cr>
 nno <buffer><nowait> +]# <cmd>call markdown#fold#put#main()<cr>
@@ -265,7 +265,7 @@ endtry
 # folding + conceal "{{{2
 
 # Do  *not*  remove this  function  call;  see  our  comment in  `Fold()`  (from
-# `lg/styled_comment.vim`) for an explanation.
+# `lg/styledComment.vim`) for an explanation.
 markdown#window#settings()
 
 augroup MarkdownWindowSettings

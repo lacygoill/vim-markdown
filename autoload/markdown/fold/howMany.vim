@@ -4,7 +4,7 @@ if exists('loaded') | finish | endif
 var loaded = true
 
 # Interface {{{1
-def markdown#fold#how_many#print() #{{{2
+def markdown#fold#howMany#print() #{{{2
     if foldclosed('.') == -1
         var first_line: number = search('^#', 'bcnW')
         var last_line: number = search('^#\|\%$', 'cnW')

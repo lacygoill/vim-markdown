@@ -3,7 +3,7 @@ vim9script noclear
 if exists('loaded') | finish | endif
 var loaded = true
 
-def markdown#fold#sort#by_size(lnum1: number, lnum2: number) #{{{1
+def markdown#fold#sort#bySize(lnum1: number, lnum2: number) #{{{1
     # get the level of the first fold
     var lvl: number = getline(lnum1)->matchstr('^#*')->strlen()
     if lvl == 0
@@ -80,7 +80,7 @@ def markdown#fold#sort#by_size(lnum1: number, lnum2: number) #{{{1
                         folds[-1]['foldstart'],
                         folds[-1]['foldend'],
                         f.foldstart - 1)
-                    markdown#fold#sort#by_size(lnum1, lnum2)
+                    markdown#fold#sort#bySize(lnum1, lnum2)
                     return
                 endif
             endfor

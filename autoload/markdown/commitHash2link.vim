@@ -3,7 +3,7 @@ vim9script noclear
 if exists('loaded') | finish | endif
 var loaded = true
 
-def markdown#commit_hash2link#main(...l: list<any>)
+def markdown#commitHash2link#main(...l: list<any>)
     if l[0] == 1 && l[1] == line('$') && l[2] == ''
         var help: list<string> =<< trim END
             While the cursor is on a line such as:
@@ -41,7 +41,7 @@ def markdown#commit_hash2link#main(...l: list<any>)
     exe range .. 's;\(\x\{7}\)\x\+;[`\1`](' .. url .. '&);e'
 enddef
 
-def markdown#commit_hash2link#completion(...l: any): string
+def markdown#commitHash2link#completion(...l: any): string
     return join(['tmux', 'vim'], "\n")
 enddef
 
