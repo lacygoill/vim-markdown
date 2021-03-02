@@ -87,9 +87,10 @@ def markdown#fold#sort#bySize(lnum1: number, lnum2: number) #{{{1
 
             var orig_lnum: number = line('.')
             foldend = search(pat, 'W', lnum2)
-            #                                          ┌ stop if you've found a fold whose level is < `lvl`
-            #                                          │
-            if foldend == 0 || getline(orig_lnum + 1)->match('^\%(#\{' .. (lvl - 1) .. '}#\@!\)') == 0
+            if foldend == 0
+                || getline(orig_lnum + 1)
+                    # stop if you've found a fold whose level is < `lvl`
+                    ->match('^\%(#\{' .. (lvl - 1) .. '}#\@!\)') == 0
                 break
             endif
             folds += [{

@@ -9,7 +9,7 @@ def markdown#fold#foldtitle#get(): string #{{{1
     var level: number = markdown#fold#foldexpr#headingDepth(v:foldstart)
     var indent: string = repeat(' ', (level - 1) * 3)
     # remove noise
-    var title: string = substitute(foldstartline, '^#\+\s*\|`', '', 'g')
+    var title: string = foldstartline->substitute('^#\+\s*\|`', '', 'g')
     if get(b:, 'foldtitle_full', false)
         var foldsize: number = (v:foldend - v:foldstart)
         var linecount: string = '[' .. foldsize .. ']' .. repeat(' ', 4 - strlen(foldsize))

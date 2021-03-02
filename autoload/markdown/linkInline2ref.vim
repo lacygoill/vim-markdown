@@ -95,12 +95,13 @@ def CreateReflinks(): dict<string> #{{{2
             #
             #     [some text][1]
             #}}}
-            var new_line: string = substitute(line, '\%' .. col .. 'c\[\d\+', '[' .. id, '')
-            # Do *not* use `:s`!{{{
-            #
-            # It would make the cursor move which would fuck everything up.
-            #}}}
-            setline('.', new_line)
+            line
+                ->substitute('\%' .. col .. 'c\[\d\+', '[' .. id, '')
+                # Do *not* use `:s`!{{{
+                #
+                # It would make the cursor move which would fuck everything up.
+                #}}}
+                ->setline('.')
             id2url[id] = url
 
         # [some text](some url)
@@ -112,11 +113,11 @@ def CreateReflinks(): dict<string> #{{{2
             norm! %
             var col_end: number = col('.')
             norm! %
-            var new_line: string = substitute(
-                line,
-                '\%' .. col .. 'c(.*\%' .. col_end .. 'c)',
-                '[' .. id .. ']',
-                ''
+            var new_line: string = line
+                ->substitute(
+                    '\%' .. col .. 'c(.*\%' .. col_end .. 'c)',
+                    '[' .. id .. ']',
+                    ''
                 )
             setline('.', new_line)
             id2url[id] = url
@@ -143,7 +144,8 @@ def PopulateReferenceSection(id2url: dict<string>) #{{{2
         ->mapnew((k: string, v: string) => '[' .. k .. ']: ' .. v)
         ->values()
         ->sort((a: string, b: string): number =>
-            matchstr(a, '\d\+')->str2nr() - matchstr(b, '\d\+')->str2nr())
+                matchstr(a, '\d\+')->str2nr() - matchstr(b, '\d\+')->str2nr()
+        )
     append('.', lines)
     sil exe 'keepj keepp :%s/^' .. REF_SECTION .. '\n\n\zs\n//e'
 enddef
@@ -175,7 +177,7 @@ def GetUrl(id = 0): string #{{{2
         # now after its start; in that case, we'll miss it.
         #}}}
         norm! v%y
-        return substitute(@", '^(\|)$\|\s', '', 'g')
+        return @"->substitute('^(\|)$\|\s', '', 'g')
     endif
 enddef
 

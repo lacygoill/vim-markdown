@@ -11,7 +11,7 @@ def markdown#getDefinition#main()
     else
         word = expand('<cWORD>')
     endif
-    word = substitute(word, '[“(]\|[”)].*\|[.?s]\{,2}$', '', 'g')
+    word = word->substitute('[“(]\|[”)].*\|[.?s]\{,2}$', '', 'g')
     var fname: string = expand('%:p:t')
     if fname != 'glossary.md'
         var cwd: string = getcwd()
@@ -19,7 +19,8 @@ def markdown#getDefinition#main()
     endif
     var pat: string = '^#.*\c\V' .. escape(word, '\')
     var items: list<dict<any>> = getline(1, '$')
-        ->mapnew((i, v: string): dict<any> => ({bufnr: bufnr('%'), lnum: i + 1, text: v}))
+        ->mapnew((i: number, v: string): dict<any> =>
+                    ({bufnr: bufnr('%'), lnum: i + 1, text: v}))
         ->filter((_, v: dict<any>): bool => v.text =~ pat)
     if empty(items)
         echom 'no definition for ' .. word

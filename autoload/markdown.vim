@@ -263,9 +263,9 @@ def GetFiletype(arg_ft: string): string #{{{2
     else
         var ft: string = execute('autocmd filetypedetect')
             ->split('\n')
-            ->filter((_, v: string): bool => v =~ '\m\C\*\.' .. arg_ft .. '\>')
+            ->filter((_, v: string): bool => v =~ '\C\*\.' .. arg_ft .. '\>')
             ->get(0, '')
-            ->matchstr('\m\Csetf\%[iletype]\s*\zs\S*')
+            ->matchstr('\Csetf\%[iletype]\s*\zs\S*')
         if filereadable($VIMRUNTIME .. '/syntax/' .. ft .. '.vim')
             return ft
         endif
