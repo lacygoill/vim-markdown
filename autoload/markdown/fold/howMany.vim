@@ -65,6 +65,6 @@ enddef
 def GetCurrentLvl(): number #{{{2
     var pat: string = '^#\+\ze\s\+'
     var first_line: number = search(pat, 'bcnW')
-    return getline(first_line)->matchstr(pat)->strlen()
+    return getline(first_line)->matchend(pat)
 enddef
 

@@ -80,7 +80,7 @@ def CreateReflinks(): dict<string> #{{{2
         flags = 'W'
         var line: string = getline('.')
         var col: number = col('.')
-        var char_under_cursor: string = matchstr(line, '\%' .. col .. 'c.')
+        var char_under_cursor: string = line[charcol('.') - 1]
         # [some text][some id]
         if char_under_cursor == '['
             var old_id: string = matchstr(line, '\%' .. col .. 'c\[\zs\d\+\ze]')

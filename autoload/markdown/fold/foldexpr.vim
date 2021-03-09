@@ -53,8 +53,8 @@ enddef
 #}}}1
 def markdown#fold#foldexpr#headingDepth(lnum: number): number #{{{1
     var thisline: string = getline(lnum)
-    var level: number = matchstr(thisline, '^#\{1,6}')->strlen()
-    if !level && thisline != '' && thisline != '```'
+    var level: number = matchend(thisline, '^#\{1,6}')
+    if level > 0 && thisline != '' && thisline != '```'
         var nextline: string = getline(lnum + 1)
         if nextline =~ '^=\+\s*$'
             return 1
@@ -93,10 +93,10 @@ def markdown#fold#foldexpr#stacked(): string #{{{1
     # Run this shell command:
     #
     #     $ vim -Nu <(cat <<'EOF'
-    #         setl fdm=expr fde=HeadingDepth(v:lnum)>0?'>1':'=' debug=throw
+    #         setl fdm=expr fde=HeadingDepth(v:lnum)>0?'>1':'1' debug=throw
     #         def HeadingDepth(lnum: number): number
-    #             var level: number = getline(lnum)->matchstr('^#\{1,6}')->strlen()
-    #             if level == 0
+    #             var level: number = getline(lnum)->matchend('^#\{1,6}')
+    #             if level == -1
     #                 if getline(lnum + 1) =~ '^=\+\s*$'
     #                     level = 1
     #                 endif

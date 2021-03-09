@@ -12,7 +12,7 @@ def markdown#fold#foldtitle#get(): string #{{{1
     var title: string = foldstartline->substitute('^#\+\s*\|`', '', 'g')
     if get(b:, 'foldtitle_full', false)
         var foldsize: number = (v:foldend - v:foldstart)
-        var linecount: string = '[' .. foldsize .. ']' .. repeat(' ', 4 - strlen(foldsize))
+        var linecount: string = '[' .. foldsize .. ']' .. repeat(' ', 4 - len(foldsize))
         return indent .. (foldsize > 1 ? linecount : '') .. title
     else
         return indent .. title
