@@ -153,9 +153,10 @@ enddef
 # Util {{{1
 def GetUrl(id = 0): string #{{{2
     if id != 0
-        return search('^\[' .. id .. ']:', 'n')
+        var line: string = search('^\[' .. id .. ']:', 'n')
             ->getline()
-            ->matchstr(':\s*\zs.*')
+        return line
+            ->strpart(line->matchend(':\s*'))
     else
         # Do *not* use `norm! %`!{{{
         #

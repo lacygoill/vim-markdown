@@ -16,7 +16,7 @@ def markdown#highlightLanguages() #{{{2
         # If by accident, we manually  assign a value to `b:markdown_highlight`, and
         # we write duplicate values, we want to include the corresponding syntax
         # plugin only once.
-        if has_key(done_include, delim)
+        if done_include->has_key(delim)
             continue
         endif
         # We can't blindly rely on the delim:{{{

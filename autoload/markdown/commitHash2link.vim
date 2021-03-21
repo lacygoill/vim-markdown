@@ -32,7 +32,7 @@ def markdown#commitHash2link#main(...l: list<any>)
         vim: 'https://github.com/vim/vim/commit/',
         tmux: 'https://github.com/tmux/tmux/commit/',
         }
-    if !has_key(pgm2url, pgm)
+    if !pgm2url->has_key(pgm)
         echom 'CommitHash2Link: ' .. pgm .. ' is not supported'
         return
     endif
