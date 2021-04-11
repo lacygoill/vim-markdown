@@ -3,7 +3,12 @@ vim9script noclear
 if exists('loaded') | finish | endif
 var loaded = true
 
-def markdown#check#punctuation(type: string, lnum1: number, lnum2: number): string #{{{1
+def markdown#check#punctuation( #{{{1
+    type: string,
+    lnum1: number,
+    lnum2: number
+): string
+
     if type == '-help'
         h markdown-punctuation
         return ''
@@ -30,7 +35,7 @@ def markdown#check#punctuation(type: string, lnum1: number, lnum2: number): stri
             yet
             so
         END
-        var pat: string = join(fanboys, '\|')
+        var pat: string = fanboys->join('\|')
         pat = '\C[^,; \t]\zs\ze\_s\+\%(' .. pat .. '\)\_s\+'
 
         var range: string = ':' .. lnum1 .. ',' .. lnum2
@@ -44,14 +49,14 @@ def markdown#check#punctuation(type: string, lnum1: number, lnum2: number): stri
                 col: col('.'),
                 bufnr: bufnr,
                 text: getline('.'),
-                }]
+            }]
         endwhile
         # populate the command-line with `:ldo s/\%#/,/c` when we press `C-g s`
         setloclist(0, [], ' ', {
             items: items,
             title: ':CheckPunctuation -comma',
             context: {populate: 'ldo s/\%#/,/c'}
-            })
+        })
         lw
     finally
         if winbufnr(winid) == bufnr
@@ -66,6 +71,6 @@ def markdown#check#punctuation(type: string, lnum1: number, lnum2: number): stri
 enddef
 var view: dict<number>
 
-def markdown#check#punctuationComplete(...l: any) #{{{1
-    return join(['-comma', '-help'], "\n")
+def markdown#check#punctuationComplete(_, _, _) #{{{1
+    return ['-comma', '-help']->join("\n")
 enddef

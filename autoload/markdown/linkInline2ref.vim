@@ -141,11 +141,10 @@ def PopulateReferenceSection(id2url: dict<string>) #{{{2
     #    > **Strings**, Lists, Dicts and Funcrefs **will be considered as being 0**.
     #}}}
     var lines: list<string> = id2url
-        ->mapnew((k: string, v: string) => '[' .. k .. ']: ' .. v)
+        ->mapnew((k: string, v: string): string => '[' .. k .. ']: ' .. v)
         ->values()
         ->sort((a: string, b: string): number =>
-                matchstr(a, '\d\+')->str2nr() - matchstr(b, '\d\+')->str2nr()
-        )
+                matchstr(a, '\d\+')->str2nr() - matchstr(b, '\d\+')->str2nr())
     append('.', lines)
     sil exe 'keepj keepp :%s/^' .. REF_SECTION .. '\n\n\zs\n//e'
 enddef

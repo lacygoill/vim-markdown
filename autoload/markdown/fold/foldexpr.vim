@@ -53,8 +53,7 @@ enddef
 #}}}1
 def markdown#fold#foldexpr#headingDepth(lnum: number): number #{{{1
     var thisline: string = getline(lnum)
-    var level: number = matchend(thisline, '^#\{1,6}')
-    if level > 0 && thisline != '' && thisline != '```'
+    if thisline != '' && thisline !~ '^```'
         var nextline: string = getline(lnum + 1)
         if nextline =~ '^=\+\s*$'
             return 1
@@ -76,10 +75,16 @@ def markdown#fold#foldexpr#headingDepth(lnum: number): number #{{{1
     #         return 0
     #     endif
     #
-    # If  you uncomment it, in  the previous block, replace  `return {1|2}` with
-    # `var level: number = {1|2}`.
+    # If you want to uncomment it, you first need to:
+    #
+    #    - at the start of the function, after the `thisline` assignment, write:
+    #
+    #         var level: number = matchend(thisline, '^#\{1,6}')
+    #
+    #    - in the previous block, replace `return {1|2}` with `level = {1|2}`
+    #    - at the end of the function, replace the current `return matchend(...)` with `return level`
     #}}}
-    return level
+    return matchend(thisline, '^#\{1,6}')
 enddef
 
 def markdown#fold#foldexpr#nested(): string #{{{1

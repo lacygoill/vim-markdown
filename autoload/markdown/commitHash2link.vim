@@ -31,7 +31,7 @@ def markdown#commitHash2link#main(...l: list<any>)
     var pgm2url: dict<string> = {
         vim: 'https://github.com/vim/vim/commit/',
         tmux: 'https://github.com/tmux/tmux/commit/',
-        }
+    }
     if !pgm2url->has_key(pgm)
         echom 'CommitHash2Link: ' .. pgm .. ' is not supported'
         return
@@ -41,7 +41,7 @@ def markdown#commitHash2link#main(...l: list<any>)
     exe range .. 's;\(\x\{7}\)\x\+;[`\1`](' .. url .. '&);e'
 enddef
 
-def markdown#commitHash2link#completion(...l: any): string
-    return join(['tmux', 'vim'], "\n")
+def markdown#commitHash2link#completion(_, _, _): string
+    return ['tmux', 'vim']->join("\n")
 enddef
 

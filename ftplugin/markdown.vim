@@ -112,7 +112,7 @@ sil! repmap#make#repeatable({
     from: expand('<sfile>:p') .. ':' .. expand('<slnum>'),
     motions: [
         {bwd: '[of', fwd: ']of'},
-        ]})
+    ]})
 
 nno <buffer><nowait> gd <cmd>call markdown#getDefinition#main()<cr>
 xno <buffer><nowait> gd <cmd>call markdown#getDefinition#main('vis')<cr>
@@ -121,7 +121,7 @@ nno <buffer><nowait> gl <cmd>call markdown#fold#howMany#print()<cr>
 nno <buffer><nowait> +[# <cmd>call markdown#fold#put#main(v:false)<cr>
 nno <buffer><nowait> +]# <cmd>call markdown#fold#put#main()<cr>
 
-nno <buffer><expr><nowait> =rb sh#break_long_cmd()
+nno <buffer><expr><nowait> =rb sh#breakLongCmd()
 nno <buffer><expr><nowait> =r- markdown#hyphens2hashes()
 nno <buffer><expr><nowait> =r-- markdown#hyphens2hashes() .. '_'
 xno <buffer><expr><nowait> =r- markdown#hyphens2hashes()

@@ -58,7 +58,7 @@ def markdown#fold#sort#bySize(lnum1: number, lnum2: number) #{{{1
             foldstart: lnum1,
             foldend: foldend,
             size: foldend - lnum1 + 1,
-            }]
+        }]
         # What does the loop do?{{{
         #
         #    1. it looks for the end of the next fold with the same level
@@ -97,7 +97,7 @@ def markdown#fold#sort#bySize(lnum1: number, lnum2: number) #{{{1
                 foldstart: orig_lnum + 1,
                 foldend: foldend,
                 size: foldend - orig_lnum,
-                }]
+            }]
         endwhile
     finally
         if winbufnr(winid) == bufnr

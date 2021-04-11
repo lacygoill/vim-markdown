@@ -30,11 +30,7 @@ def Getlines(): list<string> #{{{1
     #     https://github.com/suan/vim-instant-markdown/pull/74#issue-37422001
     #     https://github.com/suan/instant-markdown-d/pull/26
     #}}}
-    # TODO(Vim9): Use `..=` when it works.{{{
-    #
-    #     lines[line('.') - 1] ..= ' <a name="#marker" id="marker"></a>'
-    #}}}
-    lines[line('.') - 1] = lines[line('.') - 1] .. ' <a name="#marker" id="marker"></a>'
+    lines[line('.') - 1] ..= ' <a name="#marker" id="marker"></a>'
     return lines
 enddef
 

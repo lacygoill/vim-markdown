@@ -4,7 +4,7 @@ if exists('loaded') | finish | endif
 var loaded = true
 
 # Interface {{{1
-def markdown#fold#promote#main(_a: any) #{{{2
+def markdown#fold#promote#main(_) #{{{2
     var cnt: number = v:count1
     for i in range(1, cnt)
         Promote()

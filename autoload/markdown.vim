@@ -55,8 +55,8 @@ def markdown#highlightLanguages() #{{{2
         # 1. Vim will define all groups from  all python syntax plugins, but for
         # each of them, it will add the argument `contained`.
         #
-        # 2. Vim will  define the cluster `@markdownHighlightpython`  which contains
-        # all the syntax groups define in python syntax plugins.
+        # 2. Vim  will  define   the  cluster  `@markdownHighlightpython`  which
+        # contains all the syntax groups defined in python syntax plugins.
         #
         # Note that if `b:current_syntax` is set, Vim won't define the contained
         # python syntax groups; the cluster will be defined but contain nothing.
