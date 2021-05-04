@@ -10,7 +10,7 @@ def markdown#fold#option#fdl(choice: string)
     endif
 
     if choice == 'more'
-        &l:fdl += 1
+        ++&l:fdl
     else
         &l:fdl = (&l:fdl == 0 ? 0 : &l:fdl - 1)
     endif

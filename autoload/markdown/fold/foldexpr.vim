@@ -132,7 +132,7 @@ def markdown#fold#foldexpr#stacked(): string #{{{1
     #
     # See also our comments in:
     #
-    #     ~/.vim/plugged/vim-git/after/ftplugin/git.vim
+    #     ~/.vim/pack/mine/opt/git/after/ftplugin/git.vim
     #
     # One of them illustrates how `'='` is preferable to `1`.
     # Folding too much can have unexpected results.

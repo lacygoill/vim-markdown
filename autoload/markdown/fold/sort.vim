@@ -76,7 +76,7 @@ def markdown#fold#sort#bySize(lnum1: number, lnum2: number) #{{{1
                 # if you find a previous fold which is bigger
                 if f.size > folds[-1]['size']
                     # move last fold above
-                    sil exe printf(':%d,%dm %d',
+                    exe printf('sil :%d,%dm %d',
                         folds[-1]['foldstart'],
                         folds[-1]['foldend'],
                         f.foldstart - 1)

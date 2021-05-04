@@ -42,7 +42,7 @@ def markdown#check#punctuation( #{{{1
         cursor(1, 1)
         var items: list<dict<any>>
         var flags: string = 'cW'
-        var g: number = 0 | while search(pat, flags) > 0 && g < 999 | g += 1
+        var g: number = 0 | while search(pat, flags) > 0 && g < 999 | ++g
             flags = 'W'
             items += [{
                 lnum: line('.'),

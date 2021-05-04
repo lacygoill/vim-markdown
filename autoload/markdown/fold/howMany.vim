@@ -55,7 +55,7 @@ def GetNumberOfFolds(n: number): number #{{{2
     var cnt: number = 0
     while cnt < 999 && line('.') < first_line_last_fold
         search('^#\{' .. current_lvl .. '}#\@!\s\S\+\|\%$', 'W')
-        cnt += 1
+        ++cnt
     endwhile
 
     return (n == 1 ? cnt : cnt - 1)

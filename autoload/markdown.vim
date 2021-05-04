@@ -174,7 +174,7 @@ def markdown#fixFormatting() #{{{2
 
     cursor(1, 1)
     var flags: string = 'cW'
-    var g: number = 0 | while search('^#', flags) > 0 && g < 999 | g += 1
+    var g: number = 0 | while search('^#', flags) > 0 && g < 999 | ++g
         flags = 'W'
         var item: string = synstack('.', col('.'))
             ->mapnew((_, v: number): string => synIDattr(v, 'name'))
@@ -234,7 +234,7 @@ def markdown#hyphens2hashes(type = ''): string #{{{2
     if empty(hashes)
         return ''
     endif
-    sil exe range .. 's/^---/' .. hashes .. ' ?/e'
+    exe 'sil ' .. range .. 's/^---/' .. hashes .. ' ?/e'
     return ''
 enddef
 

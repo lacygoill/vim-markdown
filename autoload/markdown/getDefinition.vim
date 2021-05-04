@@ -34,7 +34,7 @@ def markdown#getDefinition#main()
     endif
     setloclist(0, [], ' ', {items: items, title: word})
     lw
-    if &ft == 'qf'
+    if &filetype == 'qf'
         lfirst
         norm! zMzvzz
     endif

@@ -83,7 +83,7 @@ def CreateReflinks(): dict<string> #{{{2
         var char_under_cursor: string = line[charcol('.') - 1]
         # [some text][some id]
         if char_under_cursor == '['
-            var old_id: string = matchstr(line, '\%' .. col .. 'c\[\zs\d\+\ze]')
+            var old_id: string = line->matchstr('\%' .. col .. 'c\[\zs\d\+\ze]')
             var url: string = GetUrl(old_id)
             # update id{{{
             #
@@ -122,7 +122,7 @@ def CreateReflinks(): dict<string> #{{{2
             setline('.', new_line)
             id2url[id] = url
         endif
-        id += 1
+        ++id
     endwhile
     return id2url
 enddef
@@ -144,9 +144,9 @@ def PopulateReferenceSection(id2url: dict<string>) #{{{2
         ->mapnew((k: string, v: string): string => '[' .. k .. ']: ' .. v)
         ->values()
         ->sort((a: string, b: string): number =>
-                matchstr(a, '\d\+')->str2nr() - matchstr(b, '\d\+')->str2nr())
+                a->matchstr('\d\+')->str2nr() - b->matchstr('\d\+')->str2nr())
     append('.', lines)
-    sil exe 'keepj keepp :%s/^' .. REF_SECTION .. '\n\n\zs\n//e'
+    exe 'sil keepj keepp :%s/^' .. REF_SECTION .. '\n\n\zs\n//e'
 enddef
 # }}}1
 # Util {{{1
@@ -184,7 +184,7 @@ enddef
 def IdOutsideReferenceSection(): bool #{{{2
     var ref_section_lnum: number = search('^' .. REF_SECTION .. '$', 'n')
     if search('^\[\d\+]:', 'n', ref_section_lnum) > 0
-        sil exe 'lvim /^\[\d\+]:\%<' .. ref_section_lnum .. 'l/j %'
+        exe 'sil lvim /^\[\d\+]:\%<' .. ref_section_lnum .. 'l/j %'
         echom 'There are id declarations outside the Reference section'
         setloclist(0, [], 'a', {title: 'move them inside or remove/edit them'})
         return true
@@ -224,7 +224,7 @@ def MultiLineLinks(): bool #{{{2
     cursor(1, 1)
     var pat: string = '\[[^][]*\n\_[^][]*](.*)'
     var flags: string = 'cW'
-    var g: number = 0 | while search(pat, flags) > 0 && g <= GUARD | g += 1
+    var g: number = 0 | while search(pat, flags) > 0 && g <= GUARD | ++g
         flags = 'W'
         if IsARealLink()
             exe 'lvim /' .. pat .. '/gj %'
