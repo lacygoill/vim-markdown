@@ -562,7 +562,7 @@ syn region markdownListItem
 
 # vaguely inspired from `helpHeader`
 syn match markdownOutput
-    \ /^.*\~$/
+    \ /^.*˜$/
     \ contained
     \ containedin=markdownCodeBlock
     \ nextgroup=markdownIgnore
@@ -574,7 +574,7 @@ syn match markdownIgnore
     \ conceal
 
 syn match markdownListItemOutput
-    \ /^.*\~$/
+    \ /^.*˜$/
     \ contained
     \ containedin=markdownListItemCodeBlock
     \ nextgroup=markdownListItemIgnore
@@ -783,7 +783,7 @@ exe 'syn match markdownTodo  /\CTO' .. 'DO\|FIX' .. 'ME/ contained'
 #                                                                   │
 #                                   search in the current line only ┘
 #     $ tree
-#     .~
+#     .˜
 #     ├── cat1
 #     │   ├── tig.1.gz
 #     │   └── youtube-dl.1.gz
