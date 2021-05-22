@@ -4,6 +4,17 @@ if exists('loaded') | finish | endif
 var loaded = true
 
 # Interface {{{1
+def markdown#note2code(): string #{{{2
+    var line: string = getline('.')
+    if line =~ '^#\+\s\+\S'
+        var path: string = line
+            ->substitute('^#\+\s\+', '', '')
+            ->substitute(' ', '_', 'g')
+        return 'code/' .. expand('%:p:t:r') .. '/' .. path
+    endif
+    return ''
+enddef
+
 def markdown#highlightLanguages() #{{{2
     # What's the purpose of this `for` loop?{{{
     #
@@ -193,7 +204,7 @@ def markdown#fixFormatting() #{{{2
 enddef
 
 def markdown#undoFtplugin() #{{{2
-    set ai< cms< cocu< cole< com< efm< fde< fdm< fdt< flp< fml< fp< kp< mp< spl< tw< wrap<
+    set ai< cms< cocu< cole< com< efm< fde< fdm< fdt< flp< fml< fp< inex< kp< mp< spl< tw< wrap<
     unlet! b:cr_command b:exchange_indent b:sandwich_recipes b:markdown_highlight b:mc_chain
     sil! au! InstantMarkdown * <buffer>
     sil! au! MarkdownWindowSettings * <buffer>

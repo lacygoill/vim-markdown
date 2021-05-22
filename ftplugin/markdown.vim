@@ -130,6 +130,7 @@ xno <buffer><expr><nowait> H markdown#fold#promote#setup('less')
 xno <buffer><expr><nowait> L markdown#fold#promote#setup('more')
 
 # Options {{{1
+var afile: string = expand('<afile>:p')
 # ai {{{2
 
 # There's no indent plugin in `$VIMRUNTIME/indent/`, so we use `'autoindent'` as
@@ -262,7 +263,7 @@ try
 catch /^Vim\%((\a\+)\)\=:E666:/
 endtry
 
-# folding + conceal "{{{2
+# folding + conceal {{{2
 
 # Do  *not*  remove this  function  call;  see  our  comment in  `Fold()`  (from
 # `lg/styledComment.vim`) for an explanation.
@@ -297,19 +298,25 @@ setl tw=80
 # We want `gq` to use par in a markdown buffer.
 &l:fp = 'par -w' .. &l:tw .. 'rjeq'
 
-# kp "{{{2
+# inex {{{2
 
-if expand('<afile>:p') =~ '/wiki/vim/'
+if afile =~ '/wiki/'
+    setlocal includeexpr=markdown#note2code()
+endif
+
+# kp {{{2
+
+if afile =~ '/wiki/vim/'
     setl kp=:help
 else
     setl kp=:Man
 endif
 
-# spl "{{{2
+# spl {{{2
 
 setl spl=en
 
-# wrap "{{{2
+# wrap {{{2
 
 # It's nice to have when we're reading the wiki of a github project.
 setl wrap
