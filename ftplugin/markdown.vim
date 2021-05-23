@@ -298,12 +298,6 @@ setl tw=80
 # We want `gq` to use par in a markdown buffer.
 &l:fp = 'par -w' .. &l:tw .. 'rjeq'
 
-# inex {{{2
-
-if afile =~ '/wiki/'
-    setlocal includeexpr=markdown#note2code()
-endif
-
 # kp {{{2
 
 if afile =~ '/wiki/vim/'
