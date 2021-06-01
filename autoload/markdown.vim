@@ -61,7 +61,36 @@ def markdown#highlightLanguages() #{{{2
         # Note that if `b:current_syntax` is set, Vim won't define the contained
         # python syntax groups; the cluster will be defined but contain nothing.
         #}}}
-        exe 'syn include @markdownHighlight' .. ft .. ' syntax/' .. ft .. '.vim'
+        # `sil!` is necessary to suppress a possible E403 error.{{{
+        #
+        # To reproduce, write this text in `/tmp/md.md`:
+        #
+        #     ```rexx
+        #     text
+        #     ```
+        #     ```vim
+        #     text
+        #     ```
+        #
+        # Then, open the `/tmp/md.md` file:
+        #
+        #     Error detected while processing BufRead Autocommands for "*.md"
+        #         ..FileType Autocommands for "*"
+        #         ..Syntax Autocommands for "*"
+        #         ..function <SNR>22_SynSet[25]
+        #         ..script ~/.vim/pack/mine/opt/markdown/syntax/markdown.vim[835]
+        #         ..function markdown#highlightLanguages[82]
+        #         ..script /usr/local/share/vim/vim82/syntax/vim.vim:
+        #     line  838:
+        #     E403: syntax sync: line continuations pattern specified twice
+        #
+        # The issue  is that  the markdown  file contains  2 fenced  code blocks
+        # causing Vim to include 2 syntax  plugins, each of which runs this kind
+        # of command:
+        #
+        #     syn sync linecount {pattern}
+        #}}}
+        exe 'sil! syn include @markdownHighlight' .. ft .. ' syntax/' .. ft .. '.vim'
         # Why?{{{
         #
         # The previous `:syn  include` has caused `b:current_syntax`  to bet set
