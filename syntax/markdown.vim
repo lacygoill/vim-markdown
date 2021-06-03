@@ -603,8 +603,8 @@ syn match markdownListItemIgnore
 #
 #     syn match markdownHideAnswer '<details>\n\=<summary>' conceal containedin=markdownCodeBlock
 #     syn region markdownShowAnswer matchgroup=Ignore start='</summary>' end='</details>' conceal containedin=markdownCodeBlock
-#     hi link markdownHideAnswer Ignore
-#     hi link markdownShowAnswer PreProc
+#     hi def link markdownHideAnswer Ignore
+#     hi def link markdownShowAnswer PreProc
 #}}}
 #    Why don't you use it?{{{
 #
@@ -852,28 +852,28 @@ hi markdownItalic     term=italic      cterm=italic      gui=italic
 hi markdownBold       term=bold        cterm=bold        gui=bold
 hi markdownBoldItalic term=bold,italic cterm=bold,italic gui=bold,italic
 
-hi link markdownHeader                Title
-hi link markdownHeaderItalic          TitleItalic
-hi link markdownHeaderBold            TitleBold
-hi link markdownHeaderBoldItalic      TitleBoldItalic
-hi link markdownHeadingRule           markdownRule
+hi def link markdownHeader                Title
+hi def link markdownHeaderItalic          TitleItalic
+hi def link markdownHeaderBold            TitleBold
+hi def link markdownHeaderBoldItalic      TitleBoldItalic
+hi def link markdownHeadingRule           markdownRule
 
-hi link markdownFootnote              Typedef
-hi link markdownFootnoteDefinition    Typedef
+hi def link markdownFootnote              Typedef
+hi def link markdownFootnoteDefinition    Typedef
 
-hi link markdownId                    Type
-hi link markdownAutomaticLink         markdownUrl
-hi link markdownLinkRefTitle          String
-hi link markdownIdDelimiter           markdownLinkDelimiter
-hi link markdownUrlDelimiter          Function
-hi link markdownUrlTitleDelimiter     Delimiter
+hi def link markdownId                    Type
+hi def link markdownAutomaticLink         markdownUrl
+hi def link markdownLinkRefTitle          String
+hi def link markdownIdDelimiter           markdownLinkDelimiter
+hi def link markdownUrlDelimiter          Function
+hi def link markdownUrlTitleDelimiter     Delimiter
 
-hi link markdownItalicDelimiter       markdownItalic
-hi link markdownBoldDelimiter         markdownBold
-hi link markdownBoldItalicDelimiter   markdownBoldItalic
-hi link markdownCodeDelimiter         Delimiter
+hi def link markdownItalicDelimiter       markdownItalic
+hi def link markdownBoldDelimiter         markdownBold
+hi def link markdownBoldItalicDelimiter   markdownBoldItalic
+hi def link markdownCodeDelimiter         Delimiter
 
-hi link markdownEscape                Special
+hi def link markdownEscape                Special
 # Why do you highlight some underscores as errors, and how to avoid them?{{{
 #
 # According  to tpope,  we should  always wrap a  word containing  an underscore
@@ -902,13 +902,13 @@ hi link markdownEscape                Special
 #
 # But again, it doesn't work in titles.
 #}}}
-hi link markdownError                 Error
+hi def link markdownError                 Error
 
-hi link markdownTodo                  Todo
-hi link markdownOutput                PreProc
-hi link markdownListItemOutput        markdownOutput
-hi link markdownIgnore                Ignore
-hi link markdownTable                 Structure
+hi def link markdownTodo                  Todo
+hi def link markdownOutput                PreProc
+hi def link markdownListItemOutput        markdownOutput
+hi def link markdownIgnore                Ignore
+hi def link markdownTable                 Structure
 # }}}1
 
 b:current_syntax = 'markdown'
