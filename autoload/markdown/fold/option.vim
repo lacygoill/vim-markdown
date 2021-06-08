@@ -3,17 +3,17 @@ vim9script noclear
 if exists('loaded') | finish | endif
 var loaded = true
 
-def markdown#fold#option#fdl(choice: string)
-    if &l:fde !~ 'nested'
-        echo "the folds are not nested; change 'fde' first"
+def markdown#fold#option#foldlevel(choice: string)
+    if &l:foldexpr !~ 'nested'
+        echo "the folds are not nested; change 'foldexpr' first"
         return
     endif
 
     if choice == 'more'
-        ++&l:fdl
+        ++&l:foldlevel
     else
-        &l:fdl = (&l:fdl == 0 ? 0 : &l:fdl - 1)
+        &l:foldlevel = (&l:foldlevel == 0 ? 0 : &l:foldlevel - 1)
     endif
-    echo "'fdl' = " .. &l:fdl
+    echo "'foldlevel' = " .. &l:foldlevel
 enddef
 

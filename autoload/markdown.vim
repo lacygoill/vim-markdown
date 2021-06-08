@@ -30,8 +30,8 @@ def markdown#highlightLanguages() #{{{2
         #     " there's no js syntax plugin
         #     " we want the javascript syntax plugin
         #}}}
-        var ft: string = GetFiletype(delim)
-        if empty(ft)
+        var filetype: string = GetFiletype(delim)
+        if empty(filetype)
             continue
         endif
 
@@ -90,11 +90,12 @@ def markdown#highlightLanguages() #{{{2
         #
         #     syn sync linecount {pattern}
         #}}}
-        exe 'sil! syn include @markdownHighlight' .. ft .. ' syntax/' .. ft .. '.vim'
+        exe 'sil! syn include @markdownHighlight' .. filetype
+            .. ' syntax/' .. filetype .. '.vim'
         # Why?{{{
         #
         # The previous `:syn  include` has caused `b:current_syntax`  to bet set
-        # to the value stored in `ft`.
+        # to the value stored in `filetype`.
         # If more than one language is embedded, the next time that we run
         # `:syn include`, the resulting cluster will contain nothing.
         #}}}
@@ -102,18 +103,18 @@ def markdown#highlightLanguages() #{{{2
 
         # Note that the name of the region is identical to the name of the cluster:{{{
         #
-        #     'markdownHighlight' .. ft
+        #     'markdownHighlight' .. filetype
         #
         # But there's no conflict.
         # Probably because a cluster name is always prefixed by `@`.
         #}}}
-        exe 'syn region markdownHighlight' .. ft
+        exe 'syn region markdownHighlight' .. filetype
             .. ' matchgroup=markdownCodeDelimiter'
             .. ' start=/^\s*````*\s*' .. delim .. '\S\@!.*$/'
             .. ' end=/^\s*````*\ze\s*$/'
             .. ' keepend'
             .. ' concealends'
-            .. ' contains=@markdownHighlight' .. ft
+            .. ' contains=@markdownHighlight' .. filetype
         done_include[delim] = true
     endfor
     if !empty(delims)
@@ -196,10 +197,10 @@ def markdown#fixFormatting() #{{{2
     # The syntax highlighting will be disabled.
     # See `:h :bufdo`.
     #}}}
-    var ei_save: string = &ei
-    &ei = ''
+    var eventignore_save: string = &eventignore
+    &eventignore = ''
     do Syntax
-    &ei = ei_save
+    &eventignore = eventignore_save
 
     cursor(1, 1)
     var flags: string = 'cW'
@@ -222,7 +223,23 @@ def markdown#fixFormatting() #{{{2
 enddef
 
 def markdown#undoFtplugin() #{{{2
-    set ai< cms< cocu< cole< com< efm< fde< fdm< fdt< flp< fml< fp< kp< mp< spl< tw< wrap<
+    set autoindent<
+    set commentstring<
+    set concealcursor<
+    set conceallevel<
+    set comments<
+    set errorformat<
+    set foldexpr<
+    set foldmethod<
+    set foldtext<
+    set formatlistpat<
+    set foldminlines<
+    set formatprg<
+    set keywordprg<
+    set makeprg<
+    set spelllang<
+    set textwidth<
+    set wrap<
     unlet! b:cr_command b:exchange_indent b:sandwich_recipes b:markdown_highlight b:mc_chain
     sil! au! InstantMarkdown * <buffer>
     sil! au! MarkdownWindowSettings * <buffer>
@@ -255,7 +272,7 @@ enddef
 
 def markdown#hyphens2hashes(type = ''): string #{{{2
     if type == ''
-        &opfunc = 'markdown#hyphens2hashes'
+        &operatorfunc = 'markdown#hyphens2hashes'
         return 'g@'
     endif
     var range: string = ":'[,']"
@@ -286,17 +303,17 @@ def markdown#fixFencedCodeBlock() #{{{2
 enddef
 # }}}1
 # Utilities {{{1
-def GetFiletype(arg_ft: string): string #{{{2
-    if filereadable($VIMRUNTIME .. '/syntax/' .. arg_ft .. '.vim')
-        return arg_ft
+def GetFiletype(arg_filetype: string): string #{{{2
+    if filereadable($VIMRUNTIME .. '/syntax/' .. arg_filetype .. '.vim')
+        return arg_filetype
     else
-        var ft: string = execute('autocmd filetypedetect')
+        var filetype: string = execute('autocmd filetypedetect')
             ->split('\n')
-            ->filter((_, v: string): bool => v =~ '\C\*\.' .. arg_ft .. '\>')
+            ->filter((_, v: string): bool => v =~ '\C\*\.' .. arg_filetype .. '\>')
             ->get(0, '')
             ->matchstr('\Csetf\%[iletype]\s*\zs\S*')
-        if filereadable($VIMRUNTIME .. '/syntax/' .. ft .. '.vim')
-            return ft
+        if filereadable($VIMRUNTIME .. '/syntax/' .. filetype .. '.vim')
+            return filetype
         endif
     endif
     return ''

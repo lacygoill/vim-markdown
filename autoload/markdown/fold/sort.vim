@@ -14,11 +14,11 @@ def markdown#fold#sort#bySize(lnum1: number, lnum2: number) #{{{1
     endif
 
     # disable folding, because it could badly interfere when we move lines with `:m`
-    var fen_save: bool = &l:fen
+    var foldenable_save: bool = &l:foldenable
     var winid: number = win_getid()
     var bufnr: number = bufnr('%')
-    [fen_save, winid, bufnr] = [&l:fen, win_getid(), bufnr('%')]
-    &l:fen = false
+    [foldenable, winid, bufnr] = [&l:foldenable, win_getid(), bufnr('%')]
+    &l:foldenable = false
     try
         # What's this?{{{
         #
@@ -29,7 +29,7 @@ def markdown#fold#sort#bySize(lnum1: number, lnum2: number) #{{{1
         #
         # We mustn't stop when we find a fold whose level is bigger than `lvl`.
         # Those are children folds; they should be ignored.
-        # Thus, the quantifier must NOT go beyond `lvl`.
+        # Thus, the quantifier must *not* go beyond `lvl`.
         #
         # Also, we must stop if we find a fold whose level is smaller.
         # Those are parents.
@@ -104,7 +104,7 @@ def markdown#fold#sort#bySize(lnum1: number, lnum2: number) #{{{1
             var tabnr: number
             var winnr: number
             [tabnr, winnr] = win_id2tabwin(winid)
-            settabwinvar(tabnr, winnr, '&fen', fen_save)
+            settabwinvar(tabnr, winnr, '&foldenable', foldenable_save)
         endif
     endtry
 enddef

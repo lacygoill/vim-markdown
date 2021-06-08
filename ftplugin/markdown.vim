@@ -18,15 +18,15 @@ endif
 #     ru! ftplugin/html.vim ftplugin/html_*.vim ftplugin/html/*.vim
 #       │
 #       └ all of them
-#         (even if there are several ftplugin/html.vim in various directories of &rtp)
+#         (even if there are several ftplugin/html.vim in various directories of &runtimepath)
 #}}}
 # Why don't you source them?{{{
 #
 # We have some html settings which are undesirable in markdown.
 #
 # Examples:
-# We set `'sw'` to 2 in an html  file (as per google style guide), but we prefer
-# to set it to 4 in a markdown file.
+# We set `'shiftwidth'` to 2 in an html file (as per google style guide), but we
+# prefer to set it to 4 in a markdown file.
 #
 # In  our HTML  plugin  (`~/.vim/after/ftplugin/html.vim`), we  set  up the  web
 # browser to look for the word under the cursor when we press `K`.
@@ -98,14 +98,14 @@ com -bar -buffer Preview markdown#preview#main()
 # Mappings {{{1
 
 nno <buffer><nowait> cof <cmd>call markdown#fold#foldexpr#toggle()<cr>
-# Increase/decrease  'fdl' when folds are nested.{{{
+# Increase/decrease  'foldlevel' when folds are nested.{{{
 #
 # Use it to quickly see the titles up to an arbitrary depth.
 # Useful  to get  an overview  of  the contents  of  the notes  of an  arbitrary
 # precision.
 #}}}
-nno <buffer><nowait> [of <cmd>call markdown#fold#option#fdl('less')<cr>
-nno <buffer><nowait> ]of <cmd>call markdown#fold#option#fdl('more')<cr>
+nno <buffer><nowait> [of <cmd>call markdown#fold#option#foldlevel('less')<cr>
+nno <buffer><nowait> ]of <cmd>call markdown#fold#option#foldlevel('more')<cr>
 sil! repmap#make#repeatable({
     mode: 'n',
     buffer: true,
@@ -131,50 +131,50 @@ xno <buffer><expr><nowait> L markdown#fold#promote#setup('more')
 
 # Options {{{1
 var afile: string = expand('<afile>:p')
-# ai {{{2
+# autoindent {{{2
 
 # There's no indent plugin in `$VIMRUNTIME/indent/`, so we use `'autoindent'` as
 # a poor-man's solution.
-setl ai
+&l:autoindent = true
 
-# cms {{{2
+# commentstring {{{2
 
 # template for a comment (taken from html);  will be used by `gc` (could also be
-# used by `zf` &friends, if `&l:fdm = 'manual'`)
-setl cms=>\ %s
+# used by `zf` &friends, if `&l:foldmethod = 'manual'`)
+&l:commentstring = '> %s'
 
 # comments {{{2
 
-#        ┌ Only the first line has the comment leader.{{{
-#        │ Do not repeat comment on the next line, but preserve indentation:
-#        │ useful for bullet-list.
-#        │
-#        │┌ Blank (Space, Tab or EOL) required after the comment leader.
-#        ││ So here, '- hello' would be recognized as a comment, but not '-hello'.
-#        ││
-#        ││┌ Nested comment.
-#        │││ Nesting with mixed parts is allowed.
-#        │││ Ex: if 'comments' is "n:*,n:-", a line starting with "* -" is a comment.
-#        │││                                                       ├─┘
-#        │││                                                       └ mixed
-#        │││}}}
-setl com=fbn:-,fb:*,fb:+
+#              ┌ Only the first line has the comment leader.{{{
+#              │ Do not repeat comment on the next line, but preserve indentation:
+#              │ useful for bullet-list.
+#              │
+#              │┌ Blank (Space, Tab or EOL) required after the comment leader.
+#              ││ So here, '- hello' would be recognized as a comment, but not '-hello'.
+#              ││
+#              ││┌ Nested comment.
+#              │││ Nesting with mixed parts is allowed.
+#              │││ Ex: if 'comments' is "n:*,n:-", a line starting with "* -" is a comment.
+#              │││                                                       ├─┘
+#              │││                                                       └ mixed
+#              │││}}}
+&l:comments = 'fbn:-,fb:*,fb:+'
 
-# What's the purpose of 'com'? {{{
+# What's the purpose of 'comments'? {{{
 #
 # 'comments' contains a list of strings which can start a commented line.
 # Vim needs to know what the comment leader is in various occasions:
 #
-#    - if 'fo' contains the flag `r`, and we open a new line, hitting CR
-#      from insert mode, Vim needs to know what to prepend at the
-#      beginning
+#    - if 'formatoptions' contains the flag `r`, and we open a new line,
+#      hitting CR from insert mode, Vim needs to know what to prepend
+#      at the beginning
 #
-#      same thing if 'fo' contains the flag `o`, and we open a new line,
-#      hitting o O from normal mode
+#      same thing if 'formatoptions' contains the flag `o`, and we open
+#      a new line, hitting o O from normal mode
 #
-#    - if 'fo' contains the flag `c`, Vim automatically wraps a long
-#      commented line; when it breaks the current line, and open a new
-#      one, it must know what to prepend at the beginning
+#    - if 'formatoptions' contains the flag `c`, Vim automatically wraps
+#      a long commented line; when it breaks the current line, and open
+#      a new one, it must know what to prepend at the beginning
 #
 #    - when we format a comment with the `gw` operator, Vim needs to know
 #      what the comment leader is, to be able to remove / add it when it
@@ -184,13 +184,13 @@ setl com=fbn:-,fb:*,fb:+
 # We can make Vim recognize multi-line ones too.
 # Doing so lets us format them with `gw`.
 #}}}
-# Don't confuse 'com' with 'cms'.{{{
+# Don't confuse 'comments' with 'commentstring'.{{{
 #
-# `'cms'` is just a template used by  folding commands (ex: `zf`) when they have
-# to (un)comment a  marker which they need to add/remove  on the starting/ending
-# line of a fold.
-# We often use it to infer what a comment looks like, because it's easier than
-# parsing 'com', but that's it.
+# `'commentstring'` is just a template used  by folding commands (e.g.: `zf`) when
+# they  have to  (un)comment  a marker  which  they need  to  add/remove on  the
+# starting/ending line of a fold.
+# We often use it  to infer what a comment looks like,  because it's easier than
+# parsing 'comments', but that's it.
 #
 #             ┌ %s is replaced by "{{_{ and "}}_}  at the end of resp.
 #             │ the starting line of the fold and the ending line of the fold
@@ -208,12 +208,12 @@ setl com=fbn:-,fb:*,fb:+
 # If we type this line in a markdown buffer, or if it has already been typed and
 # we press `gwip`:
 #
-# Without the `f` flag and with `&l:tw = 80`, we get:
+# Without the `f` flag and with `&l:textwidth = 80`, we get:
 #
 #     - some very long comment some very long comment some very long comment some
 #     - very long comment
 #
-# With the `f` flag and `&l:tw = 80`, we get:
+# With the `f` flag and `&l:textwidth = 80`, we get:
 #
 #     - some very long comment some very long comment some very long comment some
 #       very long comment
@@ -273,12 +273,12 @@ augroup MarkdownWindowSettings
     au! * <buffer>
     # Why `#compute()`?{{{
     #
-    # `vim-fold`  automatically  resets the  value  of  `'fde'` from  `expr`  to
+    # `vim-fold` automatically resets  the value of `'foldexpr'`  from `expr` to
     # `manual`, because the latter is less costly.
     # But  it does  so only  on `FileType`;  the next  `BufWinEnter` will  reset
-    # `'fde'` again from `manual` to `expr`.
+    # `'foldexpr'` again from `manual` to `expr`.
     #
-    # So, we need to reset `'fde'` *again*:
+    # So, we need to reset `'foldexpr'` *again*:
     #
     #     expr → manual → expr → manual
     #     │      │        │      │
@@ -291,29 +291,29 @@ augroup MarkdownWindowSettings
         | sil! fold#lazy#compute(false)
 augroup END
 
-# fp  tw {{{2
+# formatprg  textwidth {{{2
 
-setl tw=80
+&l:textwidth = 80
 
 # We want `gq` to use par in a markdown buffer.
-&l:fp = 'par -w' .. &l:tw .. 'rjeq'
+&l:formatprg = 'par -w' .. &l:textwidth .. 'rjeq'
 
-# kp {{{2
+# keywordprg {{{2
 
 if afile =~ '/wiki/vim/'
-    setl kp=:help
+    &l:keywordprg = ':help'
 else
-    setl kp=:Man
+    &l:keywordprg = ':Man'
 endif
 
-# spl {{{2
+# spelllang {{{2
 
-setl spl=en
+&l:spelllang = 'en'
 
 # wrap {{{2
 
 # It's nice to have when we're reading the wiki of a github project.
-setl wrap
+&l:wrap = true
 # }}}1
 # Variables {{{1
 # cr_command {{{2

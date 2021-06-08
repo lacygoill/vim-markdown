@@ -17,10 +17,10 @@ def markdown#check#punctuation( #{{{1
     endif
 
     view = winsaveview()
-    var fen_save: bool = &l:fen
+    var foldenable_save: bool = &l:foldenable
     var winid: number = win_getid()
     var bufnr: number = bufnr('%')
-    &l:fen = false
+    &l:foldenable = false
 
     try
         # make sure any coordinating conjunction is preceded by a comma
@@ -63,7 +63,7 @@ def markdown#check#punctuation( #{{{1
             var tabnr: number
             var winnr: number
             [tabnr, winnr] = win_id2tabwin(winid)
-            settabwinvar(tabnr, winnr, '&fen', fen_save)
+            settabwinvar(tabnr, winnr, '&foldenable', foldenable_save)
         endif
         win_execute(winid, 'winrestview(view)')
     endtry

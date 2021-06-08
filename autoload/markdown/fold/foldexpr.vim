@@ -39,14 +39,15 @@ var loaded = true
 # }}}1
 
 def markdown#fold#foldexpr#toggle() #{{{1
-    &l:fde = &l:fde == 'markdown#fold#foldexpr#stacked()'
+    &l:foldexpr = &l:foldexpr == 'markdown#fold#foldexpr#stacked()'
         ? 'markdown#fold#foldexpr#nested()'
         : 'markdown#fold#foldexpr#stacked()'
     # Why?{{{
     #
-    # We set `'fdm'` to `manual` by default, because `expr` can be much more expensive.
-    # As a consequence, if we change  the value of `'fde'`, Vim won't re-compute
-    # the folds; we want it to; that's why we need to execute `#compute()`.
+    # We set `'foldmethod'`  to `manual` by default, because `expr`  can be much
+    # more expensive.  As a consequence, if we change the value of `'foldexpr'`,
+    # Vim won't  re-compute the  folds; we  want it  to; that's  why we  need to
+    # execute `#compute()`.
     #}}}
     sil! fold#lazy#compute(false)
 enddef
@@ -98,7 +99,7 @@ def markdown#fold#foldexpr#stacked(): string #{{{1
     # Run this shell command:
     #
     #     $ vim -Nu <(cat <<'EOF'
-    #         setl fdm=expr fde=HeadingDepth(v:lnum)>0?'>1':'1' debug=throw
+    #         setl foldmethod=expr foldexpr=HeadingDepth(v:lnum)>0?'>1':'1' debug=throw
     #         def HeadingDepth(lnum: number): number
     #             var level: number = getline(lnum)->matchend('^#\{1,6}')
     #             if level == -1
@@ -139,8 +140,8 @@ def markdown#fold#foldexpr#stacked(): string #{{{1
     #}}}
     #     But doesn't it make the performance worse?{{{
     #
-    # No, because – in  big enough files – as soon as Vim  creates the folds, we
-    # reset `'fdm'` to `manual` which is less costly.
+    # No, because – in big enough files  – as soon as Vim creates the folds,
+    # we reset `'foldmethod'` to `manual` which is less costly.
     #}}}
     return markdown#fold#foldexpr#headingDepth(v:lnum) > 0 ? '>1' : '='
 enddef

@@ -8,7 +8,7 @@ var how: string
 # Interface {{{1
 def markdown#fold#promote#setup(arg_how: string): string #{{{2
     how = arg_how
-    &opfunc = expand('<SID>') .. 'Do'
+    &operatorfunc = expand('<SID>') .. 'Do'
     return 'g@'
 enddef
 #}}}1

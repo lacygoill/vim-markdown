@@ -18,18 +18,18 @@ def markdown#linkInline2ref#main() #{{{2
         syn enable
     endif
 
-    var fen_save: bool = &l:fen
+    var foldenable_save: bool = &l:foldenable
     var winid: number = win_getid()
     var bufnr: number = bufnr('%')
-    &l:fen = false
+    &l:foldenable = false
 
     try
         # Make sure syntax highlighting is enabled.
         # `:argdo`, `:bufdo`, ... could disable it (e.g. `:argdo LinkInline2Ref`).
-        var ei_save: string = &ei
-        &ei = ''
+        var eventignore_save: string = &eventignore
+        &eventignore = ''
         do Syntax
-        &ei = ei_save
+        &eventignore = eventignore_save
 
         # We're going to inspect the syntax highlighting under the cursor.
         # Sometimes, it's wrong.
@@ -61,7 +61,7 @@ def markdown#linkInline2ref#main() #{{{2
             var tabnr: number
             var winnr: number
             [tabnr, winnr] = win_id2tabwin(winid)
-            settabwinvar(tabnr, winnr, '&fen', fen_save)
+            settabwinvar(tabnr, winnr, '&foldenable', foldenable_save)
         endif
         if !syntax_was_enabled
             syn off
