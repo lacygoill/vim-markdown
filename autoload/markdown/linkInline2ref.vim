@@ -132,7 +132,7 @@ def PopulateReferenceSection(id2url: dict<string>) #{{{2
     if search('^\[\d\+]:') == 0
         norm! G
     endif
-    sil keepj keepp :.,$g/^\[\d\+]:/d _
+    sil keepj keepp :.,$ g/^\[\d\+]:/d _
     # Why don't you simply use `n` as the second argument of `sort()`, to get a numerical sort?{{{
     #
     # From `:h sort()`:
@@ -146,7 +146,7 @@ def PopulateReferenceSection(id2url: dict<string>) #{{{2
         ->sort((a: string, b: string): number =>
                 a->matchstr('\d\+')->str2nr() - b->matchstr('\d\+')->str2nr())
     append('.', lines)
-    exe 'sil keepj keepp :%s/^' .. REF_SECTION .. '\n\n\zs\n//e'
+    exe 'sil keepj keepp :% s/^' .. REF_SECTION .. '\n\n\zs\n//e'
 enddef
 # }}}1
 # Util {{{1
