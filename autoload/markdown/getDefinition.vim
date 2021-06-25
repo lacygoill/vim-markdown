@@ -11,7 +11,8 @@ def markdown#getDefinition#main()
     else
         word = expand('<cWORD>')
     endif
-    word = word->substitute('[“(]\|[”)].*\|[.?s]\{,2}$', '', 'g')
+    word = word
+        ->substitute('[“(]\|[”)].*\|[.?s]\{,2}$', '', 'g')
     var fname: string = expand('%:p:t')
     if fname != 'glossary.md'
         var cwd: string = getcwd()

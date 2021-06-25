@@ -115,7 +115,7 @@ sil! repmap#make#repeatable({
     ]})
 
 nno <buffer><nowait> gd <cmd>call markdown#getDefinition#main()<cr>
-xno <buffer><nowait> gd <cmd>call markdown#getDefinition#main('vis')<cr>
+xno <buffer><nowait> gd <c-\><c-n><cmd>call markdown#getDefinition#main()<cr>
 nno <buffer><nowait> gl <cmd>call markdown#fold#howMany#print()<cr>
 
 nno <buffer><nowait> +[# <cmd>call markdown#fold#put#main(v:false)<cr>
