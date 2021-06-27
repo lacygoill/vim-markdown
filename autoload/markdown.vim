@@ -34,11 +34,6 @@ def markdown#highlightLanguages() #{{{2
         if empty(filetype)
             continue
         endif
-        # Let the Vim9 syntax plugin know that we want it to be sourced no matter what.
-        # I.e. this should let us bypass its initial guard.
-        if delim == 'vim9'
-            b:embedded_vim9_block = true
-        endif
 
         # Warning: do *not* use a different prefix than `markdownHighlight` in the cluster name{{{
         #
@@ -104,7 +99,7 @@ def markdown#highlightLanguages() #{{{2
         # If more than one language is embedded, the next time that we run
         # `:syn include`, the resulting cluster will contain nothing.
         #}}}
-        unlet! b:current_syntax b:embedded_vim9_block
+        unlet! b:current_syntax
 
         # Note that the name of the region is identical to the name of the cluster:{{{
         #
@@ -308,16 +303,13 @@ def markdown#fixFencedCodeBlock() #{{{2
 enddef
 # }}}1
 # Utilities {{{1
-def GetFiletype(delim: string): string #{{{2
-    if delim == 'vim9'
-        return 'vim'
-    endif
-    if filereadable($VIMRUNTIME .. '/syntax/' .. delim .. '.vim')
-        return delim
+def GetFiletype(arg_filetype: string): string #{{{2
+    if filereadable($VIMRUNTIME .. '/syntax/' .. arg_filetype .. '.vim')
+        return arg_filetype
     else
         var filetype: string = execute('autocmd filetypedetect')
             ->split('\n')
-            ->filter((_, v: string): bool => v =~ '\C\*\.' .. delim .. '\>')
+            ->filter((_, v: string): bool => v =~ '\C\*\.' .. arg_filetype .. '\>')
             ->get(0, '')
             ->matchstr('\Csetf\%[iletype]\s*\zs\S*')
         if filereadable($VIMRUNTIME .. '/syntax/' .. filetype .. '.vim')
