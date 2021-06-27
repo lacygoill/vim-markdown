@@ -21,18 +21,23 @@ def markdown#highlightLanguages() #{{{2
         endif
         # We can't blindly rely on the delim:{{{
         #
-        #     " ✔
+        #     # ✔
         #     ```python
-        #     " here, we indeed want the python syntax plugin
+        #     # here, we indeed want the python syntax plugin
         #
-        #     " ✘
+        #     # ✘
         #     ```js
-        #     " there's no js syntax plugin
-        #     " we want the javascript syntax plugin
+        #     # there's no js syntax plugin
+        #     # we want the javascript syntax plugin
         #}}}
         var filetype: string = GetFiletype(delim)
         if empty(filetype)
             continue
+        endif
+        # Let the Vim9 syntax plugin know that we want it to be sourced no matter what.
+        # I.e. this should let us bypass its initial guard.
+        if delim == 'vim9'
+            b:embedded_vim9_block = true
         endif
 
         # Warning: do *not* use a different prefix than `markdownHighlight` in the cluster name{{{
@@ -99,7 +104,7 @@ def markdown#highlightLanguages() #{{{2
         # If more than one language is embedded, the next time that we run
         # `:syn include`, the resulting cluster will contain nothing.
         #}}}
-        unlet! b:current_syntax
+        unlet! b:current_syntax b:embedded_vim9_block
 
         # Note that the name of the region is identical to the name of the cluster:{{{
         #
@@ -303,13 +308,16 @@ def markdown#fixFencedCodeBlock() #{{{2
 enddef
 # }}}1
 # Utilities {{{1
-def GetFiletype(arg_filetype: string): string #{{{2
-    if filereadable($VIMRUNTIME .. '/syntax/' .. arg_filetype .. '.vim')
-        return arg_filetype
+def GetFiletype(delim: string): string #{{{2
+    if delim == 'vim9'
+        return 'vim'
+    endif
+    if filereadable($VIMRUNTIME .. '/syntax/' .. delim .. '.vim')
+        return delim
     else
         var filetype: string = execute('autocmd filetypedetect')
             ->split('\n')
-            ->filter((_, v: string): bool => v =~ '\C\*\.' .. arg_filetype .. '\>')
+            ->filter((_, v: string): bool => v =~ '\C\*\.' .. delim .. '\>')
             ->get(0, '')
             ->matchstr('\Csetf\%[iletype]\s*\zs\S*')
         if filereadable($VIMRUNTIME .. '/syntax/' .. filetype .. '.vim')

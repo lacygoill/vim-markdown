@@ -342,7 +342,7 @@ if search('^```\S\+', 'n') > 0
         ->filter((_, v: string): bool => v =~ '^```\S\+')
         ->sort()
         ->uniq()
-        ->map((_, v: string): string => v->matchstr('```\zs[a-z]\+'))
+        ->map((_, v: string): string => v->matchstr('```\zs\w\+'))
 endif
 
 # mc_chain {{{2
