@@ -24,9 +24,9 @@ enddef
 def Promote() #{{{2
     var range: string = ':' .. line("'[") .. ',' .. line("']")
     if how == 'more'
-        exe 'sil keepj keepp ' .. range .. 's/^\(#\+\)/\1#/e'
+        execute 'silent keepjumps keeppatterns ' .. range .. 'substitute/^\(#\+\)/\1#/e'
     else
-        exe 'sil keepj keepp ' .. range .. 's/^\(#\+\)#/\1/e'
+        execute 'silent keepjumps keeppatterns ' .. range .. 'substitute/^\(#\+\)#/\1/e'
     endif
 enddef
 

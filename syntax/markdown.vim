@@ -88,13 +88,13 @@ endif
 # It may cause collapsed highlighting at large fenced code block.
 # In this case, set a larger value.
 # Note that setting a too large value may cause bad performance on highlighting.
-syn sync minlines=50
-syn case ignore
+syntax sync minlines=50
+syntax case ignore
 
-# fix spelling errors for text outside any syntax item (`:h :syn-spell`)
-syn spell toplevel
+# fix spelling errors for text outside any syntax item (`:help :syn-spell`)
+syntax spell toplevel
 
-syn cluster markdownSpanElements contains=
+syntax cluster markdownSpanElements contains=
     \markdownLinkText,
     \markdownItalic,
     \markdownBold,
@@ -104,10 +104,10 @@ syn cluster markdownSpanElements contains=
 
 # Header {{{1
 
-syn match markdownHeadingRule '^[=-]\+$' contained
+syntax match markdownHeadingRule '^[=-]\+$' contained
 
 # If you change the name of `Delimiter`, update `markdown#fix_wrong_headers()`.
-syn region markdownHeader
+syntax region markdownHeader
     \ matchgroup=Delimiter
     \ start=/^#\{1,6}#\@!/
     \ end=/$/
@@ -115,11 +115,11 @@ syn region markdownHeader
     \ oneline
     \ contains=@Spell,@markdownSpanElements,markdownAutomaticLink
 
-syn match markdownHeader
+syntax match markdownHeader
     \ /^.\+\n=\+$/
     \ contains=@Spell,@markdownSpanElements,markdownHeadingRule,markdownAutomaticLink
 
-syn match markdownHeader
+syntax match markdownHeader
     \ /^.\+\n-\+$/
     \ contains=@Spell,@markdownSpanElements,markdownHeadingRule,markdownAutomaticLink
 # }}}1
@@ -166,7 +166,7 @@ syn match markdownHeader
 #    - `markdownListItemBold`
 #    - `markdownListItemBoldItalic`
 #}}}
-syn region markdownItalic
+syntax region markdownItalic
     \ matchgroup=markdownItalicDelimiter
     \ start=/\*/
     \ end=/\*/
@@ -175,7 +175,7 @@ syn region markdownItalic
     \ contains=@Spell
     \ concealends
 
-syn region markdownHeaderItalic
+syntax region markdownHeaderItalic
     \ matchgroup=markdownItalicDelimiter
     \ start=/\*/
     \ end=/\*/
@@ -195,7 +195,7 @@ syn region markdownHeaderItalic
 # Shouldn't we use `_` instead of `*` to  avoid a conflict with `*` when used as
 # an item leader.
 #}}}
-syn region markdownListItemItalic
+syntax region markdownListItemItalic
     \ matchgroup=markdownItalicDelimiter
     \ start=/\*/
     \ end=/\*/
@@ -205,7 +205,7 @@ syn region markdownListItemItalic
     \ contains=@Spell
     \ concealends
 
-syn region markdownBlockquoteItalic
+syntax region markdownBlockquoteItalic
     \ matchgroup=markdownCodeDelimiter
     \ start=/\*/
     \ end=/\*/
@@ -216,7 +216,7 @@ syn region markdownBlockquoteItalic
 # }}}1
 #    Bold {{{1
 
-syn region markdownBold
+syntax region markdownBold
     \ matchgroup=markdownBoldDelimiter
     \ start=/\*\*/
     \ end=/\*\*/
@@ -225,7 +225,7 @@ syn region markdownBold
     \ contains=markdownItalic,@Spell
     \ concealends
 
-syn region markdownHeaderBold
+syntax region markdownHeaderBold
     \ matchgroup=markdownBoldDelimiter
     \ start=/\*\*/
     \ end=/\*\*/
@@ -236,7 +236,7 @@ syn region markdownHeaderBold
     \ containedin=markdownHeader
     \ concealends
 
-syn region markdownListItemBold
+syntax region markdownListItemBold
     \ matchgroup=markdownBoldDelimiter
     \ start=/\*\*/
     \ end=/\*\*/
@@ -247,7 +247,7 @@ syn region markdownListItemBold
     \ concealends
 
 # `markdownBlockquoteBold` must be defined *after* `markdownItalic`
-syn region markdownBlockquoteBold
+syntax region markdownBlockquoteBold
     \ matchgroup=markdownBoldDelimiter
     \ start=/\*\*/
     \ end=/\*\*/
@@ -258,7 +258,7 @@ syn region markdownBlockquoteBold
 # }}}1
 #    Bold+Italic {{{1
 
-syn region markdownBoldItalic
+syntax region markdownBoldItalic
     \ matchgroup=markdownBoldItalicDelimiter
     \ start=/\*\*\*/
     \ end=/\*\*\*/
@@ -267,7 +267,7 @@ syn region markdownBoldItalic
     \ contains=@Spell
     \ concealends
 
-syn region markdownHeaderBoldItalic
+syntax region markdownHeaderBoldItalic
     \ matchgroup=markdownBoldItalicDelimiter
     \ start=/\*\*\*/
     \ end=/\*\*\*/
@@ -278,7 +278,7 @@ syn region markdownHeaderBoldItalic
     \ contains=@Spell
     \ concealends
 
-syn region markdownListItemBoldItalic
+syntax region markdownListItemBoldItalic
     \ matchgroup=markdownBoldItalicDelimiter
     \ start=/\*\*\*/
     \ end=/\*\*\*/
@@ -288,7 +288,7 @@ syn region markdownListItemBoldItalic
     \ contains=@Spell
     \ concealends
 
-syn region markdownBlockquoteBoldItalic
+syntax region markdownBlockquoteBoldItalic
     \ matchgroup=markdownBoldItalicDelimiter
     \ start=/\*\*\*/
     \ end=/\*\*\*/
@@ -309,7 +309,7 @@ syn region markdownBlockquoteBoldItalic
 # This is distracting.
 #}}}
 # If you change the name of `markdownCodeDelimiter`, update `./autoload/markdown.vim`.
-syn region markdownCodeSpan
+syntax region markdownCodeSpan
     \ matchgroup=markdownCodeDelimiter
     \ start=/\z(`\+\)/
     \ end=/\z1/
@@ -318,7 +318,7 @@ syn region markdownCodeSpan
     \ concealends
     \ oneline
 
-syn region markdownBlockquoteCodeSpan
+syntax region markdownBlockquoteCodeSpan
     \ matchgroup=markdownCodeDelimiter
     \ start=/\z(`\+\)/
     \ end=/\z1/
@@ -326,7 +326,7 @@ syn region markdownBlockquoteCodeSpan
     \ contained
     \ concealends
 
-syn region markdownListItemCodeSpan
+syntax region markdownListItemCodeSpan
     \ matchgroup=markdownCodeDelimiter
     \ start=/\z(`\+\)/
     \ end=/\z1/
@@ -341,13 +341,13 @@ syn region markdownListItemCodeSpan
 # Why `contains=@Spell`?{{{
 #
 # When we enable `'spell'`, errors aren't highlighted inside a code block.
-# So we add the @Spell cluster.  See `:h spell-syntax`
+# So we add the @Spell cluster.  See `:help spell-syntax`
 #}}}
 # Do *not* define a codeblock as a region!{{{
 #
 # Like this for example:
 #
-#     syn region markdownCodeBlock
+#     syntax region markdownCodeBlock
 #         \ start=/^    \|^\t/
 #         \ end=/$/
 #         \ contains=@Spell
@@ -356,7 +356,7 @@ syn region markdownListItemCodeSpan
 # It would prevent a codeblock inside a hidden answer from being hidden when the
 # conceal is enabled.
 #}}}
-syn match markdownCodeBlock
+syntax match markdownCodeBlock
     \ /^\%(    \|^\t\).*$/
     \ contains=@Spell
     \ keepend
@@ -365,7 +365,7 @@ syn match markdownCodeBlock
 #
 # For your notes to be readable on github, you need at least 9 spaces.
 #}}}
-syn region markdownListItemCodeBlock
+syntax region markdownListItemCodeBlock
     \ start=/^         \|^\t\t/
     \ end=/$/
     \ contained
@@ -408,7 +408,7 @@ syn region markdownListItemCodeBlock
 # By  adding `\S*`,  we make  sure that  an unrecognized  embedded codeblock  is
 # highlighted like a regular fenced codeblock, which fixes this issue.
 #}}}
-syn region markdownFencedCodeBlock
+syntax region markdownFencedCodeBlock
     \ matchgroup=markdownCodeDelimiter
     \ start=/^```\S*\s*$/
     \ end=/^```\ze\s*$/
@@ -418,7 +418,7 @@ syn region markdownFencedCodeBlock
 
 # Blockquote {{{1
 
-syn cluster markdownBlockquoteSpanElements contains=
+syntax cluster markdownBlockquoteSpanElements contains=
     \markdownBlockquoteItalic,
     \markdownBlockquoteBold,
     \markdownBlockquoteBoldItalic,
@@ -442,23 +442,23 @@ syn cluster markdownBlockquoteSpanElements contains=
 # `keepend`  prevents a  possible broken  contained region  from being  extended
 # outside the initial containing region.
 #}}}
-syn match markdownBlockquote
+syntax match markdownBlockquote
     \ /^ \{,3}>\+\%(\s.*\|$\)/
     \ contains=@Spell,@markdownBlockquoteSpanElements,markdownBlockquoteLeadingChar
     \ keepend
 
-syn match markdownBlockquoteLeadingChar
+syntax match markdownBlockquoteLeadingChar
     \ /\%(^ \{,3}\)\@3<=>\+\s\=/
     \ contained
     \ conceal
 
-syn match markdownListItemBlockquote
+syntax match markdownListItemBlockquote
     \ /^ \{4}>\+\%(\s.*\|$\)/
     \ contained
     \ contains=@markdownBlockquoteSpanElements,markdownListItemBlockquoteLeadingChar
     \ keepend
 
-syn match markdownListItemBlockquoteLeadingChar
+syntax match markdownListItemBlockquoteLeadingChar
     \ /\%(^ \{4}\)\@4<=>\+\s\=/
     \ contained
     \ conceal
@@ -468,8 +468,8 @@ syn match markdownListItemBlockquoteLeadingChar
 
 # A horizontal rule must contain at least 3 asterisks or hyphens.
 # They may be separated by whitespace.
-syn match markdownRule '^\* *\* *\*[ *]*$'
-syn match markdownRule '^- *- *-[ -]*$'
+syntax match markdownRule '^\* *\* *\*[ *]*$'
+syntax match markdownRule '^- *- *-[ -]*$'
 # }}}1
 
 # List Item {{{1
@@ -494,7 +494,7 @@ syn match markdownRule '^- *- *-[ -]*$'
 # item; I prefer they keep their original highlighting.
 # For this to happen, we need to include `UrlDelimiter` and `AutomaticLink`.
 #}}}
-syn cluster markdownListItemElements contains=
+syntax cluster markdownListItemElements contains=
     \markdownLinkText,
     \markdownListItemItalic,
     \markdownListItemBold,
@@ -548,7 +548,7 @@ syn cluster markdownListItemElements contains=
 # When that  happens, the codeblock is  wrongly highlighted as a  list item.  It
 # can mess up the highlighting of the rest of the buffer.
 #}}}
-syn region markdownListItem
+syntax region markdownListItem
     \ start=/^ \{,3\}\%([-*+]\|\d\+\.\)\s\+\S/
     \ end=/^\s*\n\ze \{,3}\S\|\n\ze\s*```\s*$/
     \ keepend
@@ -561,25 +561,25 @@ syn region markdownListItem
 # at the end of the lines.
 
 # vaguely inspired from `helpHeader`
-syn match markdownOutput
+syntax match markdownOutput
     \ /^.*˜$/
     \ contained
     \ containedin=markdownCodeBlock
     \ nextgroup=markdownIgnore
 
-syn match markdownIgnore
+syntax match markdownIgnore
     \ /.$/
     \ contained
     \ containedin=markdownOutput
     \ conceal
 
-syn match markdownListItemOutput
+syntax match markdownListItemOutput
     \ /^.*˜$/
     \ contained
     \ containedin=markdownListItemCodeBlock
     \ nextgroup=markdownListItemIgnore
 
-syn match markdownListItemIgnore
+syntax match markdownListItemIgnore
     \ /.$/
     \ contained
     \ containedin=markdownListItemOutput
@@ -601,10 +601,10 @@ syn match markdownListItemIgnore
 #}}}
 #    How could I use implement it?{{{
 #
-#     syn match markdownHideAnswer '<details>\n\=<summary>' conceal containedin=markdownCodeBlock
-#     syn region markdownShowAnswer matchgroup=Ignore start='</summary>' end='</details>' conceal containedin=markdownCodeBlock
-#     hi def link markdownHideAnswer Ignore
-#     hi def link markdownShowAnswer PreProc
+#     syntax match markdownHideAnswer '<details>\n\=<summary>' conceal containedin=markdownCodeBlock
+#     syntax region markdownShowAnswer matchgroup=Ignore start='</summary>' end='</details>' conceal containedin=markdownCodeBlock
+#     highlight def link markdownHideAnswer Ignore
+#     highlight def link markdownShowAnswer PreProc
 #}}}
 #    Why don't you use it?{{{
 #
@@ -621,7 +621,7 @@ syn match markdownListItemIgnore
 #    - use `<details>`
 #    - use `↣ ↢`
 #}}}
-syn region markdownHideAnswer
+syntax region markdownHideAnswer
     \ start=/^↣/
     \ end=/^↢.*/
     \ conceal
@@ -630,7 +630,7 @@ syn region markdownHideAnswer
     \ containedin=markdownCodeBlock
     \ keepend
 
-syn match markdownHideAnswer
+syntax match markdownHideAnswer
     \ /↣.\{-}↢/
     \ conceal
     \ cchar=?
@@ -638,7 +638,7 @@ syn match markdownHideAnswer
     \ containedin=markdownCodeBlock
 # }}}1
 
-syn region markdownIdDeclaration
+syntax region markdownIdDeclaration
     \ matchgroup=markdownLinkDelimiter
     \ start=/^ \{,3\}!\=\[/
     \ end=/\]:/
@@ -647,12 +647,12 @@ syn region markdownIdDeclaration
     \ nextgroup=markdownUrl
     \ skipwhite
 
-syn match markdownUrl /\S\+/
+syntax match markdownUrl /\S\+/
     \ nextgroup=markdownLinkRefTitle
     \ skipwhite
     \ contained
 
-syn region markdownUrl
+syntax region markdownUrl
     \ matchgroup=markdownUrlDelimiter
     \ start=/</
     \ end=/>/
@@ -664,7 +664,7 @@ syn region markdownUrl
 
 # in  addition to double  quotes, the official  spec supports single  quotes and
 # parentheses too
-syn region markdownLinkRefTitle
+syntax region markdownLinkRefTitle
     \ matchgroup=markdownUrlTitleDelimiter
     \ start=/"/
     \ end=/"/
@@ -697,7 +697,7 @@ syn region markdownLinkRefTitle
 # You would just see a bold word.
 # The same issue exists with any style contained in `markdownSpanElements`.
 #}}}
-exe 'syn region markdownLinkText'
+execute 'syntax region markdownLinkText'
     .. ' matchgroup=markdownLinkTextDelimiter'
     .. ' start=/!\=\[\ze\_[^]]*] \=[[(]/'
     .. ' end=/\]\ze \=[[(]/'
@@ -708,7 +708,7 @@ exe 'syn region markdownLinkText'
 
 # If  you  change the  name  the  items  beginning with  `markdownLink`,  update
 # `IsARealLink()` in `./autoload/markdown/link_inline2ref.vim`.
-syn region markdownLink
+syntax region markdownLink
     \ matchgroup=markdownLinkDelimiter
     \ start=/(/
     \ end=/)/
@@ -717,37 +717,37 @@ syn region markdownLink
     \ contained
     \ conceal
 
-syn region markdownId
+syntax region markdownId
     \ matchgroup=markdownIdDelimiter
     \ start=/\[/
     \ end=/\]/
     \ keepend
     \ contained
 
-syn region markdownAutomaticLink
+syntax region markdownAutomaticLink
     \ matchgroup=markdownUrlDelimiter
     \ start=/<\ze\w\+:\|[[:alnum:]_+-]\+@/
     \ end=/>/
     \ keepend
     \ oneline
 
-syn match markdownFootnote '\[^[^\]]\+\]'
-syn match markdownFootnoteDefinition '^\[^[^\]]\+\]:'
+syntax match markdownFootnote '\[^[^\]]\+\]'
+syntax match markdownFootnoteDefinition '^\[^[^\]]\+\]:'
 
-syn match markdownEscape '\\[][\\`*_{}()<>#+.!-]'
-syn match markdownError '\w\@1<=_\ze\w'
+syntax match markdownEscape '\\[][\\`*_{}()<>#+.!-]'
+syntax match markdownError '\w\@1<=_\ze\w'
 
 # If you try to exclude the comment leader with a positive lookbehind, make sure
 # it's not costly.  Last time I tried, it was.
-syn match markdownPointer '^\s\+\%(\%(#\|"\\\=\)\s*\)\=\%([v^✘✔-]\+\s*\)\+$'
-#                                     ├──────┘
-#                                     └ support a Vim commented line in a codeblock
-#                                       (for the optional backslash, see `:h line-continuation-comment`)
+syntax match markdownPointer '^\s\+\%(\%(#\|"\\\=\)\s*\)\=\%([v^✘✔-]\+\s*\)\+$'
+#                                        ├──────┘
+#                                        └ support a Vim commented line in a codeblock
+#                                          (for the optional backslash, see `:help line-continuation-comment`)
 # TODO: Should we get this comment leader programmatically?  If so, how?
 # And what  if we use  different comment leaders  because we write  in different
 # languages in the same document?
 
-exe 'syn match markdownTodo  /\CTO' .. 'DO\|FIX' .. 'ME/ contained'
+execute 'syntax match markdownTodo  /\CTO' .. 'DO\|FIX' .. 'ME/ contained'
 
 # If you change this regex, test the new syntax highlighting against this text:{{{
 #
@@ -821,7 +821,7 @@ exe 'syn match markdownTodo  /\CTO' .. 'DO\|FIX' .. 'ME/ contained'
 #    │      │ blockwise     │               │          │           │
 #    └──────┴───────────────┴───────────────┴──────────┴───────────┘
 #}}}
-exe 'syn match markdownTable '
+execute 'syntax match markdownTable '
     .. '/^ \{4,}\%('
     ..         '┌[─┬┼]\+[┤┐]'
     .. '\|' .. '└[─┴]\+┘'
@@ -830,7 +830,9 @@ exe 'syn match markdownTable '
     .. '\|' .. '│.*├.*┤'
     .. '\).*/'
 
-syn match markdownOption /`\@1<='[-a-z]\{2,}'\ze`/ contained containedin=markdownCodeSpan,markdownListItemCodeSpan
+syntax match markdownOption /`\@1<='[-a-z]\{2,}'\ze`/
+    \ contained
+    \ containedin=markdownCodeSpan,markdownListItemCodeSpan
 
 markdown#highlightLanguages()
 
@@ -848,32 +850,32 @@ markdown#highlightLanguages()
 # If we define  the latter here, our comments wouldn't  be correctly highlighted
 # as long as a markdown buffer hasn't been loaded.
 
-hi markdownItalic     term=italic      cterm=italic      gui=italic
-hi markdownBold       term=bold        cterm=bold        gui=bold
-hi markdownBoldItalic term=bold,italic cterm=bold,italic gui=bold,italic
+highlight markdownItalic     term=italic      cterm=italic      gui=italic
+highlight markdownBold       term=bold        cterm=bold        gui=bold
+highlight markdownBoldItalic term=bold,italic cterm=bold,italic gui=bold,italic
 
-hi def link markdownHeader                Title
-hi def link markdownHeaderItalic          TitleItalic
-hi def link markdownHeaderBold            TitleBold
-hi def link markdownHeaderBoldItalic      TitleBoldItalic
-hi def link markdownHeadingRule           markdownRule
+highlight def link markdownHeader                Title
+highlight def link markdownHeaderItalic          TitleItalic
+highlight def link markdownHeaderBold            TitleBold
+highlight def link markdownHeaderBoldItalic      TitleBoldItalic
+highlight def link markdownHeadingRule           markdownRule
 
-hi def link markdownFootnote              Typedef
-hi def link markdownFootnoteDefinition    Typedef
+highlight def link markdownFootnote              Typedef
+highlight def link markdownFootnoteDefinition    Typedef
 
-hi def link markdownId                    Type
-hi def link markdownAutomaticLink         markdownUrl
-hi def link markdownLinkRefTitle          String
-hi def link markdownIdDelimiter           markdownLinkDelimiter
-hi def link markdownUrlDelimiter          Function
-hi def link markdownUrlTitleDelimiter     Delimiter
+highlight def link markdownId                    Type
+highlight def link markdownAutomaticLink         markdownUrl
+highlight def link markdownLinkRefTitle          String
+highlight def link markdownIdDelimiter           markdownLinkDelimiter
+highlight def link markdownUrlDelimiter          Function
+highlight def link markdownUrlTitleDelimiter     Delimiter
 
-hi def link markdownItalicDelimiter       markdownItalic
-hi def link markdownBoldDelimiter         markdownBold
-hi def link markdownBoldItalicDelimiter   markdownBoldItalic
-hi def link markdownCodeDelimiter         Delimiter
+highlight def link markdownItalicDelimiter       markdownItalic
+highlight def link markdownBoldDelimiter         markdownBold
+highlight def link markdownBoldItalicDelimiter   markdownBoldItalic
+highlight def link markdownCodeDelimiter         Delimiter
 
-hi def link markdownEscape                Special
+highlight def link markdownEscape                Special
 # Why do you highlight some underscores as errors, and how to avoid them?{{{
 #
 # According  to tpope,  we should  always wrap a  word containing  an underscore
@@ -902,13 +904,13 @@ hi def link markdownEscape                Special
 #
 # But again, it doesn't work in titles.
 #}}}
-hi def link markdownError                 Error
+highlight def link markdownError                 Error
 
-hi def link markdownTodo                  Todo
-hi def link markdownOutput                PreProc
-hi def link markdownListItemOutput        markdownOutput
-hi def link markdownIgnore                Ignore
-hi def link markdownTable                 Structure
+highlight def link markdownTodo                  Todo
+highlight def link markdownOutput                PreProc
+highlight def link markdownListItemOutput        markdownOutput
+highlight def link markdownIgnore                Ignore
+highlight def link markdownTable                 Structure
 # }}}1
 
 b:current_syntax = 'markdown'

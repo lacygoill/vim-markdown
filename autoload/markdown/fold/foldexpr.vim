@@ -49,7 +49,7 @@ def markdown#fold#foldexpr#toggle() #{{{1
     # Vim won't  re-compute the  folds; we  want it  to; that's  why we  need to
     # execute `#compute()`.
     #}}}
-    sil! fold#lazy#compute(false)
+    silent! fold#lazy#compute(false)
 enddef
 #}}}1
 def markdown#fold#foldexpr#headingDepth(lnum: number): number #{{{1
@@ -99,7 +99,7 @@ def markdown#fold#foldexpr#stacked(): string #{{{1
     # Run this shell command:
     #
     #     $ vim -Nu <(cat <<'EOF'
-    #         setl foldmethod=expr foldexpr=HeadingDepth(v:lnum)>0?'>1':'1' debug=throw
+    #         setlocal foldmethod=expr foldexpr=HeadingDepth(v:lnum)>0?'>1':'1' debug=throw
     #         def HeadingDepth(lnum: number): number
     #             var level: number = getline(lnum)->matchend('^#\{1,6}')
     #             if level == -1
@@ -109,9 +109,9 @@ def markdown#fold#foldexpr#stacked(): string #{{{1
     #             endif
     #             return level
     #         enddef
-    #         ino <expr> <c-k> repeat('<del>', 300)
+    #         inoremap <expr> <C-K> repeat('<Del>', 300)
     #     EOF
-    #     ) +"%d | put='text' | norm! yy300pG300Ax" /tmp/md.md
+    #     ) +":% delete | put ='text' | normal! yy300pG300Ax" /tmp/md.md
     #
     # Vim starts up after about 2 seconds.
     # Next, press `I C-k`; Vim removes 300 characters after about 2 seconds.

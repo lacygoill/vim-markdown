@@ -13,7 +13,7 @@ def markdown#fold#sort#bySize(lnum1: number, lnum2: number) #{{{1
         return
     endif
 
-    # disable folding, because it could badly interfere when we move lines with `:m`
+    # disable folding, because it could badly interfere when we move lines with `:move`
     var foldenable_save: bool = &l:foldenable
     var winid: number = win_getid()
     var bufnr: number = bufnr('%')
@@ -76,7 +76,7 @@ def markdown#fold#sort#bySize(lnum1: number, lnum2: number) #{{{1
                 # if you find a previous fold which is bigger
                 if f.size > folds[-1]['size']
                     # move last fold above
-                    exe printf('sil :%d,%d m %d',
+                    execute printf('silent :%d,%d m %d',
                         folds[-1]['foldstart'],
                         folds[-1]['foldend'],
                         f.foldstart - 1)

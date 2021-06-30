@@ -35,22 +35,11 @@ def markdown#highlightLanguages() #{{{2
             continue
         endif
 
-        # Warning: do *not* use a different prefix than `markdownHighlight` in the cluster name{{{
-        #
-        # That's the  prefix used by the  default markdown plugin; as  a result,
-        # that's the one assumed by other default syntax plugins such as the zsh
-        # one:
-        #
-        # https://github.com/chrisbra/vim-zsh/blob/25c49bd61b8e82fd8f002c0ef21416d6550f79ea/syntax/zsh.vim#L22-L24
-        #
-        # If  you change  the prefix,  an embedded fenced  codeblock may  not be
-        # correctly highlighted.
-        #}}}
-        # What's the effect of `:syn include`?{{{
+        # What's the effect of `:syntax include`?{{{
         #
         # If you execute:
         #
-        #     syn include @markdownHighlightpython syntax/python.vim
+        #     syntax include @markdownHighlightpython syntax/python.vim
         #
         # 1. Vim will define all groups from  all python syntax plugins, but for
         # each of them, it will add the argument `contained`.
@@ -61,7 +50,7 @@ def markdown#highlightLanguages() #{{{2
         # Note that if `b:current_syntax` is set, Vim won't define the contained
         # python syntax groups; the cluster will be defined but contain nothing.
         #}}}
-        # `sil!` is necessary to suppress a possible E403 error.{{{
+        # `silent!` is necessary to suppress a possible E403 error.{{{
         #
         # To reproduce, write this text in `/tmp/md.md`:
         #
@@ -88,16 +77,40 @@ def markdown#highlightLanguages() #{{{2
         # causing Vim to include 2 syntax  plugins, each of which runs this kind
         # of command:
         #
-        #     syn sync linecount {pattern}
+        #     syntax sync linecount {pattern}
         #}}}
-        exe 'sil! syn include @markdownHighlight' .. filetype
+        # Warning: do *not* use a different prefix than `markdownHighlight` in the cluster name{{{
+        #
+        # That's the  prefix used by the  default markdown plugin; as  a result,
+        # that's the one assumed by other default syntax plugins such as the zsh
+        # one:
+        #
+        # https://github.com/chrisbra/vim-zsh/blob/25c49bd61b8e82fd8f002c0ef21416d6550f79ea/syntax/zsh.vim#L22-L24
+        #
+        # If  you change  the prefix,  an embedded fenced  codeblock may  not be
+        # correctly highlighted.
+        #}}}
+        # I have some wrong highlighting in a code block.  An item matches where it should not!{{{
+        #
+        # The  plugin  author  might  have forgotten  to  use  `contained`  when
+        # installing a rule.
+        #
+        # If an item  is missing "contained", *all* the rules  in the group will
+        # match  at the  toplevel of  a  fenced code  block.  Even  if they  are
+        # defined with "contained".
+        # That's because `:help syn-include` includes  any group for which there
+        # is at  least one  item matching  at the top  level, inside  the ad-hoc
+        # specified cluster.   The one that you  use later to define  the region
+        # highlighting a code block.
+        #}}}
+        execute 'silent! syntax include @markdownHighlight' .. filetype
             .. ' syntax/' .. filetype .. '.vim'
         # Why?{{{
         #
-        # The previous `:syn  include` has caused `b:current_syntax`  to bet set
-        # to the value stored in `filetype`.
-        # If more than one language is embedded, the next time that we run
-        # `:syn include`, the resulting cluster will contain nothing.
+        # The previous  `:syntax include`  has caused `b:current_syntax`  to bet
+        # set to the value stored in `filetype`.
+        # If  more than  one language  is embedded,  the next  time that  we run
+        # `:syntax include`, the resulting cluster will contain nothing.
         #}}}
         unlet! b:current_syntax
 
@@ -108,7 +121,7 @@ def markdown#highlightLanguages() #{{{2
         # But there's no conflict.
         # Probably because a cluster name is always prefixed by `@`.
         #}}}
-        exe 'syn region markdownHighlight' .. filetype
+        execute 'syntax region markdownHighlight' .. filetype
             .. ' matchgroup=markdownCodeDelimiter'
             .. ' start=/^\s*````*\s*' .. delim .. '\S\@!.*$/'
             .. ' end=/^\s*````*\ze\s*$/'
@@ -118,30 +131,30 @@ def markdown#highlightLanguages() #{{{2
         done_include[delim] = true
     endfor
     if !empty(delims)
-        syn sync ccomment markdownHeader
+        syntax sync ccomment markdownHeader
     endif
     # TODO: The previous line is necessary to fix an issue.  But is it the right fix?{{{
     #
     # Here is the issue:
     #
-    #     $ vim +"%d|pu=['# x', '', '\`\`\`vim']+repeat([''], 9)+['\`\`\`']+repeat([''], 109)+['# x', '', 'some text']" +x /tmp/md.md
-    #     $ vim +'norm! Gzo' /tmp/md.md
+    #     $ vim +":% delete | put =['# x', '', '\`\`\`vim']+repeat([''], 9)+['\`\`\`']+repeat([''], 109)+['# x', '', 'some text']" +exit /tmp/md.md
+    #     $ vim +'normal! Gzo' /tmp/md.md
     #
-    # Without the  previous `:syn sync`,  `some text` is wrongly  highlighted by
-    # `markdownFencedCodeBlock`.  Study `:h 44.10` then `:h :syn-sync`.
+    # Without the previous `:syntax sync`, `some text` is wrongly highlighted by
+    # `markdownFencedCodeBlock`.  Study `:help 44.10` then `:help :syn-sync`.
     #
     # ---
     #
-    # Note that whenever  we run a `:syn  include`, there is a risk  that it has
-    # changed how  the synchronization is  performed (by sourcing a  `:syn sync`
+    # Note that whenever we run a `:syntax include`, there is a risk that it has
+    # changed how the synchronization is performed (by sourcing a `:syntax sync`
     # directive).
     #
     # ---
     #
-    # Is there a risk that a `:syn include` resets a `:syn iskeyword`?
+    # Is there a risk that a `:syntax include` resets a `:syntax iskeyword`?
     # Or some other syntax-specific setting?
-    # If so, should  we try to save its value before  `:syn include` and restore
-    # it afterward?
+    # If  so, should  we try  to  save its  value before  `:syntax include`  and
+    # restore it afterward?
     #}}}
 enddef
 
@@ -195,11 +208,11 @@ def markdown#fixFormatting() #{{{2
     #     argdo Fix
     #
     # The syntax highlighting will be disabled.
-    # See `:h :bufdo`.
+    # See `:help :bufdo`.
     #}}}
     var eventignore_save: string = &eventignore
     &eventignore = ''
-    do Syntax
+    doautocmd Syntax
     &eventignore = eventignore_save
 
     cursor(1, 1)
@@ -241,8 +254,8 @@ def markdown#undoFtplugin() #{{{2
     set textwidth<
     set wrap<
     unlet! b:cr_command b:exchange_indent b:sandwich_recipes b:markdown_highlight b:mc_chain
-    sil! au! InstantMarkdown * <buffer>
-    sil! au! MarkdownWindowSettings * <buffer>
+    silent! autocmd! InstantMarkdown * <buffer>
+    silent! autocmd! MarkdownWindowSettings * <buffer>
 
     nunmap <buffer> cof
     nunmap <buffer> [of
@@ -262,12 +275,12 @@ def markdown#undoFtplugin() #{{{2
     xunmap <buffer> H
     xunmap <buffer> L
 
-    delc CheckPunctuation
-    delc CommitHash2Link
-    delc FixFormatting
-    delc FoldSortBySize
-    delc LinkInline2Ref
-    delc Preview
+    delcommand CheckPunctuation
+    delcommand CommitHash2Link
+    delcommand FixFormatting
+    delcommand FoldSortBySize
+    delcommand LinkInline2Ref
+    delcommand Preview
 enddef
 
 def markdown#hyphens2hashes(type = ''): string #{{{2
@@ -280,26 +293,26 @@ def markdown#hyphens2hashes(type = ''): string #{{{2
     if empty(hashes)
         return ''
     endif
-    exe 'sil ' .. range .. 's/^---/' .. hashes .. ' ?/e'
+    execute 'silent ' .. range .. 'substitute/^---/' .. hashes .. ' ?/e'
     return ''
 enddef
 
 def markdown#fixFencedCodeBlock() #{{{2
-    if execute('syn list @markdownHighlightvim', 'silent!') !~ 'markdownHighlightvim'
+    if execute('syntax list @markdownHighlightvim', 'silent!') !~ 'markdownHighlightvim'
         return
     endif
     # Why here?  Why not in our Vim syntax plugin?{{{
     #
     # Well, we do write  it in our Vim syntax plugin  too; it's indeed necessary
-    # for Vim files, but it's not enough for markdown files, because `syn clear`
+    # for Vim files, but it's not enough for markdown files, because `syntax clear`
     # is ignored when run from an included syntax file.
     #
-    # From `:h 44.9`:
+    # From `:help 44.9`:
     #
     #    > The `:syntax  include` command is  clever enough  to ignore a  `:syntax clear`
     #    > command in the included file.
     #}}}
-    syn clear vimUsrCmd
+    syntax clear vimUsrCmd
 enddef
 # }}}1
 # Utilities {{{1

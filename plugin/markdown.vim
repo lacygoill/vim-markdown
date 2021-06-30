@@ -7,7 +7,7 @@ var loaded = true
 # https://github.com/vim/vim/issues/6587 is fixed.
 
 # In a Vim9 script, don't highlight a custom Vim function (called without `:call`) with `vimUsrCmd`.
-augroup MarkdownFixFencedCodeBlock | au!
-    au Syntax markdown markdown#fixFencedCodeBlock()
+augroup MarkdownFixFencedCodeBlock | autocmd!
+    autocmd Syntax markdown markdown#fixFencedCodeBlock()
 augroup END
 

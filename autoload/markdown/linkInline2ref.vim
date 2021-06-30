@@ -15,7 +15,7 @@ def markdown#linkInline2ref#main() #{{{2
     var view: dict<number> = winsaveview()
     var syntax_was_enabled: bool = exists('g:syntax_on')
     if !syntax_was_enabled
-        syn enable
+        syntax enable
     endif
 
     var foldenable_save: bool = &l:foldenable
@@ -28,13 +28,13 @@ def markdown#linkInline2ref#main() #{{{2
         # `:argdo`, `:bufdo`, ... could disable it (e.g. `:argdo LinkInline2Ref`).
         var eventignore_save: string = &eventignore
         &eventignore = ''
-        do Syntax
+        doautocmd Syntax
         &eventignore = eventignore_save
 
         # We're going to inspect the syntax highlighting under the cursor.
         # Sometimes, it's wrong.
         # We must be sure it's correct.
-        syn sync fromstart
+        syntax sync fromstart
 
         # Make sure there's no link whose description span multiple lines.
         # Those kind of links are too difficult to handle.
@@ -44,7 +44,7 @@ def markdown#linkInline2ref#main() #{{{2
 
         if !MarkdownLinkSyntaxGroupExists()
             echohl ErrorMsg
-            echom 'The function relies on the syntax group ‘markdownLink’; but it doesn''t exist'
+            echomsg 'The function relies on the syntax group ‘markdownLink’; but it doesn''t exist'
             echohl NONE
             return
         endif
@@ -64,7 +64,7 @@ def markdown#linkInline2ref#main() #{{{2
             settabwinvar(tabnr, winnr, '&foldenable', foldenable_save)
         endif
         if !syntax_was_enabled
-            syn off
+            syntax off
         endif
         winrestview(view)
     endtry
@@ -110,9 +110,9 @@ def CreateReflinks(): dict<string> #{{{2
                 continue
             endif
             var url: string = GetUrl()
-            norm! %
+            normal! %
             var col_end: number = col('.')
-            norm! %
+            normal! %
             var new_line: string = line
                 ->substitute(
                     '\%' .. col .. 'c(.*\%' .. col_end .. 'c)',
@@ -130,12 +130,12 @@ enddef
 def PopulateReferenceSection(id2url: dict<string>) #{{{2
     search('^' .. REF_SECTION .. '$')
     if search('^\[\d\+]:') == 0
-        norm! G
+        normal! G
     endif
-    sil keepj keepp :.,$ g/^\[\d\+]:/d _
+    silent keepjumps keeppatterns :.,$ global/^\[\d\+]:/delete _
     # Why don't you simply use `n` as the second argument of `sort()`, to get a numerical sort?{{{
     #
-    # From `:h sort()`:
+    # From `:help sort()`:
     #
     #    > Implementation detail: This  uses the strtod() function  to parse numbers,
     #    > **Strings**, Lists, Dicts and Funcrefs **will be considered as being 0**.
@@ -146,7 +146,7 @@ def PopulateReferenceSection(id2url: dict<string>) #{{{2
         ->sort((a: string, b: string): number =>
                 a->matchstr('\d\+')->str2nr() - b->matchstr('\d\+')->str2nr())
     append('.', lines)
-    exe 'sil keepj keepp :% s/^' .. REF_SECTION .. '\n\n\zs\n//e'
+    execute 'silent keepjumps keeppatterns :% substitute/^' .. REF_SECTION .. '\n\n\zs\n//e'
 enddef
 # }}}1
 # Util {{{1
@@ -157,7 +157,7 @@ def GetUrl(id = 0): string #{{{2
         return line
             ->strpart(line->matchend(':\s*'))
     else
-        # Do *not* use `norm! %`!{{{
+        # Do *not* use `normal! %`!{{{
         #
         # It would make the cursor move, which could cause an issue.
         # Suppose there're two inline links on the same line.
@@ -176,7 +176,7 @@ def GetUrl(id = 0): string #{{{2
         # relative to the second link will  change, and it's possible that we're
         # now after its start; in that case, we'll miss it.
         #}}}
-        norm! v%y
+        normal! v%y
         return @"->substitute('^(\|)$\|\s', '', 'g')
     endif
 enddef
@@ -184,8 +184,8 @@ enddef
 def IdOutsideReferenceSection(): bool #{{{2
     var ref_section_lnum: number = search('^' .. REF_SECTION .. '$', 'n')
     if search('^\[\d\+]:', 'n', ref_section_lnum) > 0
-        exe 'sil lvim /^\[\d\+]:\%<' .. ref_section_lnum .. 'l/j %'
-        echom 'There are id declarations outside the Reference section'
+        execute 'silent lvimgrep /^\[\d\+]:\%<' .. ref_section_lnum .. 'l/j %'
+        echomsg 'There are id declarations outside the Reference section'
         setloclist(0, [], 'a', {title: 'move them inside or remove/edit them'})
         return true
     endif
@@ -213,7 +213,7 @@ enddef
 
 def MarkdownLinkSyntaxGroupExists(): bool #{{{2
     try
-        sil syn list markdownLink
+        silent syntax list markdownLink
     catch /^Vim\%((\a\+)\)\=:E28:/
         return false
     endtry
@@ -227,7 +227,7 @@ def MultiLineLinks(): bool #{{{2
     var g: number = 0 | while search(pat, flags) > 0 && g <= GUARD | ++g
         flags = 'W'
         if IsARealLink()
-            exe 'lvim /' .. pat .. '/gj %'
+            execute 'lvimgrep /' .. pat .. '/gj %'
             setloclist(0, [], 'a',
                 {title: 'some descriptions of links span multiple lines; make them mono-line'})
             return true

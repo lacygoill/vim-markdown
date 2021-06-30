@@ -23,8 +23,8 @@ def markdown#commitHash2link#main(...l: list<any>)
     var pgm: string = l[2]
 
     if pgm == ''
-        echom 'Need to provide the name of a program (e.g. tmux)'
-        echom 'Run ":CommitHash2Link" without arguments for more help'
+        echomsg 'Need to provide the name of a program (e.g. tmux)'
+        echomsg 'Run ":CommitHash2Link" without arguments for more help'
         return
     endif
 
@@ -33,12 +33,12 @@ def markdown#commitHash2link#main(...l: list<any>)
         tmux: 'https://github.com/tmux/tmux/commit/',
     }
     if !pgm2url->has_key(pgm)
-        echom 'CommitHash2Link: ' .. pgm .. ' is not supported'
+        echomsg 'CommitHash2Link: ' .. pgm .. ' is not supported'
         return
     endif
     var url: string = pgm2url[pgm]
     var range: string = ':' .. line1 .. ',' .. line2
-    exe range .. 's;\(\x\{7}\)\x\+;[`\1`](' .. url .. '&);e'
+    execute range .. 's;\(\x\{7}\)\x\+;[`\1`](' .. url .. '&);e'
 enddef
 
 def markdown#commitHash2link#completion(_, _, _): string

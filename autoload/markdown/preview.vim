@@ -12,7 +12,7 @@ var loaded = true
 #}}}
 const WEB_SERVER: string = $HOME .. '/Vcs/instant-markdown-d/instant-markdown-d'
 if !executable(WEB_SERVER)
-    echom 'cannot find the web server:   ' .. WEB_SERVER
+    echomsg 'cannot find the web server:   ' .. WEB_SERVER
 endif
 # If you have an issue, to debug it, you could change the assignment like this:{{{
 #
@@ -35,16 +35,16 @@ def Getlines(): list<string> #{{{1
 enddef
 
 def KillDaemon() #{{{1
-    #                 ┌ silent: don't show progress meter or error messages{{{
-    #                 │
-    #                 │  ┌ specifies  a custom  request method  to use
-    #                 │  │ when communicating with the HTTP server
-    #                 │  │
-    #                 │  │ The  specified request  method  will be  used
-    #                 │  │ instead of  the method otherwise  used (which
-    #                 │  │ defaults to GET).
-    #                 │  │}}}
-    sil system('curl -s -X DELETE http://localhost:8090 ' .. REDIRECTION)
+    silent system('curl'
+        # silent: don't show progress meter or error messages{{{
+        .. ' -s'
+        # Specifies a custom request method to use when communicating with the HTTP server.{{{
+        #
+        # The  specified request  method  will  be used  instead  of the  method
+        # otherwise used (which defaults to GET).
+        #}}}
+        .. ' -X'
+        .. ' DELETE http://localhost:8090 ' .. REDIRECTION)
     # What's the meaning of the `DELETE` method?{{{
     #
     #    > The DELETE method requests that  the origin server delete the resource
@@ -56,11 +56,11 @@ enddef
 
 def markdown#preview#main() #{{{1
     getline(1, '$')->StartDaemon()
-    aug InstantMarkdown
-        au! * <buffer>
-        au CursorHold,BufWrite,InsertLeave <buffer> Refresh()
-        au BufUnload <buffer> KillDaemon()
-    aug END
+    augroup InstantMarkdown
+        autocmd! * <buffer>
+        autocmd CursorHold,BufWrite,InsertLeave <buffer> Refresh()
+        autocmd BufUnload <buffer> KillDaemon()
+    augroup END
 enddef
 
 def Refresh() #{{{1
@@ -69,12 +69,12 @@ def Refresh() #{{{1
 
     elseif b:changedtick_last != b:changedtick
         b:changedtick_last = b:changedtick
-        sil system('curl -X PUT -T - http://localhost:8090 ' .. REDIRECTION, Getlines())
-        #                    │ │{{{
-        #                    │ └ use stdin instead of a given file
-        #                    │
-        #                    └ transfer the specified local file to the remote URL
-        # }}}
+        silent system('curl -X'
+            # transfer the specified local file to the remote URL
+            .. ' PUT'
+            # use stdin instead of a given file
+            .. ' -T'
+            .. ' - http://localhost:8090 ' .. REDIRECTION, Getlines())
     endif
 enddef
 
@@ -102,6 +102,6 @@ def StartDaemon(initial_lines: list<string>) #{{{1
     #}}}
     var env: string = 'INSTANT_MARKDOWN_ALLOW_UNSAFE_CONTENT=1'
     var cmd: string = env .. ' ' .. WEB_SERVER .. ' ' .. REDIRECTION
-    sil system(cmd, initial_lines)
+    silent system(cmd, initial_lines)
 enddef
 

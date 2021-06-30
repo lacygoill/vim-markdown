@@ -11,10 +11,10 @@ def markdown#fold#put#main(below = true) #{{{1
 
     if below
         append('.', ['', header, '', ''])
-        norm! 4j
+        normal! 4j
     else
         append(line('.') - 1, [header, '', '', ''])
-        norm! 2k
+        normal! 2k
     endif
     startinsert!
 enddef

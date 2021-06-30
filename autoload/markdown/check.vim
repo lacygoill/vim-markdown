@@ -10,7 +10,7 @@ def markdown#check#punctuation( #{{{1
 ): string
 
     if type == '-help'
-        h markdown-punctuation
+        help markdown-punctuation
         return ''
     elseif type != '-comma'
         return ''
@@ -57,7 +57,7 @@ def markdown#check#punctuation( #{{{1
             title: ':CheckPunctuation -comma',
             context: {populate: 'ldo s/\%#/,/c'}
         })
-        lw
+        lwindow
     finally
         if winbufnr(winid) == bufnr
             var tabnr: number

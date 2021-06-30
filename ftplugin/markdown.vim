@@ -15,10 +15,10 @@ endif
 #
 # You would need to consider the 3 possible naming schemes:
 #
-#     ru! ftplugin/html.vim ftplugin/html_*.vim ftplugin/html/*.vim
-#       │
-#       └ all of them
-#         (even if there are several ftplugin/html.vim in various directories of &runtimepath)
+#     runtime! ftplugin/html.vim ftplugin/html_*.vim ftplugin/html/*.vim
+#            │
+#            └ all of them
+#              (even if there are several ftplugin/html.vim in various directories of &runtimepath)
 #}}}
 # Why don't you source them?{{{
 #
@@ -66,19 +66,19 @@ endif
 
 # Commands {{{1
 
-com -bar -buffer -nargs=1 -range=% -complete=custom,markdown#check#punctuationComplete
+command -bar -buffer -nargs=1 -range=% -complete=custom,markdown#check#punctuationComplete
     \ CheckPunctuation echo markdown#check#punctuation(<q-args>, <line1>, <line2>)
     #                  │{{{
     #                  └ useful to erase the command from the command-line after its execution
     #}}}
 
-com -bar -buffer -nargs=? -range=% -complete=custom,markdown#commitHash2link#completion
+command -bar -buffer -nargs=? -range=% -complete=custom,markdown#commitHash2link#completion
     \ CommitHash2Link markdown#commitHash2link#main(<line1>, <line2>, <q-args>)
 
 # Warning: Don't call this command `:Fix`.  It wouldn't work as expected with `:argdo`.
-com -bar -buffer FixFormatting markdown#fixFormatting()
+command -bar -buffer FixFormatting markdown#fixFormatting()
 
-com -bar -buffer -range=% FoldSortBySize markdown#fold#sort#bySize(<line1>, <line2>)
+command -bar -buffer -range=% FoldSortBySize markdown#fold#sort#bySize(<line1>, <line2>)
 
 # Purpose: Convert inline link:{{{
 #
@@ -91,22 +91,22 @@ com -bar -buffer -range=% FoldSortBySize markdown#fold#sort#bySize(<line1>, <lin
 #     # Reference
 #     [ref]: link
 #}}}
-com -bar -buffer -range=% LinkInline2Ref markdown#linkInline2ref#main()
+command -bar -buffer -range=% LinkInline2Ref markdown#linkInline2ref#main()
 
-com -bar -buffer Preview markdown#preview#main()
+command -bar -buffer Preview markdown#preview#main()
 
 # Mappings {{{1
 
-nno <buffer><nowait> cof <cmd>call markdown#fold#foldexpr#toggle()<cr>
+nnoremap <buffer><nowait> cof <Cmd>call markdown#fold#foldexpr#toggle()<CR>
 # Increase/decrease  'foldlevel' when folds are nested.{{{
 #
 # Use it to quickly see the titles up to an arbitrary depth.
 # Useful  to get  an overview  of  the contents  of  the notes  of an  arbitrary
 # precision.
 #}}}
-nno <buffer><nowait> [of <cmd>call markdown#fold#option#foldlevel('less')<cr>
-nno <buffer><nowait> ]of <cmd>call markdown#fold#option#foldlevel('more')<cr>
-sil! repmap#make#repeatable({
+nnoremap <buffer><nowait> [of <Cmd>call markdown#fold#option#foldlevel('less')<CR>
+nnoremap <buffer><nowait> ]of <Cmd>call markdown#fold#option#foldlevel('more')<CR>
+silent! repmap#make#repeatable({
     mode: 'n',
     buffer: true,
     from: expand('<sfile>:p') .. ':' .. expand('<slnum>'),
@@ -114,20 +114,20 @@ sil! repmap#make#repeatable({
         {bwd: '[of', fwd: ']of'},
     ]})
 
-nno <buffer><nowait> gd <cmd>call markdown#getDefinition#main()<cr>
-xno <buffer><nowait> gd <c-\><c-n><cmd>call markdown#getDefinition#main()<cr>
-nno <buffer><nowait> gl <cmd>call markdown#fold#howMany#print()<cr>
+nnoremap <buffer><nowait> gd <Cmd>call markdown#getDefinition#main()<CR>
+xnoremap <buffer><nowait> gd <C-\><C-N><Cmd>call markdown#getDefinition#main()<CR>
+nnoremap <buffer><nowait> gl <Cmd>call markdown#fold#howMany#print()<CR>
 
-nno <buffer><nowait> +[# <cmd>call markdown#fold#put#main(v:false)<cr>
-nno <buffer><nowait> +]# <cmd>call markdown#fold#put#main()<cr>
+nnoremap <buffer><nowait> +[# <Cmd>call markdown#fold#put#main(v:false)<CR>
+nnoremap <buffer><nowait> +]# <Cmd>call markdown#fold#put#main()<CR>
 
-nno <buffer><expr><nowait> =rb sh#breakLongCmd()
-nno <buffer><expr><nowait> =r- markdown#hyphens2hashes()
-nno <buffer><expr><nowait> =r-- markdown#hyphens2hashes() .. '_'
-xno <buffer><expr><nowait> =r- markdown#hyphens2hashes()
+nnoremap <buffer><expr><nowait> =rb sh#breakLongCmd()
+nnoremap <buffer><expr><nowait> =r- markdown#hyphens2hashes()
+nnoremap <buffer><expr><nowait> =r-- markdown#hyphens2hashes() .. '_'
+xnoremap <buffer><expr><nowait> =r- markdown#hyphens2hashes()
 
-xno <buffer><expr><nowait> H markdown#fold#promote#setup('less')
-xno <buffer><expr><nowait> L markdown#fold#promote#setup('more')
+xnoremap <buffer><expr><nowait> H markdown#fold#promote#setup('less')
+xnoremap <buffer><expr><nowait> L markdown#fold#promote#setup('more')
 
 # Options {{{1
 var afile: string = expand('<afile>:p')
@@ -270,7 +270,7 @@ endtry
 markdown#window#settings()
 
 augroup MarkdownWindowSettings
-    au! * <buffer>
+    autocmd! * <buffer>
     # Why `#compute()`?{{{
     #
     # `vim-fold` automatically resets  the value of `'foldexpr'`  from `expr` to
@@ -287,8 +287,8 @@ augroup MarkdownWindowSettings
     #     │      └ vim-fold on FileType *
     #     └ our ftplugin on FileType markdown
     #}}}
-    au BufWinEnter,FileChangedShellPost <buffer> markdown#window#settings()
-        | sil! fold#lazy#compute(false)
+    autocmd BufWinEnter,FileChangedShellPost <buffer> markdown#window#settings()
+        | silent! fold#lazy#compute(false)
 augroup END
 
 # formatprg  textwidth {{{2
@@ -321,13 +321,13 @@ endif
 # When we hit `CR`, we want the cursor to move on the 100th column.
 # By default, it moves on the 80th column.
 
-const b:cr_command = 'norm! 100|'
+const b:cr_command = 'normal! 100|'
 
 # exchange_indent {{{2
 
 # We've set up `vim-exchange` to re-indent linewise exchanges with `==`.
 # But we don't want that for markdown buffers.
-# For more info: `:h g:exchange_indent`.
+# For more info: `:help g:exchange_indent`.
 
 const b:exchange_indent = ''
 
@@ -359,7 +359,7 @@ b:mc_chain =<< trim END
     keyn
     ulti
     abbr
-    c-n
+    C-n
     dict
 END
 
@@ -371,9 +371,9 @@ b:sandwich_recipes = get(g:, 'sandwich#recipes', get(g:, 'sandwich#default_recip
         buns: ['↣ ', ' ↢'],
         input: ['c'],
         command: [
-            "']mark z",
-            "keepj keepp '[s/^\\s*↣\\s*$/↣/e",
-            "keepj keepp 'zs/^\\s*↢\\s*$/↢/e",
+            ":'] mark z",
+            "keepjumps keeppatterns :'[ substitute/^\\s*↣\\s*$/↣/e",
+            "keepjumps keeppatterns :'z substitute/^\\s*↢\\s*$/↢/e",
     ]}]
 
 # did_ftplugin {{{2
@@ -384,6 +384,6 @@ b:did_ftplugin = 1
 # }}}1
 # Teardown {{{1
 
-b:undo_ftplugin = get(b:, 'undo_ftplugin', 'exe')
+b:undo_ftplugin = get(b:, 'undo_ftplugin', 'execute')
     .. '| call markdown#undoFtplugin()'
 

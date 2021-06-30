@@ -5,8 +5,8 @@ var loaded = true
 
 def markdown#getDefinition#main()
     var word: string
-    if mode() =~ "^[vV\<c-v>]$"
-        norm! gvy
+    if mode() =~ "^[vV\<C-V>]$"
+        normal! gvy
         word = @"
     else
         word = expand('<cWORD>')
@@ -16,7 +16,7 @@ def markdown#getDefinition#main()
     var fname: string = expand('%:p:t')
     if fname != 'glossary.md'
         var cwd: string = getcwd()
-        exe 'sp ' .. cwd .. '/glossary.md'
+        execute 'split ' .. cwd .. '/glossary.md'
     endif
     var pat: string = '^#.*\c\V' .. escape(word, '\')
     var items: list<dict<any>> = getline(1, '$')
@@ -24,9 +24,9 @@ def markdown#getDefinition#main()
                     ({bufnr: bufnr('%'), lnum: i + 1, text: v}))
         ->filter((_, v: dict<any>): bool => v.text =~ pat)
     if empty(items)
-        echom 'no definition for ' .. word
+        echomsg 'no definition for ' .. word
         if fname != 'glossary.md'
-            q
+            quit
         endif
         return
     else
@@ -34,10 +34,10 @@ def markdown#getDefinition#main()
         redraw!
     endif
     setloclist(0, [], ' ', {items: items, title: word})
-    lw
+    lwindow
     if &filetype == 'qf'
         lfirst
-        norm! zMzvzz
+        normal! zMzvzz
     endif
 enddef
 
