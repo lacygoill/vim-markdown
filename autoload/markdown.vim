@@ -1,8 +1,5 @@
 vim9script noclear
 
-if exists('loaded') | finish | endif
-var loaded = true
-
 # Interface {{{1
 def markdown#highlightLanguages() #{{{2
     # What's the purpose of this `for` loop?{{{
@@ -135,9 +132,20 @@ def markdown#highlightLanguages() #{{{2
     endif
     # TODO: The previous line is necessary to fix an issue.  But is it the right fix?{{{
     #
-    # Here is the issue:
+    # Here is the issue.
     #
-    #     $ vim +":% delete | put =['# x', '', '\`\`\`vim']+repeat([''], 9)+['\`\`\`']+repeat([''], 109)+['# x', '', 'some text']" +exit /tmp/md.md
+    # Run this to generate test file `/tmp/md.md`:
+    #
+    #     var lines = ['# x', '', '```vim']
+    #     +   repeat([''], 9)
+    #     +   ['```']
+    #     +   repeat([''], 109)
+    #     +   ['# x', '', 'some text']
+    #     lines->writefile('/tmp/md.md')
+    #     exit
+    #
+    # Now, start Vim like this:
+    #
     #     $ vim +'normal! Gzo' /tmp/md.md
     #
     # Without the previous `:syntax sync`, `some text` is wrongly highlighted by

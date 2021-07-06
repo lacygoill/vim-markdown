@@ -1,8 +1,5 @@
 vim9script noclear
 
-if exists('loaded') | finish | endif
-var loaded = true
-
 def markdown#fold#put#main(below = true) #{{{1
     var header: string = search('^#', 'bnW')->getline()->matchstr('^#\+')
     if header == ''

@@ -1,8 +1,5 @@
 vim9script noclear
 
-if exists('loaded') | finish | endif
-var loaded = true
-
 # Old but can still be useful {{{1
 #     def HasSurroundingFencemarks(lnum: number): bool {{{2
 #         var pos: list<number> = [line('.'), col('.')]
@@ -98,20 +95,24 @@ def markdown#fold#foldexpr#stacked(): string #{{{1
     #
     # Run this shell command:
     #
-    #     $ vim -Nu <(cat <<'EOF'
-    #         setlocal foldmethod=expr foldexpr=HeadingDepth(v:lnum)>0?'>1':'1' debug=throw
-    #         def HeadingDepth(lnum: number): number
-    #             var level: number = getline(lnum)->matchend('^#\{1,6}')
-    #             if level == -1
-    #                 if getline(lnum + 1) =~ '^=\+\s*$'
-    #                     level = 1
-    #                 endif
+    #     setlocal foldmethod=expr foldexpr=FoldExpr() debug=throw
+    #     def g:FoldExpr(): string
+    #         return HeadingDepth(v:lnum) > 0 ? '>1' : '='
+    #         #                                         ^
+    #     enddef
+    #     def HeadingDepth(lnum: number): number
+    #         var level: number = getline(lnum)->matchend('^#\{1,6}')
+    #         if level == -1
+    #             if getline(lnum + 1) =~ '^=\+\s*$'
+    #                 level = 1
     #             endif
-    #             return level
-    #         enddef
-    #         inoremap <expr> <C-K> repeat('<Del>', 300)
-    #     EOF
-    #     ) +":% delete | put ='text' | normal! yy300pG300Ax" /tmp/md.md
+    #         endif
+    #         return level
+    #     enddef
+    #     inoremap <expr> <C-K> repeat('<Del>', 300)
+    #     :% delete
+    #     'text'->setline(1)
+    #     normal! yy300pG300Ax
     #
     # Vim starts up after about 2 seconds.
     # Next, press `I C-k`; Vim removes 300 characters after about 2 seconds.

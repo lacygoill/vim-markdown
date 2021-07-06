@@ -1,8 +1,5 @@
 vim9script noclear
 
-if exists('loaded') | finish | endif
-var loaded = true
-
 def markdown#commitHash2link#main(...l: list<any>)
     if l[0] == 1 && l[1] == line('$') && l[2] == ''
         var help: list<string> =<< trim END
@@ -38,7 +35,7 @@ def markdown#commitHash2link#main(...l: list<any>)
     endif
     var url: string = pgm2url[pgm]
     var range: string = ':' .. line1 .. ',' .. line2
-    execute range .. 's;\(\x\{7}\)\x\+;[`\1`](' .. url .. '&);e'
+    execute range .. ' substitute;\(\x\{7}\)\x\+;[`\1`](' .. url .. '&);e'
 enddef
 
 def markdown#commitHash2link#completion(_, _, _): string

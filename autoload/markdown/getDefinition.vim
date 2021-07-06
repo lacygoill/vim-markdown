@@ -1,8 +1,5 @@
 vim9script noclear
 
-if exists('loaded') | finish | endif
-var loaded = true
-
 def markdown#getDefinition#main()
     var word: string
     if mode() =~ "^[vV\<C-V>]$"

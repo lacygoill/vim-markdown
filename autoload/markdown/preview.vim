@@ -1,8 +1,5 @@
 vim9script noclear
 
-if exists('loaded') | finish | endif
-var loaded = true
-
 # To install the web server:{{{
 #
 #     $ sudo aptitude install git nodejs npm

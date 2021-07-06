@@ -1,8 +1,5 @@
 vim9script noclear
 
-if exists('loaded') | finish | endif
-var loaded = true
-
 def markdown#fold#sort#bySize(lnum1: number, lnum2: number) #{{{1
     # get the level of the first fold
     var lvl: number = getline(lnum1)->matchend('^#*')

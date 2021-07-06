@@ -1,8 +1,5 @@
 vim9script noclear
 
-if exists('loaded') | finish | endif
-var loaded = true
-
 def markdown#fold#foldtitle#get(): string #{{{1
     var foldstartline: string = getline(v:foldstart)
     # get the desired level of indentation for the title

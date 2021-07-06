@@ -1,8 +1,5 @@
 vim9script noclear
 
-if exists('loaded') | finish | endif
-var loaded = true
-
 def markdown#check#punctuation( #{{{1
     type: string,
     lnum1: number,

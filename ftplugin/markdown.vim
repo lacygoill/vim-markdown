@@ -104,15 +104,12 @@ nnoremap <buffer><nowait> cof <Cmd>call markdown#fold#foldexpr#toggle()<CR>
 # Useful  to get  an overview  of  the contents  of  the notes  of an  arbitrary
 # precision.
 #}}}
-nnoremap <buffer><nowait> [of <Cmd>call markdown#fold#option#foldlevel('less')<CR>
-nnoremap <buffer><nowait> ]of <Cmd>call markdown#fold#option#foldlevel('more')<CR>
-silent! repmap#make#repeatable({
-    mode: 'n',
-    buffer: true,
-    from: expand('<sfile>:p') .. ':' .. expand('<slnum>'),
-    motions: [
-        {bwd: '[of', fwd: ']of'},
-    ]})
+nmap <buffer><nowait> [of <Plug>(foldlevel-less)
+nmap <buffer><nowait> ]of <Plug>(foldlevel-more)
+nnoremap <Plug>(foldlevel-less) <Cmd>call markdown#fold#option#foldlevel('less')<CR>
+nnoremap <Plug>(foldlevel-more) <Cmd>call markdown#fold#option#foldlevel('more')<CR>
+silent! submode#enter('foldlevel-more-or-less', 'n', 'br', '[of', '<Plug>(foldlevel-less)')
+silent! submode#enter('foldlevel-more-or-less', 'n', 'br', ']of', '<Plug>(foldlevel-more)')
 
 nnoremap <buffer><nowait> gd <Cmd>call markdown#getDefinition#main()<CR>
 xnoremap <buffer><nowait> gd <C-\><C-N><Cmd>call markdown#getDefinition#main()<CR>
@@ -192,10 +189,10 @@ var afile: string = expand('<afile>:p')
 # We often use it  to infer what a comment looks like,  because it's easier than
 # parsing 'comments', but that's it.
 #
-#             ┌ %s is replaced by "{{_{ and "}}_}  at the end of resp.
+#             ┌ %s is replaced by #{{_{ and #}}_}  at the end of resp.
 #             │ the starting line of the fold and the ending line of the fold
 #             ├──────────┐
-#     "%s  →  "{{_{  "}}_}
+#     #%s  →  #{{_{  #}}_}
 #     ├─┘
 #     └ template
 #}}}
@@ -342,7 +339,7 @@ if search('^```\S\+', 'n') > 0
         ->filter((_, v: string): bool => v =~ '^```\S\+')
         ->sort()
         ->uniq()
-        ->map((_, v: string): string => v->matchstr('```\zs\w\+'))
+        ->map((_, v: string) => v->matchstr('```\zs\w\+'))
 endif
 
 # mc_chain {{{2

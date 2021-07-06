@@ -1,8 +1,5 @@
 vim9script noclear
 
-if exists('loaded') | finish | endif
-var loaded = true
-
 # Init
 
 # `:LinkInline2Ref` won't work as expected if the buffer contains more than `GUARD` links.
@@ -141,7 +138,7 @@ def PopulateReferenceSection(id2url: dict<string>) #{{{2
     #    > **Strings**, Lists, Dicts and Funcrefs **will be considered as being 0**.
     #}}}
     var lines: list<string> = id2url
-        ->mapnew((k: string, v: string): string => '[' .. k .. ']: ' .. v)
+        ->mapnew((k: string, v: string) => '[' .. k .. ']: ' .. v)
         ->values()
         ->sort((a: string, b: string): number =>
                 a->matchstr('\d\+')->str2nr() - b->matchstr('\d\+')->str2nr())
