@@ -12,7 +12,7 @@ enddef
 # Core {{{1
 def Do(_) #{{{2
     var cnt: number = v:count1
-    for i: number in range(1, cnt)
+    for _ in range(1, cnt)
         Promote()
     endfor
     getpos("'[")[1 : 2]->cursor()
