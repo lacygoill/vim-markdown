@@ -9,7 +9,7 @@ def markdown#highlightLanguages() #{{{2
     #}}}
     var done_include: dict<bool>
     var delims: list<string> = get(b:, 'markdown_highlight', [])
-    for delim in delims
+    for delim: string in delims
         # If by accident, we manually  assign a value to `b:markdown_highlight`, and
         # we write duplicate values, we want to include the corresponding syntax
         # plugin only once.

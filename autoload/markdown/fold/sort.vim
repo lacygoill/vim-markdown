@@ -69,7 +69,7 @@ def markdown#fold#sort#bySize(lnum1: number, lnum2: number) #{{{1
         #        - it re-calls the function to continue the process
         #}}}
         while foldend > 0
-            for f in folds
+            for f: dict<number> in folds
                 # if you find a previous fold which is bigger
                 if f.size > folds[-1]['size']
                     # move last fold above

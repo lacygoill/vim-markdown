@@ -16,7 +16,7 @@ vim9script noclear
 #     def HasSyntaxGroup(lnum: number): bool {{{2
 #         var syntax_groups: list<string> = synstack(lnum, 1)
 #             ->mapnew((_, v: number): string => synIDattr(v, 'name'))
-#         for value in syntax_groups
+#         for value: string in syntax_groups
 #             if value =~ '\cmarkdown\%(Code\|Highlight\)'
 #                 return true
 #             endif
