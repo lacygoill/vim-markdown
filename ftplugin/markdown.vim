@@ -108,8 +108,8 @@ nmap <buffer><nowait> [of <Plug>(foldlevel-less)
 nmap <buffer><nowait> ]of <Plug>(foldlevel-more)
 nnoremap <Plug>(foldlevel-less) <Cmd>call markdown#fold#option#foldlevel('less')<CR>
 nnoremap <Plug>(foldlevel-more) <Cmd>call markdown#fold#option#foldlevel('more')<CR>
-silent! submode#enter('foldlevel-more-or-less', 'n', 'br', '[of', '<Plug>(foldlevel-less)')
-silent! submode#enter('foldlevel-more-or-less', 'n', 'br', ']of', '<Plug>(foldlevel-more)')
+silent! execute submode#enter('foldlevel-more-or-less', 'n', 'br', '[of', '<Plug>(foldlevel-less)')
+silent! execute submode#enter('foldlevel-more-or-less', 'n', 'br', ']of', '<Plug>(foldlevel-more)')
 
 nnoremap <buffer><nowait> gd <Cmd>call markdown#getDefinition#main()<CR>
 xnoremap <buffer><nowait> gd <C-\><C-N><Cmd>call markdown#getDefinition#main()<CR>
